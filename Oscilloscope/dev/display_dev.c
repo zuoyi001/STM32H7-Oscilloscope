@@ -21,8 +21,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "display_dev.h"
 #include "main.h"
+#include "sdram.h"
 /* Private includes ----------------------------------------------------------*/
-
+static unsigned short gram[1366*768] __attribute__((at(Bank5_SDRAM_ADDR)));
 /* Define all supported display panel information */
 const display_dev_def display_dev[7] = 
 {
@@ -67,9 +68,9 @@ const display_dev_def display_dev[7] =
 		.hfp = 160,
 		.vfp = 12,
 		/* rcc clock settings */
-		.PLLSAIN = 360,
+		.PLLSAIN = 50 * 4,
 		.PLLSAIR = 2 , 
-		.PLLSAIDIVR = DIVR_4,
+		.PLLSAIDIVR = DIVR_2,
 	},
 	{
 		.dev_capital = "VGA\n1280*800",
@@ -202,10 +203,17 @@ const display_dev_def display_dev[7] =
 };
 /* information of display dev */
 static display_dev_def * display_info_s = (display_dev_def *)&display_dev[1]; /* default setting is 800*480 for test */ 
+/* information of current display dev */
+static display_info_def display_info;
 /* get information for the display */
-display_dev_def * get_display_dev_info(void)
+display_info_def * get_display_dev_info(void)
 {
-	return display_info_s;
+	/* pointer to curren dev */
+	display_info.display_dev = display_info_s;
+	/* gram */
+	display_info.gram_addr = (unsigned int)gram;
+	/* return */
+	return &display_info;
 }
 /* set up information for the display at circle mode */
 char * set_display_dev(unsigned short index)
@@ -320,7 +328,6 @@ static void LTDC_MspInit(void)
   */
 void LTDC_Init(display_dev_def * info)
 {
-
   /* USER CODE BEGIN LTDC_Init 0 */
 	
   LTDC_HandleTypeDef hltdc;
@@ -373,7 +380,7 @@ void LTDC_Init(display_dev_def * info)
   pLayerCfg.Alpha0 = 0;
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
   pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
-  pLayerCfg.FBStartAdress = (unsigned int)0x08001960;
+  pLayerCfg.FBStartAdress = (unsigned int)gram;
   pLayerCfg.ImageWidth = info->pwidth;;
   pLayerCfg.ImageHeight = info->pheight;
   pLayerCfg.Backcolor.Blue = 0;

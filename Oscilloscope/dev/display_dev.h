@@ -49,7 +49,14 @@ typedef struct
 	unsigned int PLLSAIDIVR;
 	/* end */
 }display_dev_def;
-
+/* display info */
+typedef struct 
+{
+	/* display dev */
+	display_dev_def * display_dev;
+	/* display gram addr */
+	unsigned int gram_addr;
+}display_info_def;
 /* RCC_PLLSAIDIVR */
 #define DIVR_2                0x00000000U
 #define DIVR_4                0x00010000U
@@ -57,7 +64,7 @@ typedef struct
 #define DIVR_16               0x00030000U
 
 /* function delares */
-display_dev_def * get_display_dev_info(void);
+display_info_def * get_display_dev_info(void);
 void LTDC_Init(display_dev_def * info);
 /* end */
 #endif

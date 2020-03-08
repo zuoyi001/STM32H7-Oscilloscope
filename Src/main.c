@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "display_dev.h"
+#include "Grid_data_800480.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,6 +54,9 @@ static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void LTDC_Init(display_dev_def * info);
 void SDRAM_Init(void);
+int middle_layer_init(void);
+void clear_display_dev(unsigned short color);
+void set_point( unsigned short x , unsigned short y , unsigned int color );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -90,10 +94,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  LTDC_Init(get_display_dev_info());
+  LTDC_Init(get_display_dev_info()->display_dev);
 	SDRAM_Init();
   /* USER CODE END 2 */
-
+	
+	middle_layer_init();
+	
+	clear_display_dev(0);
+	
+	for( int i = 0 ; i < 4850 ; i ++ )
+	{
+		set_point(grid_800480[i][0],grid_800480[i][1] , 0xffff);
+	}
+	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

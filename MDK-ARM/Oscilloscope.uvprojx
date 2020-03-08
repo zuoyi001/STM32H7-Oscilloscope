@@ -537,6 +537,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\dev\sdram.c</FilePath>
             </File>
+            <File>
+              <FileName>middle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\middle.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
