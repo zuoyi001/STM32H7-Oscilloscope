@@ -31,6 +31,8 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_ltdc.h"
 #include "stm32f4xx_hal_ltdc_ex.h"
+#include "stm32f4xx_hal_sdram.h"
+#include "stm32f4xx_ll_fmc.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 

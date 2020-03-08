@@ -358,10 +358,12 @@ void LTDC_Init(display_dev_def * info)
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
   hltdc.Init.Backcolor.Red = 0;
+	/* init ok or not */
   if (HAL_LTDC_Init(&hltdc) != HAL_OK)
   {
     Error_Handler();
   }
+	/* config layer */
   pLayerCfg.WindowX0 = 0;
   pLayerCfg.WindowX1 = info->pwidth;
   pLayerCfg.WindowY0 = 0;
@@ -377,15 +379,14 @@ void LTDC_Init(display_dev_def * info)
   pLayerCfg.Backcolor.Blue = 0;
   pLayerCfg.Backcolor.Green = 0;
   pLayerCfg.Backcolor.Red = 0;
+	/* init ok or not */
   if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
   {
     Error_Handler();
   }
-
   /* USER CODE END LTDC_Init 2 */
-
 }
-
+/* ------------------------------ end of file ------------------------------ */
 
 
 

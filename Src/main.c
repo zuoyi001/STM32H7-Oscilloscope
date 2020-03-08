@@ -52,6 +52,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void LTDC_Init(display_dev_def * info);
+void SDRAM_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -90,6 +91,7 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   LTDC_Init(get_display_dev_info());
+	SDRAM_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
