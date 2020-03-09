@@ -55,8 +55,6 @@ static void MX_GPIO_Init(void);
 void LTDC_Init(display_dev_def * info);
 void SDRAM_Init(void);
 int middle_layer_init(void);
-void clear_display_dev(unsigned short color);
-void set_point( unsigned short x , unsigned short y , unsigned int color );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -99,13 +97,6 @@ int main(void)
   /* USER CODE END 2 */
 	
 	middle_layer_init();
-	
-	clear_display_dev(0);
-	
-	for( int i = 0 ; i < 4850 ; i ++ )
-	{
-		set_point(grid_800480[i][0],grid_800480[i][1] , 0xffff);
-	}
 	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
