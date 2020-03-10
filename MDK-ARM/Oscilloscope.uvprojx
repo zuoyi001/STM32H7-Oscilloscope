@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F429xx,USE_HAL_DRIVER,STM32F429xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\dev</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\dev;..\Oscilloscope\osc;..\Oscilloscope\gui</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -525,6 +525,9 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>fos</GroupName>
+        </Group>
+        <Group>
           <GroupName>dev</GroupName>
           <Files>
             <File>
@@ -545,7 +548,24 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>fos</GroupName>
+          <GroupName>osc</GroupName>
+          <Files>
+            <File>
+              <FileName>osc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>gui</GroupName>
+          <Files>
+            <File>
+              <FileName>gui_dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui_dev.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>

@@ -18,19 +18,57 @@
   */
 /* USER CODE END Header */
 
+#ifndef __GUI_DEV_H__
+#define __GUI_DEV_H__
 /* Includes ------------------------------------------------------------------*/
-
+#include "gui_cfg.h"
 /* Private includes ----------------------------------------------------------*/
 
-#ifndef __MIDDLE_H__
-#define __MIDDLE_H__
+/* set up gui dev */
+typedef struct
+{
+	/* clear and set read point */
+	void (*set_point)( unsigned short , unsigned short , unsigned int );
+	unsigned short (*read_point)( unsigned short , unsigned short );
+#if HARDWARE_ACCEL_SUPPLY	
+	/* for hardware */
+	void (*fill_rect)(unsigned short,unsigned short ,unsigned short ,unsigned short ,unsigned int);
+	void (*fill_color)(unsigned short ,unsigned short,unsigned short,unsigned short,unsigned short * );
+	void (*clear_display_dev)(unsigned short );
+#endif	
+	/* screen  size information */
+	unsigned int width;
+	unsigned int height;
+	unsigned int display_type; /* 0 is LCD , 1 is VGA */
+	/* end of file */
+}gui_dev_def;
 
 /* function declares */
-int middle_layer_init(void);
-void set_point( unsigned short x , unsigned short y , unsigned int color );
-unsigned short get_point( unsigned short x , unsigned short y );
-void fill_rect(unsigned short psx,unsigned short psy,unsigned short pex,unsigned short pey,unsigned int color);
-void fill_color(unsigned short psx,unsigned short psy,unsigned short pex,unsigned short pey,unsigned short * color);
-void clear_display_dev(unsigned short color);
+
+gui_dev_def * get_gui_dev(void);
+
+/* end of file */
+
+
+
+
+
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
