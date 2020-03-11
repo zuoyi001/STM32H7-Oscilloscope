@@ -21,180 +21,263 @@
 /* Includes ------------------------------------------------------------------*/
 #include "display_dev.h"
 #include "math.h"
-/* */
-/* test */
-static unsigned short N, M,EN,EM,ENN,EMM;
-
-void calbrate_osc_ui(unsigned short width, unsigned short height)
+#include "osc.h"
+/* Includes ------------------------------------------------------------------*/
+#define VERTICAL_GRID_NUM      (8)
+#define HORIZONTAL_GRID_NUM    (10)
+#define LITTLE_GRIG_NUM        (5)
+#define VERTICAL_GRID_TOTAL    (VERTICAL_GRID_NUM * LITTLE_GRIG_NUM)
+#define HORIZONTAL_GRID_TOTAL  (HORIZONTAL_GRID_NUM * LITTLE_GRIG_NUM)
+/* left remind and up */
+#define TOP_REMAIN_PIXEL       (16)
+#define LEFT_REMAIN_PIXEL      (20)
+#define BOTTOM_REMAIN_PIXEL    (45)
+/* THREE color */
+#define COLOR_GRID_POINT       (RGB(199, 195, 199))
+#define COLOR_GRID_AREA_BG     (RGB(7, 3, 7))
+#define COLOR_BACKGROUND       (RGB(63, 75, 151))
+/* draw area defines */
+static draw_area_def draw_area;
+/* define some nes message */
+static unsigned short EN,EM;
+#if !HARDWARE_ACCEL_SUPPLY /* no use without hardware accel */
+static unsigned short ENR,EMR;
+#endif
+/* this param is for test that will be deleted soon */
+static unsigned char grid_init_flag = 0;
+/* 
+	create grid_grobal_data 
+	Computing grid data according to different resolutions 
+*/
+static int grid_grobal_data(unsigned short width, unsigned short height)
 {
-	unsigned short v_grid = (width - 20 - 2) / (5 * 10);
-
-	N = width - 20 - 1 - v_grid * (5 * 10) - 1;
-
-	EN = v_grid * (5 * 10) / 10 / 5;
-
-	ENN = width - v_grid * (5 * 10) - 20 - 1 - 1;
-
-	unsigned short h_grid = (height - 16 - 2 - 45) / (5 * 8);
-
-	M = height - 16 - 1 - h_grid * (5 * 8) - 1;
-
-	EM = h_grid * (5 * 8) / 8 / 5;
-
-	EMM = height - h_grid * (5 * 8) - 16 - 1 - 1;
+	/* horizonal data Find the greatest common divisor for 5 and 10 */
+	unsigned short EN = ( width - LEFT_REMAIN_PIXEL - 2 ) / ( HORIZONTAL_GRID_TOTAL );
+#if !HARDWARE_ACCEL_SUPPLY	
+  /* The remaining pixels on the far right of the screen */
+	ENR = width - LEFT_REMAIN_PIXEL - 1 - EN * (HORIZONTAL_GRID_TOTAL) - 1;
+#endif
+  /* for verital data Find the greatest common divisor for 5 and 8 */
+	unsigned short EM = ( height - TOP_REMAIN_PIXEL - 2 - BOTTOM_REMAIN_PIXEL ) / (VERTICAL_GRID_TOTAL);
+  /* The remaining pixels on the far bottom of the screen */
+#if !HARDWARE_ACCEL_SUPPLY	
+	EMR = height - EM * (VERTICAL_GRID_TOTAL) - TOP_REMAIN_PIXEL - 1 - 1;
+#endif
+	/* create ok or not */
+	if( EN == 0 || EM == 0 )
+	{
+		/* oh no , feels not good , What seems to be the problem */
+		return (-1);
+	}
+	/* set area data  , start pos */
+	draw_area.start_pos_x = LEFT_REMAIN_PIXEL + 1;
+	draw_area.start_pos_y = TOP_REMAIN_PIXEL + 1;
+	draw_area.stop_pos_x  = LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL);
+	draw_area.start_pos_y = TOP_REMAIN_PIXEL  + 1 + EM * (VERTICAL_GRID_TOTAL);
+	/* num grid of horizontal and vertical */
+	draw_area.num_horizontal = HORIZONTAL_GRID_NUM;
+	draw_area.num_vertical = VERTICAL_GRID_NUM;
+	/* num pixel for all horizontal */
+	draw_area.pixel_horizontal = LITTLE_GRIG_NUM * EN;
+	draw_area.pixel_vertiacl = LITTLE_GRIG_NUM * EM;
+	/* num of little grid */
+	draw_area.little_grid = LITTLE_GRIG_NUM;
+	/* endding */
+	return 0; // OK
 }
-
-void create_grid_date(unsigned short width_t,unsigned short height_t)
+/* get grid data struct for other apps and threads */
+draw_area_def * get_draw_area_msg(void)
+{
+  /* create init or not */
+	if( grid_init_flag == 0 )
+	{
+		/* reinit */
+		return (void *)(0) ; // not init yet 
+	}
+	/* return bat */
+	return &draw_area;
+}
+/* create grid data */
+int create_grid_data(gui_dev_def * dev)
 {	
-	unsigned short biWidth = width_t;
-	unsigned short biHeight = height_t;
-
-	calbrate_osc_ui(biWidth, biHeight);
-
-/* sraw */
-
-	for (int j = 0; j < EN * (5 * 10) ; j++)
+  /* get gui dev */
+	/* set grid data */
+	int ret = grid_grobal_data( dev->width , dev->height );
+	/* ok or not */
+	if( ret != 0 )
 	{
-		for (int i = 0; i < EM * (5 * 8) + 1 ; i++)
-		{
-			set_point(20 + 1 + j, 16 + 1 + i, RGB(7, 3, 7));
-		}
+		/* oh no , feels not good , What seems to be the problem */
+		return (-1);		
 	}
-
-	for (int j = 0; j < (8 + 1); j++)
-	{
-		for (int i = 0; i < (5*10 + 1); i++)
-		{
-			set_point(20 + 1 + i * EN, 16 + 1 + j*EM*5, RGB(199, 195, 199));
-		}
-	}
-
-	for (int j = 0; j < (10 + 1); j++)
-	{
-		for (int i = 0; i < (5 * 8 + 1); i++)
-		{
-			set_point(20 + 1 + j * EN * 5 , 16 + 1 + i * EM, RGB(199, 195, 199));
-		}
-	}
-
-	for (int i = 0; i < EN * (5 * 10); i++)
-	{
-		set_point(20 + 1 + i, 16 , RGB(199, 195, 199));
-
-		if ((i % EN) == 0)
-		{
-			set_point(20 + 1 + i, 16 + 2, RGB(199, 195, 199));
-			set_point(20 + 1 + i, 16 + 5, RGB(199, 195, 199));
-		}
-	}
-
-	for (int i = 0; i < EN * (5 * 10); i++)
-	{
-		set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8) + 1, RGB(199, 195, 199));
-
-		if (((i % EN)) == 0 )
-		{
-			set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8) + 1 - 3, RGB(199, 195, 199));
-			set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8) + 1 - 6, RGB(199, 195, 199));
-		}
-	}
-
-	for (int i = 0; i < EM * (5 * 8) + 1; i++)
-	{
-		set_point(20 , 16 + 1  + i, RGB(199, 195, 199));
-		set_point(20 + 1 + EN * (5 * 10) , 16 + 1 + i, RGB(199, 195, 199));
-		if (((i % EM)) == 0)
-		{
-			set_point(20 + 2, 16 + 1 + i, RGB(199, 195, 199));
-			set_point(20 + 5, 16 + 1 + i, RGB(199, 195, 199));
-
-			set_point(20 + 1 + EN * (5 * 10) - 2 , 16 + 1 + i, RGB(199, 195, 199));
-			set_point(20 + 1 + EN * (5 * 10) - 5, 16 + 1 + i, RGB(199, 195, 199));
-		}
-	}
-
-	for (int i = 0; i < EN * (5 * 10); i++)
-	{
-		set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8 / 2), RGB(199, 195, 199));
-
-		if (((i % EN)) == 0)
-		{
-			set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8 / 2) - 2, RGB(199, 195, 199));
-			set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8 / 2) - 5, RGB(199, 195, 199));
-			set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8 / 2) + 1, RGB(199, 195, 199));
-			set_point(20 + 1 + i, 16 + 1 + EM * (5 * 8 / 2) + 4, RGB(199, 195, 199));
-		}
-	}
-
-	for (int i = 0; i < EM * (5 * 8) + 1; i++)
-	{
-		set_point(20 + 1 + EN * (5 * 10 / 2), 16 + 1 + i, RGB(199, 195, 199));
-
-		if (((i % EM)) == 0)
-		{
-			set_point(20 + 1 + EN * (5 * 10 / 2) - 2, 16 + 1 + i, RGB(199, 195, 199));
-			set_point(20 + 1 + EN * (5 * 10 / 2) - 5, 16 + 1 + i, RGB(199, 195, 199));
-			set_point(20 + 1 + EN * (5 * 10 / 2) + 1, 16 + 1 + i, RGB(199, 195, 199));
-			set_point(20 + 1 + EN * (5 * 10 / 2) + 4, 16 + 1 + i, RGB(199, 195, 199));
-		}
-
-		if (((i % (EM * 5))) == 0)
-		{
-			set_point(20 + 1 + EN * (5 * 10 / 2) - 8, 16 + 1 + i, RGB(199, 195, 199));
-			set_point(20 + 1 + EN * (5 * 10 / 2) + 7, 16 + 1 + i, RGB(199, 195, 199));
-		}
-	}
-
-	set_point(20 , 16 , RGB(199, 195, 199));
-	set_point(20, 16 + EM * (5*8) + 1 + 1, RGB(199, 195, 199));
-	set_point(20 + EN * (5 * 10) + 1, 16, RGB(199, 195, 199));
-	set_point(20 + EN * (5 * 10) + 1, 16 + EM * (5 * 8) + 1 + 1, RGB(199, 195, 199));
-
+  /* sraw */
+#if HARDWARE_ACCEL_SUPPLY
+	/* clear all area with one color */
+	dev->clear_display_dev(COLOR_BACKGROUND);
+	/* if doesn't has the hardware accel */
+#else
+{	
 	for (int j = 0; j < biHeight; j++)
 	{
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < LEFT_REMAIN_PIXEL; i++)
 		{
-			set_point(i, j, RGB(63, 75, 151));
+			dev->set_point(i, j, COLOR_BACKGROUND);
 		}
 
-		for (int i = 0; i < ENN; i++)
+		for (int i = 0; i < ENR; i++)
 		{
-			set_point(i + 20 + EN * (5 * 10) +1 +1, j, RGB(63, 75, 151));
+			dev->set_point(i + LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) +1 +1, j, COLOR_BACKGROUND);
 		}
 	}
-
+/* draw other grid data */
 	for (int j = 0; j < biWidth; j++)
 	{
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < TOP_REMAIN_PIXEL; i++)
 		{
-			set_point(j, i, RGB(63, 75, 151));
+			dev->set_point(j, i, COLOR_BACKGROUND);
 		}
-
-		for (int i = 0; i < EMM - 1; i++)
+/* draw other grid data */
+		for (int i = 0; i < EMR - 1; i++)
 		{
-			set_point(j, i + 16 + 1 + 1 + 1 + EM * (5 * 8), RGB(63, 75, 151));
+			dev->set_point(j, i + TOP_REMAIN_PIXEL + 1 + 1 + 1 + EM * (VERTICAL_GRID_TOTAL), COLOR_BACKGROUND);
 		}
 	}
+#endif
+/* create the data area background color */
+#if HARDWARE_ACCEL_SUPPLY
+/* full the rect area with some color */
+  dev->fill_rect(LEFT_REMAIN_PIXEL + 1,TOP_REMAIN_PIXEL + 1,
+	               LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) , 
+								 TOP_REMAIN_PIXEL  + EM * (VERTICAL_GRID_TOTAL),COLOR_GRID_AREA_BG);
+#else
+	for (int j = 0; j < EN * (HORIZONTAL_GRID_TOTAL) ; j++)
+	{
+		for (int i = 0; i < EM * (VERTICAL_GRID_TOTAL) + 1 ; i++)
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + j, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_AREA_BG);
+		}
+	}
+#endif
+/* draw other grid data */
+	for(int j = 0; j < ( VERTICAL_GRID_NUM + 1 ); j++ )
+	{
+		for (int i = 0 ; i < ( HORIZONTAL_GRID_TOTAL + 1 ); i++ )
+		{
+			dev->set_point( LEFT_REMAIN_PIXEL + 1 + i * EN, TOP_REMAIN_PIXEL + 1 + j * EM * LITTLE_GRIG_NUM , COLOR_GRID_POINT);
+		}
+	}
+/* draw other grid data */
+	for( int j = 0 ; j < ( HORIZONTAL_GRID_NUM + 1 ) ; j++ )
+	{
+		for (int i = 0; i < (VERTICAL_GRID_TOTAL + 1); i++ )
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + j * EN * LITTLE_GRIG_NUM , TOP_REMAIN_PIXEL + 1 + i * EM, COLOR_GRID_POINT);
+		}
+	}
+/* draw other grid data */
+	for( int i = 0 ; i < EN * ( HORIZONTAL_GRID_TOTAL ) ; i++ )
+	{
+	  /* draw other grid data */ 
+		dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL , COLOR_GRID_POINT);
+    /* draw other grid data */
+		if( ( i % EN ) == 0 )
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 2, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 5, COLOR_GRID_POINT);
+		}
+	}
+/* draw other grid data */
+	for( int i = 0 ; i < EN * (HORIZONTAL_GRID_TOTAL); i++)
+	{
+		dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL) + 1, COLOR_GRID_POINT);
+    /* draw other grid data */
+		if (((i % EN)) == 0 )
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL) + 1 - 3, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL) + 1 - 6, COLOR_GRID_POINT);
+		}
+	}
+/* draw other grid data */
+	for( int i = 0; i < EM * (VERTICAL_GRID_TOTAL) + 1; i++)
+	{
+		/* draw other grid data */
+		dev->set_point(LEFT_REMAIN_PIXEL , TOP_REMAIN_PIXEL + 1  + i, COLOR_GRID_POINT);
+		dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL) , TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+		/* draw other grid data */
+		if((( i % EM )) == 0 )
+		{
+			/* draw other grid data */
+			dev->set_point(LEFT_REMAIN_PIXEL + 2, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 5, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			/* draw other grid data */
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL) - 2 , TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL) - 5, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+		}
+	}
+/* draw other grid data */
+	for( int i = 0; i < EN * (HORIZONTAL_GRID_TOTAL); i++)
+	{
+		/* draw other grid data */
+		dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL / 2), COLOR_GRID_POINT);
+    /* draw other grid data */
+		if( ( (i % EN) ) == 0)
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL / 2) - 2, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL / 2) - 5, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL / 2) + 1, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL / 2) + 4, COLOR_GRID_POINT);
+		}
+	}
+/* draw other grid data */
+	for (int i = 0; i < EM * (VERTICAL_GRID_TOTAL) + 1; i++)
+	{
+		/* draw other grid data */
+		dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2), TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+    /* draw other grid data */
+		if (((i % EM)) == 0)
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2) - 2, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2) - 5, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2) + 1, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2) + 4, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+		}
+    /* draw other grid data */
+		if (((i % (EM * LITTLE_GRIG_NUM))) == 0)
+		{
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2) - 8, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+			dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL / 2) + 7, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
+		}
+	}
+  /* draw other grid data */
+	dev->set_point(LEFT_REMAIN_PIXEL , TOP_REMAIN_PIXEL , COLOR_GRID_POINT);
+	dev->set_point(LEFT_REMAIN_PIXEL, TOP_REMAIN_PIXEL + EM * (VERTICAL_GRID_TOTAL) + 1 + 1, COLOR_GRID_POINT);
+	dev->set_point(LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) + 1, TOP_REMAIN_PIXEL, COLOR_GRID_POINT);
+	dev->set_point(LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) + 1, TOP_REMAIN_PIXEL + EM * (VERTICAL_GRID_TOTAL) + 1 + 1, COLOR_GRID_POINT);
+	/* for test */
+#if 1
+  /* draw other grid data */
 	double sin_x = 0;
 	/* sinx */
-	for( int i = 0 ; i < EN * (5 * 10) ; i ++ )
+	for( int i = 0 ; i < EN * (HORIZONTAL_GRID_TOTAL) ; i ++ )
 	{
 	 double te = sin( sin_x );
 		
-   short tm = (short)( te * EM * (5 * 8 / 4) ) + EM * (5 * 8 / 2) + 16 + 1 - EM*5;
+   short tm = (short)( te * EM * (VERTICAL_GRID_TOTAL / 4) ) + EM * (VERTICAL_GRID_TOTAL / 2) + TOP_REMAIN_PIXEL + 1 - EM*LITTLE_GRIG_NUM;
 		
 	 double tce = cos( sin_x );
 		
-   short tcm = (short)( tce * EM * (5 * 8 / 4) ) + EM * (5 * 8 / 2) + 16 + 1 + EM*5;	 
+   short tcm = (short)( tce * EM * (VERTICAL_GRID_TOTAL / 4) ) + EM * (VERTICAL_GRID_TOTAL / 2) + TOP_REMAIN_PIXEL + 1 + EM*LITTLE_GRIG_NUM;	 
 		
-		set_point( 20 + 1 + i , tm , RGB(255,255,7));
+		dev->set_point( LEFT_REMAIN_PIXEL + 1 + i , tm , RGB(255,255,7));
 		
+		dev->set_point( LEFT_REMAIN_PIXEL + 1 + i , tcm , RGB(7,227,231));
 		
-		set_point( 20 + 1 + i , tcm , RGB(7,227,231));
-		
-		sin_x += (6.28) / (double)(EN * (5 * 10)) * 3;
+		sin_x += (6.28) / (double)(EN * (HORIZONTAL_GRID_TOTAL)) * 3;
 		
 	}
-	
+#endif
+/* set the flag */
+	grid_init_flag = 1;
+/* end of func */	
+	return 0;
 }
 
