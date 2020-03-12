@@ -20,11 +20,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "fs.h"
+#include "fos.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "display_dev.h"
-#include "Grid_data_800480.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

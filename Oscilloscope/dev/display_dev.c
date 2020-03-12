@@ -203,7 +203,7 @@ const display_dev_def display_dev[7] =
 #endif	
 };
 /* information of display dev */
-static display_dev_def * display_info_s = (display_dev_def *)&display_dev[0]; /* default setting is 800*480 for test */ 
+static display_dev_def * display_info_s = (display_dev_def *)&display_dev[1]; /* default setting is 800*480 for test */ 
 /* information of current display dev */
 static display_info_def display_info;
 /* init flags */

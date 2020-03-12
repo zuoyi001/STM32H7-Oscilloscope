@@ -529,29 +529,9 @@
           <GroupName>fos</GroupName>
           <Files>
             <File>
-              <FileName>fs_init.c</FileName>
+              <FileName>fos.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\fos\fs_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>fs_inode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\fos\fs_inode.c</FilePath>
-            </File>
-            <File>
-              <FileName>fs_allocate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\fos\fs_allocate.c</FilePath>
-            </File>
-            <File>
-              <FileName>fs_open.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\fos\fs_open.c</FilePath>
-            </File>
-            <File>
-              <FileName>fs_shell.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\fos\fs_shell.c</FilePath>
+              <FilePath>..\Oscilloscope\fos\fos.c</FilePath>
             </File>
           </Files>
         </Group>
