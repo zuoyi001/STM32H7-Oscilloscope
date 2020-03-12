@@ -40,6 +40,10 @@
 #define SDRAM_MODEREG_WRITEBURST_MODE_PROGRAMMED ((unsigned short)0x0000)
 #define SDRAM_MODEREG_WRITEBURST_MODE_SINGLE     ((unsigned short)0x0200)
 
+/* declares */
+
+void sdram_init(void);
+
 /* end */
 #endif
 

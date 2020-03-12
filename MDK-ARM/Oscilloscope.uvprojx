@@ -10,6 +10,7 @@
       <TargetName>Oscilloscope</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pArmCC>5060750::V5.06 update 6 (build 750)::ARMCC</pArmCC>
       <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -338,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F429xx,USE_HAL_DRIVER,STM32F429xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\dev;..\Oscilloscope\osc;..\Oscilloscope\gui</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\dev;..\Oscilloscope\osc;..\Oscilloscope\gui;..\Oscilloscope\fos</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -372,7 +373,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>--keep __FS_*;--keep __FS_SHELL_*</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -526,6 +527,33 @@
         </Group>
         <Group>
           <GroupName>fos</GroupName>
+          <Files>
+            <File>
+              <FileName>fs_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fs_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>fs_inode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fs_inode.c</FilePath>
+            </File>
+            <File>
+              <FileName>fs_allocate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fs_allocate.c</FilePath>
+            </File>
+            <File>
+              <FileName>fs_open.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fs_open.c</FilePath>
+            </File>
+            <File>
+              <FileName>fs_shell.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fs_shell.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>dev</GroupName>

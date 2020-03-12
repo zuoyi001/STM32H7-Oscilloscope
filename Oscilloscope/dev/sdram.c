@@ -29,7 +29,7 @@ static unsigned char SDRAM_Send_Cmd(unsigned char bankx,unsigned char cmd,
 /* SDRAM init handler */
 static SDRAM_HandleTypeDef SDRAM_Handler;
 /* sdram init */
-void SDRAM_Init(void)
+void sdram_init(void)
 {
 	/* define some param */
 	FMC_SDRAM_TimingTypeDef SDRAM_Timing;

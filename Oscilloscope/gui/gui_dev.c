@@ -19,16 +19,23 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include "fs.h"
+#include "fs_shell.h"
 #include "display_dev.h"
 #include "gui_dev.h"
 #include "middle.h"
 #include "gui_cfg.h"
 /* Private includes ----------------------------------------------------------*/
+FS_INODE_REGISTER("gui_dev",gui_dev,gui_dev_init,100);
+/* define cof */
+FS_SHELL_STATIC(gui_creater,gui_creater,4,_CB_EXE_);
 /* structe the display msg */
 static gui_dev_def gui_dev_s;
-
 /* test data that will delete*/
 static unsigned char inited_flag = 0;
+
+/* for test dirctely create the gui */
+int create_grid_data(gui_dev_def * dev);
 /* gui_dev_init */
 static int gui_dev_init(void)
 {
@@ -45,10 +52,17 @@ static int gui_dev_init(void)
 	gui_dev_s.fill_color = fill_color;
 	gui_dev_s.clear_display_dev = clear_display_dev;
 #endif	
+	/* set gui create to system */
+	gui_dev.config = gui_creater;
 	/* set up flag */
 	inited_flag = 1;
 	/* reutrn OK */
 	return 0;
+}
+/* static app and thread gui create */
+static int gui_creater(void)
+{
+	return create_grid_data(&gui_dev_s);
 }
 /* get gui_dev */
 gui_dev_def * get_gui_dev(void)

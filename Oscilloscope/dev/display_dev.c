@@ -22,6 +22,7 @@
 #include "display_dev.h"
 #include "main.h"
 #include "sdram.h"
+#include "middle.h"
 /* Private includes ----------------------------------------------------------*/
 static unsigned short gram[1366*768] __attribute__((at(Bank5_SDRAM_ADDR)));
 /* Define all supported display panel information */
@@ -202,9 +203,11 @@ const display_dev_def display_dev[7] =
 #endif	
 };
 /* information of display dev */
-static display_dev_def * display_info_s = (display_dev_def *)&display_dev[1]; /* default setting is 800*480 for test */ 
+static display_dev_def * display_info_s = (display_dev_def *)&display_dev[0]; /* default setting is 800*480 for test */ 
 /* information of current display dev */
 static display_info_def display_info;
+/* init flags */
+static unsigned char init_dev_flags = 0;
 /* get information for the display */
 display_info_def * get_display_dev_info(void)
 {
@@ -212,6 +215,20 @@ display_info_def * get_display_dev_info(void)
 	display_info.display_dev = display_info_s;
 	/* gram */
 	display_info.gram_addr = (unsigned int)gram;
+	/* has inited or not */
+	if( init_dev_flags == 0 )
+	{
+		/* set up flag */
+		init_dev_flags = 1;
+		/* init ltdc init or other dev */
+		LTDC_Init(display_info.display_dev);
+		/* sram init */
+		sdram_init();
+		/* srame test that will add at next version */
+		/* init middle */
+		middle_layer_init(&display_info);
+		/* end of if */
+	}
 	/* return */
 	return &display_info;
 }
@@ -226,7 +243,6 @@ char * set_display_dev(unsigned short index)
 	return display_info_s->dev_capital;
 	/* end of function */
 }
-
 /**
 * @brief LTDC MSP Initialization
 * This function configures the hardware resources used in this example
@@ -326,7 +342,7 @@ static void LTDC_MspInit(void)
   * @param None
   * @retval None
   */
-void LTDC_Init(display_dev_def * info)
+static void LTDC_Init(display_dev_def * info)
 {
   /* USER CODE BEGIN LTDC_Init 0 */
 	

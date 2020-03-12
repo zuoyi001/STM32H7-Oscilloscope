@@ -67,7 +67,7 @@ typedef struct
 
 /* function delares */
 display_info_def * get_display_dev_info(void);
-void LTDC_Init(display_dev_def * info);
+static void LTDC_Init(display_dev_def * info);
 /* end */
 #endif
 /* end of files */

@@ -24,16 +24,13 @@
 #include "math.h"
 #include "middle.h"
 /* Private includes ----------------------------------------------------------*/
-static display_info_def * dev_info;
 static unsigned short * gram_buffer = NULL;
 static unsigned short WIDTH = 0 , HEIGHT = 0;
-	
 /* Define all supported display panel information */
 
-int middle_layer_init(void)
+/* muddle init that supply all pixel function */
+int middle_layer_init(display_info_def * dev_info)
 {
-	/* get */
-	dev_info = get_display_dev_info();
 	/* get gram */
 	if( dev_info == NULL )
 	{
@@ -45,8 +42,6 @@ int middle_layer_init(void)
 	/* get display size */
 	WIDTH =  dev_info->display_dev->pwidth;
 	HEIGHT = dev_info->display_dev->pheight;
-//	
-//	create_grid_date(WIDTH,HEIGHT);
 	/* return OK */
 	return 0;
 }

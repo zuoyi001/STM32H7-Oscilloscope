@@ -52,13 +52,13 @@ static unsigned char grid_init_flag = 0;
 static int grid_grobal_data(unsigned short width, unsigned short height)
 {
 	/* horizonal data Find the greatest common divisor for 5 and 10 */
-	unsigned short EN = ( width - LEFT_REMAIN_PIXEL - 2 ) / ( HORIZONTAL_GRID_TOTAL );
+	EN = ( width - LEFT_REMAIN_PIXEL - 2 ) / ( HORIZONTAL_GRID_TOTAL );
 #if !HARDWARE_ACCEL_SUPPLY	
   /* The remaining pixels on the far right of the screen */
 	ENR = width - LEFT_REMAIN_PIXEL - 1 - EN * (HORIZONTAL_GRID_TOTAL) - 1;
 #endif
   /* for verital data Find the greatest common divisor for 5 and 8 */
-	unsigned short EM = ( height - TOP_REMAIN_PIXEL - 2 - BOTTOM_REMAIN_PIXEL ) / (VERTICAL_GRID_TOTAL);
+	EM = ( height - TOP_REMAIN_PIXEL - 2 - BOTTOM_REMAIN_PIXEL ) / (VERTICAL_GRID_TOTAL);
   /* The remaining pixels on the far bottom of the screen */
 #if !HARDWARE_ACCEL_SUPPLY	
 	EMR = height - EM * (VERTICAL_GRID_TOTAL) - TOP_REMAIN_PIXEL - 1 - 1;
@@ -115,8 +115,7 @@ int create_grid_data(gui_dev_def * dev)
 	dev->clear_display_dev(COLOR_BACKGROUND);
 	/* if doesn't has the hardware accel */
 #else
-{	
-	for (int j = 0; j < biHeight; j++)
+	for (int j = 0; j < dev->width; j++)
 	{
 		for (int i = 0; i < LEFT_REMAIN_PIXEL; i++)
 		{
@@ -129,7 +128,7 @@ int create_grid_data(gui_dev_def * dev)
 		}
 	}
 /* draw other grid data */
-	for (int j = 0; j < biWidth; j++)
+	for (int j = 0; j < dev->height; j++)
 	{
 		for (int i = 0; i < TOP_REMAIN_PIXEL; i++)
 		{

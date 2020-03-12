@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "fs.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "display_dev.h"
@@ -52,9 +52,7 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-void LTDC_Init(display_dev_def * info);
-void SDRAM_Init(void);
-int middle_layer_init(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -92,12 +90,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  LTDC_Init(get_display_dev_info()->display_dev);
-	SDRAM_Init();
+
   /* USER CODE END 2 */
-	
-	middle_layer_init();
-	
+	fs_system_initialization();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
