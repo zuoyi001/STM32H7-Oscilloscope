@@ -558,6 +558,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\dev\middle.c</FilePath>
             </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\led.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
