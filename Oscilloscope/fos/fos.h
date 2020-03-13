@@ -26,7 +26,7 @@
 #define FS_ERR   (-1)
 #define FS_ECO   (-2)
 /* #define */
-#define FOS_PRIORITY  (0xF)
+#define FOS_PRIORITY_MAX  (0x10)
 /* USER CODE END Header */
 /* storage dev opd def */
 typedef struct
@@ -75,6 +75,32 @@ typedef struct
 	unsigned int seq_type;
 	/* other settings */
 }inode_vmn;
+/* task priority */
+typedef enum
+{
+	/* system task priority is from 0 to 4*/
+	PRIORITY_0 = 0,
+	PRIORITY_1 = 1,
+	PRIORITY_2 = 2,
+	PRIORITY_3 = 3,
+	PRIORITY_4 = 4,
+	/* idle task */
+	PRIORITY_IDLE = 5,
+	/* end of */
+}fos_priority_def;
+/* fos thread and task */
+typedef struct fos_tsk_linker
+{
+	/* task linker for next task */
+	struct fos_tsk_linker * linker;
+	/* thread enter */
+	void (*enter)(void);
+	/* runtime period */
+	unsigned int period ; // unit is ms
+	/* priority */
+	fos_priority_def priority;
+  /* other data */	
+}fos_tsk_def;
 /* Define the node usage of the current module */
 typedef struct
 {
@@ -93,6 +119,15 @@ extern inode_vmn fs_vmn$$Limit;
 #define FOS_VMN_LIMIT  ((inode_vmn *)&fs_vmn$$Limit)
 /* num for limit */
 #define FOS_VMN_NUM   (&fs_vmn$$Limit-&fs_vmn$$Base)
+/* ARM complies setting */
+extern fos_tsk_def fs_tsk$$Base;
+extern fos_tsk_def fs_tsk$$Limit;
+/* define head and limit MAC */
+#define FOS_TSK_BASE    ((fos_tsk_def *)&fs_tsk$$Base)
+/* max addr for vmn */
+#define FOS_TSK_LIMIT  ((fos_tsk_def *)&fs_tsk$$Limit)
+/* num for limit */
+#define FOS_TSK_NUM     (&fs_tsk$$Limit-&fs_tsk$$Base)
 /*----------end---------*/
 #define __INIT __attribute__((unused, section("fs_vmn")))
 #define FOS_INODE_REGISTER(name,init,config,ops,st)                            \
@@ -105,8 +140,19 @@ __INIT =                                                                       \
 	ops,    /* file ops */                                                       \
 	st      /* setting set up seq and type */                                    \
 }/* they will take 20 Byte */                                                  \
+/* define s thread and task */
+#define FOS_TSK_REGISTER(entrance,prioroty,period)                             \
+static fos_tsk_def  __FS_TSK_##entrance                                        \
+__attribute__((unused, section("fs_tsk"))) =                                   \
+{                                                                              \
+	(void *)0,                                                                   \
+  entrance,                                                                    \
+	period,                                                                      \
+	prioroty,                                                                    \
+}
 /* functions decleare */
 int fs_system_initialization(void);
+void run_thead_priority_idle(void);
 /* end of files */
 #endif
 

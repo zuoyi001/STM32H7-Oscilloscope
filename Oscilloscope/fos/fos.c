@@ -28,7 +28,7 @@ int fs_system_initialization(void)
 	/* ret */
 	int ret = FS_ERR;
 	/* init seq */
-	for( int i = 0 ; i < FOS_PRIORITY ; i ++ )
+	for( int i = 0 ; i < FOS_PRIORITY_MAX ; i ++ )
 	{
 		/* init all need init node */
 		for( const inode_vmn * base = FOS_VMN_BASE ; 
@@ -45,7 +45,7 @@ int fs_system_initialization(void)
 		}
 	}
 	/* config */
-	for( int i = 0 ; i < FOS_PRIORITY ; i ++ )
+	for( int i = 0 ; i < FOS_PRIORITY_MAX ; i ++ )
 	{
 		/* init all need init node */
 		for( const inode_vmn * base = FOS_VMN_BASE ; 

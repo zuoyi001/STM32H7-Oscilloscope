@@ -34,6 +34,7 @@ extern "C" {
 #include "stm32f4xx_hal_sdram.h"
 #include "stm32f4xx_ll_fmc.h"
 #include "stm32f4xx_hal_dma2d.h"
+#include "stm32f4xx_hal_tim.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 

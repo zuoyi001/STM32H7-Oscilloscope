@@ -97,7 +97,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+		run_thead_priority_idle();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

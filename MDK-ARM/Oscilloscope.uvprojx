@@ -373,7 +373,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--keep __FS_*;--keep __FS_SHELL_*</Misc>
+            <Misc>--keep __FS_*;--keep __FS_TSK_*</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -533,6 +533,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\fos\fos.c</FilePath>
             </File>
+            <File>
+              <FileName>fos_tsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fos_tsk.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -572,6 +577,11 @@
               <FileName>gui_dev.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\gui\gui_dev.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_tsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui_tsk.c</FilePath>
             </File>
           </Files>
         </Group>
