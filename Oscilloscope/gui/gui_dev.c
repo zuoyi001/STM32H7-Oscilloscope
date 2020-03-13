@@ -24,15 +24,13 @@
 #include "gui_dev.h"
 #include "middle.h"
 #include "gui_cfg.h"
+#include "gui.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_INODE_REGISTER("gui_dev",gui_dev_init,gui_creater,0,0);
 /* structe the display msg */
 static gui_dev_def gui_dev_s;
 /* test data that will delete*/
 static unsigned char inited_flag = 0;
-
-/* for test dirctely create the gui */
-int create_grid_data(gui_dev_def * dev);
 /* gui_dev_init */
 static int gui_dev_init(void)
 {
@@ -57,7 +55,10 @@ static int gui_dev_init(void)
 /* static app and thread gui create */
 static int gui_creater(void)
 {
-	return create_grid_data(&gui_dev_s);
+	/* create the static init */
+	gui_static_creater();
+	/* init */
+	return FS_OK;
 }
 /* get gui_dev */
 gui_dev_def * get_gui_dev(void)

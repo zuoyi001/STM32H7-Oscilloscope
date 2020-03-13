@@ -568,6 +568,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\osc\osc.c</FilePath>
             </File>
+            <File>
+              <FileName>osc_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_ui.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -582,6 +587,16 @@
               <FileName>gui_tsk.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\gui\gui_tsk.c</FilePath>
+            </File>
+            <File>
+              <FileName>win.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\win.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui.c</FilePath>
             </File>
           </Files>
         </Group>
