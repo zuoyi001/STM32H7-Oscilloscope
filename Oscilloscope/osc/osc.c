@@ -22,6 +22,8 @@
 #include "display_dev.h"
 #include "math.h"
 #include "osc.h"
+#include "gui.h"
+#include "fos.h"
 /* Includes ------------------------------------------------------------------*/
 #define VERTICAL_GRID_NUM      (8)
 #define HORIZONTAL_GRID_NUM    (10)
@@ -279,8 +281,82 @@ int create_grid_data(gui_dev_def * dev)
 /* end of func */	
 	return 0;
 }
+/* draw group win */
+int draw_group_win(gui_dev_def * dev,gui_info_def * info)
+{
+	/* size and corner dis */
+	const unsigned short mod0 = 0x0364;
+	const unsigned short mod1 = 0x4630;
+	const unsigned short mod2 = 0x0C62;
+	const unsigned short mod3 = 0x26C0;
+  /* calutie and ending pos */
+	unsigned short  pos_x = info->x , pos_y = info->y;
+  /* calutie and ending pos */
+	unsigned short pos_x_end = info->x_end , pos_end_y = info->y_end;
+  /* at circle mode create gui */
+	for( int i = 0 ; i < pos_end_y - 2 ; i ++ )
+	{
+		for( int j = 0 ; j < pos_x_end - 2 ; j ++ )
+		{
+			if( i == 0 && j == 0 )
+			{
+			}
+			else if( i == 0 && (j == pos_x_end - 2 - 1) )
+			{
 
+			}
+			else if( (i == pos_end_y - 2 - 1) && j == 0 )
+			{
 
+			}
+			else if( (i == pos_end_y - 2 - 1) && (j == pos_x_end - 2 - 1) )
+			{
+			}
+			else
+			{
+				dev->set_point( j + pos_x + 1 ,pos_y + i + 1,COLOR_GRID_AREA_BG);
+			}
+		}
+	}
+  /* corner size */
+	for( int i = 0 ; i < 16 ; i ++ )
+	{
+		/* left */
+		if( ( mod0  << i ) & 0x8000 )
+		{
+			dev->set_point( i % 4 + pos_x ,i / 4 + pos_y,COLOR_GRID_POINT);
+		}
+		/* left down */
+		if( ( mod1  << i ) & 0x8000 )
+		{
+			dev->set_point( i % 4 + pos_x ,i / 4 + pos_y + pos_end_y - 4 ,COLOR_GRID_POINT);
+		}
+    /* right up */
+		if( ( mod2  << i ) & 0x8000 )
+		{
+			dev->set_point( i % 4 + pos_x + pos_x_end - 4 ,i / 4 + pos_y,COLOR_GRID_POINT);
+		}
+		/* right down */
+		if( ( mod3  << i ) & 0x8000 )
+		{
+			dev->set_point( i % 4 + pos_x + pos_x_end - 4 ,i / 4 + pos_y + pos_end_y - 4,COLOR_GRID_POINT);
+		}
+	}
+	/* line up and down */
+	for( int i = 0 ; i < pos_x_end - 8 ; i ++ )
+	{
+		dev->set_point(pos_x + 4 + i , pos_y , COLOR_GRID_POINT);
+		dev->set_point(pos_x + 4 + i , pos_y + pos_end_y - 1, COLOR_GRID_POINT);
+	}
+  /* line left and right */
+	for( int i = 0 ; i < pos_end_y - 8 ; i ++ )
+	{
+		dev->set_point(pos_x , pos_y + 4 + i , COLOR_GRID_POINT);
+		dev->set_point(pos_x + pos_x_end - 1, pos_y + 4 + i , COLOR_GRID_POINT);
+	}	
+	/* return */
+	return FS_OK;
+}
 
 
 

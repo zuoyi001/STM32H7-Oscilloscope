@@ -26,6 +26,7 @@
 /* Includes ------------------------------------------------------------------*/
 static int osc_create_ui(void);
 static void osc_main_draw(struct gui_info *info);
+static void osc_group_draw(struct gui_info *info);
 /* Private includes ----------------------------------------------------------*/
 
 #endif

@@ -28,11 +28,18 @@
 FOS_INODE_REGISTER("osc_ui",osc_create_ui,0,0,1);
 /* define win */
 window_def win_main;
+window_def win_group0;
+window_def win_group1;
+window_def win_group2;
+window_def win_group3;
+window_def win_group4;
+window_def win_group5;
 /* gui dev */
 static gui_dev_def * dev;
-
+#if 0
 void draw_hz(const char * hzd,unsigned short x,unsigned short y);
 const char * find_hz(char * da);
+#endif
 /* osc create ui */
 static int osc_create_ui(void)
 {
@@ -47,6 +54,60 @@ static int osc_create_ui(void)
 	win_main.msg.draw = osc_main_draw;
 	/*--------------*/
 	gui_win_creater(&win_main);
+	/* create the group */
+	win_group0.msg.x = 1;
+	win_group0.msg.y = dev->height - 22 - 4;
+	win_group0.msg.x_end = dev->width - 3;
+	win_group0.msg.y_end = 22;
+	/* set callback */
+	win_group0.msg.draw = osc_group_draw;
+	/* create */
+  gui_win_creater(&win_group0);
+	/* create the group */
+	win_group1.msg.x = 1;
+	win_group1.msg.y = dev->height - 22*2 - 4 - 1;
+	win_group1.msg.x_end = (unsigned short)(((float)347 / ( float)790) * (dev->width -10));
+	win_group1.msg.y_end = 22;
+	/* set callback */
+	win_group1.msg.draw = osc_group_draw;
+	/* create */
+	gui_win_creater(&win_group1);	
+	/* create the group */
+	win_group2.msg.x = win_group1.msg.x_end + 4;
+	win_group2.msg.y = dev->height - 22*2 - 4 - 1;
+	win_group2.msg.x_end = (unsigned short)(((float)202 / ( float)790) * (dev->width - 10));
+	win_group2.msg.y_end = 22;
+	/* set callback */
+	win_group2.msg.draw = osc_group_draw;
+	/* create */
+	gui_win_creater(&win_group2);		
+	/* create the group */
+	win_group3.msg.x = win_group2.msg.x + win_group2.msg.x_end + 4;
+	win_group3.msg.y = dev->height - 22*2 - 4 - 1;
+	win_group3.msg.x_end = (unsigned short)(((float)241 / ( float)790) * (dev->width - 10) );
+	win_group3.msg.y_end = 22;
+	/* set callback */
+	win_group3.msg.draw = osc_group_draw;
+	/* create */
+	gui_win_creater(&win_group3);		
+	/* create the group */
+	win_group4.msg.x = 1;
+	win_group4.msg.y = dev->height - 62 - 6 - 22*2 - 4 - 1;
+	win_group4.msg.x_end = win_group1.msg.x_end;
+	win_group4.msg.y_end = 62;
+	/* set callback */
+	win_group4.msg.draw = osc_group_draw;
+	/* create */
+	gui_win_creater(&win_group4);		
+	/* create the group */
+	win_group5.msg.x = win_group2.msg.x;
+	win_group5.msg.y = dev->height - 62 - 6 - 22*2 - 4 - 1;
+	win_group5.msg.x_end = win_group1.msg.x_end;
+	win_group5.msg.y_end = 62;
+	/* set callback */
+	win_group5.msg.draw = osc_group_draw;
+	/* create */
+	gui_win_creater(&win_group5);			
 	/* return */
 	return FS_OK;
 }
@@ -57,100 +118,14 @@ static void osc_main_draw(struct gui_info *info)
 	(void)info;
 	/* create lisn */
 	create_grid_data(dev);
-	unsigned short cnt = 0;
-	
-  const char * pod ;
-	
-	pod	= find_hz("Å£");
-	draw_hz(pod,cnt,0);
-	cnt += 16;
-
-	pod	= find_hz("¸ç");
-	draw_hz(pod,cnt,0);
-	cnt += 16;
-
-	pod	= find_hz("Éµ");
-	draw_hz(pod,cnt,0);
-	cnt += 16;
-
-	pod	= find_hz("±Æ");
-	draw_hz(pod,cnt,0);
-	cnt += 16;	
-	
-	pod	= find_hz("Ìì");
-	draw_hz(pod,cnt,0);
-	cnt += 16;
-
-	pod	= find_hz("²Å");
-	draw_hz(pod,cnt,0);
-	cnt += 16;
-	
-	pod	= find_hz("ºÇ");
-	draw_hz(pod,cnt,0);
-	cnt += 16;
-	
-	pod	= find_hz("Å¶");
-	draw_hz(pod,cnt,0);
-	cnt += 16;	
-	
-	pod	= find_hz("·å");
-	draw_hz(pod,cnt,0);
-	cnt += 16;	
 	/* end if data */
 }
-
-/* test */
-const unsigned char hz_dd[32] = {
-	0x20,
-0x20,
-0x20,
-0x20,
-0x24,
-0x20,
-0x26,
-0x20,
-0x25,
-0xe0,
-0xfc,
-0xa0,
-0x24,
-0x20,
-0x27,
-0xff,
-0x24,
-0x20,
-0xfc,
-0x60,
-0x24,
-0xa0,
-0x27,
-0x20,
-0x25,
-0x20,
-0x24,
-0x20,
-0x20,
-0x20,
-0x00,
-0x00,
-};
-
-const char * find_hz(char * da)
+/* draw group */
+static void osc_group_draw(struct gui_info *info)
 {
-	
-	unsigned short * tm = (unsigned short *)da;
-	
-	for( int i = 0 ; i < sizeof(HZ_INDEX) / sizeof(HZ_INDEX[0]) ; i ++ )
-	{
-		if( tm[0] == HZ_INDEX[i] )
-		{
-			return (const char *)HZ_DATAX[i];
-		}
-	}
-	
-	return 0;
+	draw_group_win(dev,info);
 }
-
+#if 0
 void draw_hz(const char * hzd,unsigned short x,unsigned short y)
 {
 	int ti = 0;
@@ -166,7 +141,7 @@ void draw_hz(const char * hzd,unsigned short x,unsigned short y)
 		}
 	}
 }
-
+#endif
 
 
 

@@ -63,7 +63,7 @@ int gui_static_creater(void)
 int gui_win_creater(window_def * win)
 {
 	/* juddge wherere it is the ORIGINAL_PARENT */
-	if( win != ORIGINAL_PARENT )
+	if( original_win == ORIGINAL_PARENT )
 	{
 		/* return error . can not find the original win */
 		original_win = win;

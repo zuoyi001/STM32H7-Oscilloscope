@@ -25,7 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 
 #include "gui_dev.h"
-
+#include "gui.h"
 /* Define the area information occupied by the drawing area of the current screen */
 typedef struct
 {
@@ -45,5 +45,38 @@ typedef struct
 
 /* create grid data */
 int create_grid_data(gui_dev_def * dev);
+int draw_group_win(gui_dev_def * dev,gui_info_def * info);
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
