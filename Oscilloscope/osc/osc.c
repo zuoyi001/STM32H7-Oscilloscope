@@ -24,6 +24,8 @@
 #include "osc.h"
 #include "gui.h"
 #include "fos.h"
+/* Private includes ----------------------------------------------------------*/
+#include "osc_icon.h"
 /* Includes ------------------------------------------------------------------*/
 #define VERTICAL_GRID_NUM      (8)
 #define HORIZONTAL_GRID_NUM    (10)
@@ -463,7 +465,15 @@ int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
 	/* return */
 	return FS_OK;
 }
+/* create icon */
+int osc_create_ch1_micon(gui_info_def * parent_info,gui_info_def * cinfo)
+{
+	/* color tmp */
+	unsigned short * color = (unsigned short *)CH1_ICON_M;
+  /* draw */
+	
 
+}
 
 
 

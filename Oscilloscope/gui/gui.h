@@ -28,6 +28,8 @@
 /* gui level */
 #define GUI_SAME_LEVEL   (0)
 #define GUI_CHILD_LEVEL  (1)
+/* decleare */
+typedef struct win window_def;
 /* Message type */
 typedef enum
 {
@@ -54,7 +56,7 @@ typedef struct gui_info
 	void (*draw)(struct gui_info *);
 	/*  Message response */
 	void (*msg_response)(gui_msg_type msg);
-	/* */
+	/* end */
 }gui_info_def;
 /* widget strucr def */
 typedef struct widget
@@ -64,6 +66,9 @@ typedef struct widget
 	/* common define */
 	gui_info_def msg;
 	/* draw methed */
+	window_def * parent;
+	/* dev */
+	gui_dev_def * dev;	
 	/* end of func */
 }widget_def;
 /* win test */
@@ -75,6 +80,8 @@ typedef struct win
 	widget_def * wchild;
 	/* msg */
 	gui_info_def msg;
+	/* dev */
+	gui_dev_def * dev;	
 	/* window off */
 }window_def;
 /* end if file */
