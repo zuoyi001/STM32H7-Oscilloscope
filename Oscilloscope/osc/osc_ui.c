@@ -34,6 +34,7 @@ window_def win_group2;
 window_def win_group3;
 window_def win_group4;
 window_def win_group5;
+window_def win_menu;
 /* gui dev */
 static gui_dev_def * dev;
 #if 0
@@ -90,24 +91,37 @@ static int osc_create_ui(void)
 	win_group3.msg.draw = osc_group_draw;
 	/* create */
 	gui_win_creater(&win_group3);		
-	/* create the group */
-	win_group4.msg.x = 1;
-	win_group4.msg.y = dev->height - 62 - 6 - 22*2 - 4 - 1;
-	win_group4.msg.x_end = win_group1.msg.x_end;
-	win_group4.msg.y_end = 62;
+	/* 480 * 272 do not create the follow mesure group */
+	if( dev->width > 480 && dev->width > 272 )
+	{
+		/* create the group */
+		win_group4.msg.x = 1;
+		win_group4.msg.y = dev->height - 62 - 6 - 22*2 - 4 - 1;
+		win_group4.msg.x_end = win_group1.msg.x_end;
+		win_group4.msg.y_end = 62;
+		/* set callback */
+		win_group4.msg.draw = osc_group_draw;
+		/* create */
+		gui_win_creater(&win_group4);		
+		/* create the group */
+		win_group5.msg.x = win_group2.msg.x;
+		win_group5.msg.y = dev->height - 62 - 6 - 22*2 - 4 - 1;
+		win_group5.msg.x_end = win_group1.msg.x_end;
+		win_group5.msg.y_end = 62;
+		/* set callback */
+		win_group5.msg.draw = osc_group_draw;
+		/* create */
+		gui_win_creater(&win_group5);			
+	}
+	/* create the menu win ui */
+	win_menu.msg.x_end = (unsigned short)(((float)107 / (float)800)*dev->width);
+	win_menu.msg.y_end = dev->height - 22*2 - 1 - 1 - 4;
+	win_menu.msg.x = dev->width - win_menu.msg.x_end;
+	win_menu.msg.y = 0;
 	/* set callback */
-	win_group4.msg.draw = osc_group_draw;
+	win_menu.msg.draw = osc_menu_win_draw;
 	/* create */
-	gui_win_creater(&win_group4);		
-	/* create the group */
-	win_group5.msg.x = win_group2.msg.x;
-	win_group5.msg.y = dev->height - 62 - 6 - 22*2 - 4 - 1;
-	win_group5.msg.x_end = win_group1.msg.x_end;
-	win_group5.msg.y_end = 62;
-	/* set callback */
-	win_group5.msg.draw = osc_group_draw;
-	/* create */
-	gui_win_creater(&win_group5);			
+	gui_win_creater(&win_menu);			
 	/* return */
 	return FS_OK;
 }
@@ -124,6 +138,11 @@ static void osc_main_draw(struct gui_info *info)
 static void osc_group_draw(struct gui_info *info)
 {
 	draw_group_win(dev,info);
+}
+/* static draw menu win */
+static void osc_menu_win_draw(struct gui_info *info)
+{
+	draw_menu_win(dev,info);
 }
 #if 0
 void draw_hz(const char * hzd,unsigned short x,unsigned short y)

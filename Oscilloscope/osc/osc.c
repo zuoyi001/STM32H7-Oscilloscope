@@ -38,6 +38,10 @@
 #define COLOR_GRID_POINT       (RGB(199, 195, 199))
 #define COLOR_GRID_AREA_BG     (RGB(7, 3, 7))
 #define COLOR_BACKGROUND       (RGB(63, 75, 151))
+/* menu win color table */
+#define COLOR_MENU_ONE         (RGB(183, 83, 7))	/* color table */
+#define COLOR_MENU_TWO         (RGB(255, 155, 7))
+#define COLOR_MENU_THR         (RGB(47, 35, 23))
 /* draw area defines */
 static draw_area_def draw_area;
 /* define some nes message */
@@ -357,9 +361,108 @@ int draw_group_win(gui_dev_def * dev,gui_info_def * info)
 	/* return */
 	return FS_OK;
 }
-
-
-
+/* draw the menu window */
+int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
+{
+	/* transfer the menu size */
+	unsigned short MENU_WIDTH = info->x_end;//107;
+	unsigned short MENU_HEIGHT = info->y_end;//430;
+	/* start pos */
+	unsigned short pos_x_m = info->x; //dev->width - MENU_WIDTH;
+	unsigned short pos_y_m = info->y; //0
+	/* draw point data */
+	const unsigned char MENU_LT_0[5] = { 0xC0,0x80,0x00,0x07,0x0f };/*63.75.151*/
+	const unsigned char MENU_LT_1[5] = { 0x3f,0x60,0xD0,0xA0,0x80 };/* 183,83,7 */
+	const unsigned char MENU_LT_2[5] = { 0x00,0x1F,0x20,0x40,0x40 };/* 255,155,7*/
+	const unsigned char MENU_LT_3[5] = { 0x00,0x00,0x0F,0x18,0x30 };/* 47,35,23 */
+	/* draw point data */
+	const unsigned short MENU_LB_0 = 0x008C;
+	const unsigned short MENU_LB_1 = 0x8C63;
+	const unsigned short MENU_LB_2 = 0x6310;
+	const unsigned short MENU_LB_3 = 0x1000;
+	 /*fill the rect */
+#if HARDWARE_ACCEL_SUPPLY
+  /* fill rect */
+	dev->fill_rect( pos_x_m , pos_y_m , 
+	                pos_x_m + MENU_WIDTH - 1 , pos_y_m + MENU_HEIGHT - 1,
+	                COLOR_BACKGROUND );//background color
+#else
+	/* draw points one by one */
+	for (int i = 0; i < MENU_WIDTH; i++)
+	{
+		for (int j = 0; j < MENU_HEIGHT; j++)
+		{
+			dev->set_point(pos_x_m + i , pos_y_m + j, COLOR_BACKGROUND);
+		}
+	}	
+#endif
+	/* left top */
+	for( int i = 0; i < 5*8; i++ )
+	{
+		if ((MENU_LT_0[i / 8] << (i % 8)) & 0x80)
+		{
+			dev->set_point(pos_x_m + i % 8, pos_y_m + i / 8, COLOR_BACKGROUND);
+		}
+		if ((MENU_LT_1[i / 8] << (i % 8)) & 0x80)
+		{
+			dev->set_point(pos_x_m + i % 8, pos_y_m + i / 8, COLOR_MENU_ONE);
+		}
+		if ((MENU_LT_2[i / 8] << (i % 8)) & 0x80)
+		{
+			dev->set_point(pos_x_m + i % 8, pos_y_m + i / 8, COLOR_MENU_TWO);
+		}
+		if ((MENU_LT_3[i / 8] << (i % 8)) & 0x80)
+		{
+			dev->set_point(pos_x_m + i % 8, pos_y_m + i / 8, COLOR_MENU_THR);
+		}
+	}
+	/* left bottom */
+	for( int i = 0; i < 4 * 4; i++ )
+	{
+		if ((MENU_LB_0 << i) & 0x8000)
+		{
+			dev->set_point(pos_x_m + i % 4, pos_y_m + i / 4 + MENU_HEIGHT - 4, COLOR_BACKGROUND);
+		}
+		if ((MENU_LB_1 << i) & 0x8000)
+		{
+			dev->set_point(pos_x_m + i % 4, pos_y_m + i / 4 + MENU_HEIGHT - 4, COLOR_MENU_ONE);
+		}
+		if ((MENU_LB_2 << i) & 0x8000)
+		{
+			dev->set_point(pos_x_m + i % 4, pos_y_m + i / 4 + MENU_HEIGHT - 4, COLOR_MENU_TWO);
+		}
+		if ((MENU_LB_3 << i) & 0x8000)
+		{
+			dev->set_point(pos_x_m + i % 4, pos_y_m + i / 4 + MENU_HEIGHT - 4, COLOR_MENU_THR);
+		}
+	}
+	/* top line */
+	for (int i = 0; i < MENU_WIDTH - 8; i++)
+	{
+		dev->set_point(pos_x_m + i + 8, pos_y_m, COLOR_MENU_ONE);
+		dev->set_point(pos_x_m + i + 8, pos_y_m + 1, COLOR_MENU_TWO);
+		dev->set_point(pos_x_m + i + 8, pos_y_m + 2, COLOR_MENU_THR);
+	}
+	/* bottom line */
+	for (int i = 0; i < MENU_WIDTH - 4; i++)
+	{
+		dev->set_point(pos_x_m + i + 4, pos_y_m + MENU_HEIGHT - 1, COLOR_MENU_ONE);
+		dev->set_point(pos_x_m + i + 4, pos_y_m + MENU_HEIGHT - 2 , COLOR_MENU_TWO);
+		dev->set_point(pos_x_m + i + 4, pos_y_m + MENU_HEIGHT - 3, COLOR_MENU_THR);
+	}
+	/* left lines */
+	for (int i = 0; i < MENU_HEIGHT - 4 - 5; i++)
+	{
+		dev->set_point(pos_x_m, pos_y_m + i + 5, COLOR_MENU_ONE);
+		dev->set_point(pos_x_m + 1, pos_y_m + i + 5, COLOR_MENU_TWO);
+		dev->set_point(pos_x_m + 2, pos_y_m + i + 5, COLOR_MENU_THR);
+	}
+	/* ex two point */
+	dev->set_point(pos_x_m + 3, pos_y_m + MENU_HEIGHT - 5, COLOR_MENU_THR);
+	dev->set_point(pos_x_m + 3 + 1, pos_y_m + MENU_HEIGHT - 5 + 1, COLOR_MENU_THR);	
+	/* return */
+	return FS_OK;
+}
 
 
 

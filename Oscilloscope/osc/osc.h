@@ -46,6 +46,7 @@ typedef struct
 /* create grid data */
 int create_grid_data(gui_dev_def * dev);
 int draw_group_win(gui_dev_def * dev,gui_info_def * info);
+int draw_menu_win( gui_dev_def * dev,gui_info_def * info );
 
 #endif
 
