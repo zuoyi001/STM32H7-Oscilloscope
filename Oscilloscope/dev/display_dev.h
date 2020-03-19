@@ -25,10 +25,11 @@
 #ifndef __DISPLAY_DEV_H__
 #define __DISPLAY_DEV_H__
 
+#ifndef _VC_SIMULATOR_
 /* RGB */
 #define RGB(r,g,b) (( ( r & 0xF8 ) << 8 ) | ( ( g & 0xFC ) << 3 ) | ( ( b& 0xF8 ) >> 3 ))
 /* lcd and vga dev struct */
-
+#endif
 typedef struct
 {
 	/* Characters to display when setting */

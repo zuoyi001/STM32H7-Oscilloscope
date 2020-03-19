@@ -17,21 +17,25 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
-#ifndef __OSC_UI_H__
-#define __OSC_UI_H__
-
-#include "gui.h"
-
+#include "StdAfx.h"
 /* Includes ------------------------------------------------------------------*/
-int osc_create_ui(void);
-void osc_create_button(struct widget * widget);
-void osc_create_ch1_micon(struct widget * widget);
-void osc_create_ch2_micon(struct widget * widget);
-static void osc_main_draw(window_def * win);
-static void osc_group_draw(window_def * win);
-static void osc_menu_win_draw(window_def * win);
-/* Private includes ----------------------------------------------------------*/
 
-#endif
+
+
+extern CDC * pdc;
+
+
+
+void set_vc_point(unsigned short x,unsigned short y,unsigned int color)
+{
+	pdc->SetPixel(x,y,color);
+}
+
+
+
+
+
+
+
+
 

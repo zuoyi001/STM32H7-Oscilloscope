@@ -46,8 +46,8 @@ typedef struct
 /* function declares */
 
 gui_dev_def * get_gui_dev(void);
-static int gui_dev_init(void);
-static int gui_creater(void);
+int gui_dev_init(void);
+int gui_creater(void);
 /* end of file */
 
 

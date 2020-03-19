@@ -48,14 +48,10 @@ typedef struct gui_info
 	/* size and pos */
 	unsigned short x;
 	unsigned short y;
-	unsigned short x_end;
-	unsigned short y_end;
+	unsigned short x_size;
+	unsigned short y_size;
 	/* widget flags */
 	unsigned short wflags;
-	/* draw methed */
-	void (*draw)(struct gui_info *);
-	/*  Message response */
-	void (*msg_response)(gui_msg_type msg);
 	/* end */
 }gui_info_def;
 /* widget strucr def */
@@ -68,7 +64,11 @@ typedef struct widget
 	/* draw methed */
 	window_def * parent;
 	/* dev */
-	gui_dev_def * dev;	
+	gui_dev_def * dev;
+	/* draw methed */
+	void (*draw)(struct widget *);
+	/*  Message response */
+	void (*msg_response)(struct widget *,gui_msg_type msg);
 	/* end of func */
 }widget_def;
 /* win test */
@@ -82,6 +82,10 @@ typedef struct win
 	gui_info_def msg;
 	/* dev */
 	gui_dev_def * dev;	
+	/* draw methed */
+	void (*draw)(window_def *);
+	/*  Message response */
+	void (*msg_response)(window_def *,gui_msg_type msg);
 	/* window off */
 }window_def;
 /* end if file */
@@ -89,7 +93,7 @@ typedef struct win
 /* Function declaration */
 int gui_static_creater(void);
 int gui_win_creater(window_def * win);
-int gui_widget_creater(window_def * parent , widget_def * widget );
+int gui_widget_creater( widget_def * widget );
 /* end of files */
 #endif
 

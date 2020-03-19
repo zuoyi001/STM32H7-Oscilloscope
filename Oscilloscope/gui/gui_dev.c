@@ -17,7 +17,7 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
+#include "stdafx.h"
 /* Includes ------------------------------------------------------------------*/
 #include "fos.h"
 #include "display_dev.h"
@@ -25,6 +25,10 @@
 #include "middle.h"
 #include "gui_cfg.h"
 #include "gui.h"
+#ifdef _VC_SIMULATOR_
+/* */
+void set_vc_point(unsigned short x,unsigned short y,unsigned int color);
+#endif
 /* Private includes ----------------------------------------------------------*/
 FOS_INODE_REGISTER("gui_dev",gui_dev_init,gui_creater,0,0);
 /* structe the display msg */
@@ -32,8 +36,9 @@ static gui_dev_def gui_dev_s;
 /* test data that will delete*/
 static unsigned char inited_flag = 0;
 /* gui_dev_init */
-static int gui_dev_init(void)
+int gui_dev_init(void)
 {
+#ifndef _VC_SIMULATOR_
 	/* get dev info */
 	display_info_def * dev_info = get_display_dev_info();
 	/* get width and height */
@@ -41,7 +46,15 @@ static int gui_dev_init(void)
 	gui_dev_s.height = dev_info->display_dev->pheight;
 	/* configrate the other funcs */
 	gui_dev_s.set_point = set_point;
-	gui_dev_s.read_point = get_point;
+	gui_dev_s.read_point = get_point;	
+#else
+	/* get width and height */
+	gui_dev_s.width = 800;//dev_info->display_dev->pwidth;
+	gui_dev_s.height = 480;//dev_info->display_dev->pheight;
+		/* configrate the other funcs */
+	gui_dev_s.set_point = set_vc_point;
+	gui_dev_s.read_point = 0;
+#endif
 #if HARDWARE_ACCEL_SUPPLY		
 	gui_dev_s.fill_rect = fill_rect;
 	gui_dev_s.fill_color = fill_color;
@@ -53,7 +66,7 @@ static int gui_dev_init(void)
 	return 0;
 }
 /* static app and thread gui create */
-static int gui_creater(void)
+int gui_creater(void)
 {
 	/* create the static init */
 	gui_static_creater();

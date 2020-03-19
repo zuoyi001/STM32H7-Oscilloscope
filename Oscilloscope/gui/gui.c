@@ -17,7 +17,7 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
+#include "stdafx.h"
 /* Includes ------------------------------------------------------------------*/
 #include "fos.h"
 #include "gui.h"
@@ -34,26 +34,26 @@ int gui_static_creater(void)
 	for( window_def * base = original_win ; base != 0 ; base = base->win_child )
 	{
 		/* if use the default draw function */
-		if( base->msg.draw != 0 )
+		if( base->draw != 0 )
 		{
-			base->msg.draw(&base->msg);
+			base->draw(base);
 		}
 		else
 		{
 			/* can not supply now*/
 		}
-	}
-	/* draw the widget */
-	for( widget_def * base = original_win->wchild ; base != 0 ; base = base->peer_linker)
-	{
-		/* if use the default draw function */
-		if( base->msg.draw != 0 )
+		/* create widget */
+		for( widget_def * wbase = base->wchild ; wbase != 0 ; wbase = wbase->peer_linker)
 		{
-			base->msg.draw(&base->msg);
-		}
-		else
-		{
-			/* can not supply now*/
+			/* if use the default draw function */
+			if( wbase->draw != 0 )
+			{
+				wbase->draw(wbase);
+			}
+			else
+			{
+				/* can not supply now*/
+			}
 		}
 	}
 	/* return */
@@ -84,23 +84,33 @@ int gui_win_creater(window_def * win)
 	return FS_OK;
 }
 /* create widget */
-int gui_widget_creater(window_def * parent , widget_def * widget )
+int gui_widget_creater(widget_def * widget )
 {
 	/* juddge wherere it is the ORIGINAL_PARENT */
-	if( parent == ORIGINAL_PARENT )
+	if( widget->parent == ORIGINAL_PARENT )
 	{
 		/* return error */
 		return FS_ERR;
 	}
 	/* set the original linker */
-	widget_def * base = parent->wchild;
+	if( widget->parent->wchild == ORIGINAL_PARENT )
+	{
+		/* set */
+		widget_def ** base = &widget->parent->wchild;
+		/* set base */
+		*base = widget;
+		/* return OK */
+		return FS_OK;
+	}
+	/* get the linker tail */
+	widget_def * wbase = widget->parent->wchild;
 	/* set up widget */
-	for(  ; base != 0 ; base = base->peer_linker )
+	for(  ; wbase->peer_linker != 0 ; wbase = wbase->peer_linker )
 	{
 		/* find the pos . nothing to do*/
 	}
-	/* set */
-	base = widget;
+	/* set linker */
+	wbase->peer_linker = widget;
 	/* return OK */
 	return FS_OK;
 }

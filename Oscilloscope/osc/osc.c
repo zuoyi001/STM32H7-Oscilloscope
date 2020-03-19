@@ -17,7 +17,7 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
+#include "stdafx.h"
 /* Includes ------------------------------------------------------------------*/
 #include "display_dev.h"
 #include "math.h"
@@ -39,7 +39,7 @@
 /* THREE color */
 #define COLOR_GRID_POINT       (RGB(199, 195, 199))
 #define COLOR_GRID_AREA_BG     (RGB(7, 3, 7))
-#define COLOR_BACKGROUND       (RGB(63, 75, 151))
+#define COLOR_BACK_GROUND      (RGB(63, 75, 151))
 /* menu win color table */
 #define COLOR_MENU_ONE         (RGB(183, 83, 7))	/* color table */
 #define COLOR_MENU_TWO         (RGB(255, 155, 7))
@@ -49,7 +49,7 @@ static draw_area_def draw_area;
 /* define some nes message */
 static unsigned short EN,EM;
 #if !HARDWARE_ACCEL_SUPPLY /* no use without hardware accel */
-static unsigned short ENR,EMR;
+static unsigned short ENR,EMRR;
 #endif
 /* this param is for test that will be deleted soon */
 static unsigned char grid_init_flag = 0;
@@ -69,7 +69,7 @@ static int grid_grobal_data(unsigned short width, unsigned short height)
 	EM = ( height - TOP_REMAIN_PIXEL - 2 - BOTTOM_REMAIN_PIXEL ) / (VERTICAL_GRID_TOTAL);
   /* The remaining pixels on the far bottom of the screen */
 #if !HARDWARE_ACCEL_SUPPLY	
-	EMR = height - EM * (VERTICAL_GRID_TOTAL) - TOP_REMAIN_PIXEL - 1 - 1;
+	EMRR = height - EM * (VERTICAL_GRID_TOTAL) - TOP_REMAIN_PIXEL - 1 - 1;
 #endif
 	/* create ok or not */
 	if( EN == 0 || EM == 0 )
@@ -100,7 +100,7 @@ draw_area_def * get_draw_area_msg(void)
 	if( grid_init_flag == 0 )
 	{
 		/* reinit */
-		return (void *)(0) ; // not init yet 
+		return (draw_area_def *)(0) ; // not init yet 
 	}
 	/* return bat */
 	return &draw_area;
@@ -120,32 +120,32 @@ int create_grid_data(gui_dev_def * dev)
   /* sraw */
 #if HARDWARE_ACCEL_SUPPLY
 	/* clear all area with one color */
-	dev->clear_display_dev(COLOR_BACKGROUND);
+	dev->clear_display_dev(COLOR_BACK_GROUND);
 	/* if doesn't has the hardware accel */
 #else
-	for (int j = 0; j < dev->width; j++)
+	for (unsigned int j = 0; j < dev->height; j++)
 	{
 		for (int i = 0; i < LEFT_REMAIN_PIXEL; i++)
 		{
-			dev->set_point(i, j, COLOR_BACKGROUND);
+			dev->set_point(i, j, COLOR_BACK_GROUND);
 		}
 
 		for (int i = 0; i < ENR; i++)
 		{
-			dev->set_point(i + LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) +1 +1, j, COLOR_BACKGROUND);
+			dev->set_point(i + LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) +1 +1, j, COLOR_BACK_GROUND);
 		}
 	}
 /* draw other grid data */
-	for (int j = 0; j < dev->height; j++)
+	for (unsigned int j = 0; j < dev->width; j++)
 	{
 		for (int i = 0; i < TOP_REMAIN_PIXEL; i++)
 		{
-			dev->set_point(j, i, COLOR_BACKGROUND);
+			dev->set_point(j, i, COLOR_BACK_GROUND);
 		}
 /* draw other grid data */
-		for (int i = 0; i < EMR - 1; i++)
+		for (int i = 0; i < EMRR - 1; i++)
 		{
-			dev->set_point(j, i + TOP_REMAIN_PIXEL + 1 + 1 + 1 + EM * (VERTICAL_GRID_TOTAL), COLOR_BACKGROUND);
+			dev->set_point(j, i + TOP_REMAIN_PIXEL + 1 + 1 + 1 + EM * (VERTICAL_GRID_TOTAL), COLOR_BACK_GROUND);
 		}
 	}
 #endif
@@ -298,7 +298,7 @@ int draw_group_win(gui_dev_def * dev,gui_info_def * info)
   /* calutie and ending pos */
 	unsigned short  pos_x = info->x , pos_y = info->y;
   /* calutie and ending pos */
-	unsigned short pos_x_end = info->x_end , pos_end_y = info->y_end;
+	unsigned short pos_x_end = info->x_size , pos_end_y = info->y_size;
   /* at circle mode create gui */
 	for( int i = 0 ; i < pos_end_y - 2 ; i ++ )
 	{
@@ -367,8 +367,8 @@ int draw_group_win(gui_dev_def * dev,gui_info_def * info)
 int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
 {
 	/* transfer the menu size */
-	unsigned short MENU_WIDTH = info->x_end;//107;
-	unsigned short MENU_HEIGHT = info->y_end;//430;
+	unsigned short MENU_WIDTH = info->x_size;//107;
+	unsigned short MENU_HEIGHT = info->y_size;//430;
 	/* start pos */
 	unsigned short pos_x_m = info->x; //dev->width - MENU_WIDTH;
 	unsigned short pos_y_m = info->y; //0
@@ -387,14 +387,14 @@ int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
   /* fill rect */
 	dev->fill_rect( pos_x_m , pos_y_m , 
 	                pos_x_m + MENU_WIDTH - 1 , pos_y_m + MENU_HEIGHT - 1,
-	                COLOR_BACKGROUND );//background color
+	                COLOR_BACK_GROUND );//background color
 #else
 	/* draw points one by one */
 	for (int i = 0; i < MENU_WIDTH; i++)
 	{
 		for (int j = 0; j < MENU_HEIGHT; j++)
 		{
-			dev->set_point(pos_x_m + i , pos_y_m + j, COLOR_BACKGROUND);
+			dev->set_point(pos_x_m + i , pos_y_m + j, COLOR_BACK_GROUND);
 		}
 	}	
 #endif
@@ -403,7 +403,7 @@ int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
 	{
 		if ((MENU_LT_0[i / 8] << (i % 8)) & 0x80)
 		{
-			dev->set_point(pos_x_m + i % 8, pos_y_m + i / 8, COLOR_BACKGROUND);
+			dev->set_point(pos_x_m + i % 8, pos_y_m + i / 8, COLOR_BACK_GROUND);
 		}
 		if ((MENU_LT_1[i / 8] << (i % 8)) & 0x80)
 		{
@@ -423,7 +423,7 @@ int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
 	{
 		if ((MENU_LB_0 << i) & 0x8000)
 		{
-			dev->set_point(pos_x_m + i % 4, pos_y_m + i / 4 + MENU_HEIGHT - 4, COLOR_BACKGROUND);
+			dev->set_point(pos_x_m + i % 4, pos_y_m + i / 4 + MENU_HEIGHT - 4, COLOR_BACK_GROUND);
 		}
 		if ((MENU_LB_1 << i) & 0x8000)
 		{
@@ -466,14 +466,259 @@ int draw_menu_win( gui_dev_def * dev,gui_info_def * info )
 	return FS_OK;
 }
 /* create icon */
-int osc_create_ch1_micon(gui_info_def * parent_info,gui_info_def * cinfo)
+void osc_create_ch1_micon(struct widget * widget)
 {
 	/* color tmp */
 	unsigned short * color = (unsigned short *)CH1_ICON_M;
-  /* draw */
-	
+	/* get parent win pos */
+	unsigned short parent_x = widget->parent->msg.x;
+	unsigned short parent_y = widget->parent->msg.y;
+	/* widget pos */
+	unsigned short pos_x = widget->msg.x;
+	unsigned short pos_y = widget->msg.y;
+	/* create */
+	for( int i = 0 ; i < 16 ; i ++ )
+	{
+		for( int j = 0 ; j < 32 ; j ++ )
+		{
+#ifndef _VC_SIMULATOR_
+			widget->dev->set_point(parent_x + pos_x + j , parent_y + pos_y + i , color[i*32+j]);
+#else
+			unsigned short tm = color[i*32+j];
 
+			widget->dev->set_point(parent_x + pos_x + j , parent_y + pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
+#endif
+		}
+	}
 }
+/* draw ch2_icon */
+void osc_create_ch2_micon(struct widget * widget)
+{
+	/* color tmp */
+	unsigned short * color = (unsigned short *)CH2_ICON_M;
+	/* get parent win pos */
+	unsigned short parent_x = widget->parent->msg.x;
+	unsigned short parent_y = widget->parent->msg.y;
+	/* widget pos */
+	unsigned short pos_x = widget->msg.x;
+	unsigned short pos_y = widget->msg.y;
+	/* create */
+	for( int i = 0 ; i < 16 ; i ++ )
+	{
+		for( int j = 0 ; j < 32 ; j ++ )
+		{
+#ifndef _VC_SIMULATOR_
+			widget->dev->set_point(parent_x + pos_x + j , parent_y + pos_y + i , color[i*32+j]);
+#else
+			unsigned short tm = color[i*32+j];
+
+			widget->dev->set_point(parent_x + pos_x + j , parent_y + pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
+#endif
+		}
+	}
+}
+/* create button */
+void osc_create_button(struct widget * widget)
+{
+	/* create btn */
+	/* define the btn size */
+  unsigned short MENU_BTN_WIDTH = widget->msg.x_size;//102;
+	unsigned short MENU_BTN_HEIGHT = widget->msg.y_size;//79;
+	/* define btn start pos */
+	unsigned short pos_btn_x = widget->msg.x ;//5
+	unsigned short pos_btn_y = widget->msg.y ;//24;
+	/* parent win size */
+	unsigned short pos_x_m = widget->parent->msg.x;
+	unsigned short pos_y_m = widget->parent->msg.y;
+	/* parent win size */
+#if 0
+	unsigned short parent_size_x = widget->parent->msg.x_size;
+	unsigned short parent_size_y = widget->parent->msg.y_size;
+#endif
+	/* btn data */
+	const unsigned char MENU_BTN_LT_0[3] = { 0xC8,0x00,0x00 };/*63.75.151*/
+	const unsigned char MENU_BTN_LT_1[3] = { 0x10,0x08,0x48 };/*143,195,255*/
+	const unsigned char MENU_BTN_LT_2[3] = { 0x03,0x64,0x80 };/*191,219,255*/
+	const unsigned char MENU_BTN_LT_3[3] = { 0x00,0x13,0x33 };/* 87,131,231 */
+	const unsigned char MENU_BTN_LT_4[3] = { 0x24,0x80,0x00 };/* 63,107,175*/
+	/* btn data */
+	const unsigned short MENU_BTN_LB_0 = 0x8700;/* 63,107,175*/
+	const unsigned short MENU_BTN_LB_1 = 0x4000;/*103,171,255*/
+	const unsigned short MENU_BTN_LB_2 = 0x3000;/*87,131,231 */
+	const unsigned short MENU_BTN_LB_3 = 0x08CE;/*63,75,151*/
+	const unsigned short MENU_BTN_LB_4 = 0x0031;/*39,51,95*/
+	/* create the background */
+#if HARDWARE_ACCEL_SUPPLY
+ /* fill rect */
+	widget->dev->fill_rect( pos_x_m + pos_btn_x + 2 , pos_y_m + pos_btn_y + 2 , 
+	                pos_x_m + pos_btn_x + 2 + MENU_BTN_WIDTH - 1 - 2,
+					pos_y_m + pos_btn_y + MENU_BTN_HEIGHT + 2 - 1 - 4,
+	                COLOR_BACK_GROUND );//background color
+#else
+	/* create one by one */
+	for (int i = 0; i < MENU_BTN_WIDTH - 2; i++)
+	{
+		for (int j = 0; j < MENU_BTN_HEIGHT - 4; j++)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + 2 + i, pos_y_m + pos_btn_y + j + 2, RGB(87, 131, 231));
+		}
+	}
+#endif
+	/* left top */
+	for (int i = 0; i < 4 * 6; i++)
+	{
+		if ((MENU_BTN_LT_0[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, COLOR_BACK_GROUND);
+		}
+		if ((MENU_BTN_LT_1[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(143, 195, 255));
+		}
+		if ((MENU_BTN_LT_2[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(191, 219, 255));
+		}
+		if ((MENU_BTN_LT_3[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(87, 131, 231));
+		}
+		if ((MENU_BTN_LT_4[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(63, 107, 175));
+		}
+	}
+	/* btn bottom left */
+	for (int i = 0; i < 4 * 4; i++)
+	{
+		if ((MENU_BTN_LB_0 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(63, 107, 175));
+		}
+		if ((MENU_BTN_LB_1 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(103, 171, 255));
+		}
+		if ((MENU_BTN_LB_2 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(87, 131, 231));
+		}
+		if ((MENU_BTN_LB_3 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, COLOR_BACK_GROUND);
+		}
+		if ((MENU_BTN_LB_4 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(39, 51, 95));
+		}
+	}
+	/* btn left lines */
+	for (int i = 0; i <MENU_BTN_HEIGHT - 6 - 4; i++)
+	{
+		widget->dev->set_point(pos_x_m + pos_btn_x, pos_y_m + pos_btn_y + i + 6, RGB(143,195,255));
+	}
+	/* btn left lines 2 */
+	for (int i = 0; i < MENU_BTN_HEIGHT - 6 - 4 + 1; i++)
+	{
+		widget->dev->set_point(pos_x_m + pos_btn_x + 1, pos_y_m + pos_btn_y + i + 5, RGB(111, 179, 255));/*111,179,255*/
+	}
+	for (int i = 0; i < MENU_BTN_WIDTH - 4; i++)
+	{
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y , RGB(191, 219, 255));
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + 1, RGB(111, 179, 255));
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + MENU_BTN_HEIGHT - 2, RGB(47, 91, 143));/*47 91 143*/
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + MENU_BTN_HEIGHT - 1, RGB(7, 3, 15));/* 7,3,15*/
+	}
+	/* draw shift */
+	for (int i = 0; i < MENU_BTN_WIDTH - 2; i++)
+	{
+		for (int j = 0; j < MENU_BTN_HEIGHT - 4; j++)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + 2 + i, pos_y_m + pos_btn_y + j + 2, RGB(87, 131, 231));
+		}
+	}
+  /* draw shift */
+	for (int i = 0; i < 4 * 6; i++)
+	{
+		if ((MENU_BTN_LT_0[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, COLOR_BACK_GROUND);
+		}
+		if ((MENU_BTN_LT_1[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(143, 195, 255));
+		}
+		if ((MENU_BTN_LT_2[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(191, 219, 255));
+		}
+		if ((MENU_BTN_LT_3[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(87, 131, 231));
+		}
+		if ((MENU_BTN_LT_4[i / 8] << (i % 8)) & 0x80)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4, RGB(63, 107, 175));
+		}
+	}
+	/* btn bottom left */
+	for (int i = 0; i < 4 * 4; i++)
+	{
+		if ((MENU_BTN_LB_0 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(63, 107, 175));
+		}
+		if ((MENU_BTN_LB_1 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(103, 171, 255));
+		}
+		if ((MENU_BTN_LB_2 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(87, 131, 231));
+		}
+		if ((MENU_BTN_LB_3 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, COLOR_BACK_GROUND);
+		}
+		if ((MENU_BTN_LB_4 << i) & 0x8000)
+		{
+			widget->dev->set_point(pos_x_m + pos_btn_x + i % 4, pos_y_m + pos_btn_y + i / 4 + MENU_BTN_HEIGHT - 4, RGB(39, 51, 95));
+		}
+	}
+	/* btn left lines */
+	for (int i = 0; i <MENU_BTN_HEIGHT - 6 - 4; i++)
+	{
+		widget->dev->set_point(pos_x_m + pos_btn_x, pos_y_m + pos_btn_y + i + 6, RGB(143,195,255));
+	}
+	/* btn left lines 2 */
+	for (int i = 0; i < MENU_BTN_HEIGHT - 6 - 4 + 1; i++)
+	{
+		widget->dev->set_point(pos_x_m + pos_btn_x + 1, pos_y_m + pos_btn_y + i + 5, RGB(111, 179, 255));/*111,179,255*/
+	}
+	for (int i = 0; i < MENU_BTN_WIDTH - 4; i++)
+	{
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y , RGB(191, 219, 255));
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + 1, RGB(111, 179, 255));
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + MENU_BTN_HEIGHT - 2, RGB(47, 91, 143));/*47 91 143*/
+		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + MENU_BTN_HEIGHT - 1, RGB(7, 3, 15));/* 7,3,15*/
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

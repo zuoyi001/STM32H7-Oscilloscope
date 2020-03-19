@@ -25,6 +25,7 @@
 #define FS_OK    (0)
 #define FS_ERR   (-1)
 #define FS_ECO   (-2)
+#ifndef _VC_SIMULATOR_
 /* #define */
 #define FOS_PRIORITY_MAX  (0x10)
 /* USER CODE END Header */
@@ -153,6 +154,10 @@ __attribute__((unused, section("fs_tsk"))) =                                   \
 /* functions decleare */
 int fs_system_initialization(void);
 void run_thead_priority_idle(void);
+#else
+#define FOS_INODE_REGISTER(name,init,config,ops,st) 
+#define FOS_TSK_REGISTER(entrance,prioroty,period)
+#endif
 /* end of files */
 #endif
 

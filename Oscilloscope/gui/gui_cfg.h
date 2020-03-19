@@ -25,7 +25,10 @@
 #ifndef __GUI_CFG_H__
 #define __GUI_CFG_H__
 
+#ifndef _VC_SIMULATOR_
 /* hardware accel */
 #define HARDWARE_ACCEL_SUPPLY   1
-
+#else
+#define HARDWARE_ACCEL_SUPPLY   0
+#endif
 #endif
