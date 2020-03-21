@@ -23,6 +23,17 @@
 
 #include "gui_dev.h"
 
+/* setting */
+#define GUI_HIDE         (0x0001)
+#define GUI_DRAWED       (0x0002)
+/* check maros */
+#define CHECK_HIDE(a)    ((a&GUI_HIDE)?1:0)
+#define SET_HIDE(a)      ((a |= GUI_HIDE))
+#define CLEAR_HIDE(a)    ((a &=~ (GUI_HIDE|GUI_DRAWED)))
+/* set drawed */
+#define CHECH_DRAWED(a)  ((a&GUI_DRAWED)?1:0)
+#define SET_DRAWED(a)    ((a |= GUI_DRAWED))
+#define CLEAR_DRAWED(a)  ((a &=~ GUI_DRAWED))
 /* Includes ------------------------------------------------------------------*/
 #define ORIGINAL_PARENT  (0)
 /* gui level */
@@ -45,6 +56,8 @@ typedef enum
 /* gui msg */
 typedef struct gui_info
 {
+	/* pri_data */
+	void * pri_data;
 	/* size and pos */
 	unsigned short x;
 	unsigned short y;
@@ -52,6 +65,8 @@ typedef struct gui_info
 	unsigned short y_size;
 	/* widget flags */
 	unsigned short wflags;
+	/* memds */
+	unsigned short upd;
 	/* end */
 }gui_info_def;
 /* widget strucr def */

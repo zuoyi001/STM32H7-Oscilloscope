@@ -28,27 +28,32 @@ static window_def * original_win = 0;
 /* int gui draw */
 int gui_static_creater(void)
 {
-	/* get gui type and dev */
-	gui_dev_def * dev = get_gui_dev();
 	/* from zero to end creating the pic */
 	for( window_def * base = original_win ; base != 0 ; base = base->win_child )
 	{
 		/* if use the default draw function */
-		if( base->draw != 0 )
+		if((!CHECH_DRAWED(base->msg.wflags)) && ( base->draw != 0 ) && (!CHECK_HIDE(base->msg.wflags)))
 		{
 			base->draw(base);
+			/* set flag */
+			SET_DRAWED(base->msg.wflags);
+			/* def */
 		}
 		else
 		{
 			/* can not supply now*/
+			continue;//skip this win
 		}
 		/* create widget */
 		for( widget_def * wbase = base->wchild ; wbase != 0 ; wbase = wbase->peer_linker)
 		{
 			/* if use the default draw function */
-			if( wbase->draw != 0 )
+			if((!CHECH_DRAWED(wbase->msg.wflags)) && ( wbase->draw != 0 ) && (!CHECK_HIDE(wbase->msg.wflags)))
 			{
 				wbase->draw(wbase);
+				/* set flag */
+				//SET_DRAWED(wbase->msg.wflags);
+				/* def */
 			}
 			else
 			{
@@ -114,7 +119,27 @@ int gui_widget_creater(widget_def * widget )
 	/* return OK */
 	return FS_OK;
 }
+/* clear all drawed */
+int gui_clear_all(void)
+{
+	/* from zero to end creating the pic */
+	for( window_def * base = original_win ; base != 0 ; base = base->win_child )
+	{
+		/* clear */
+		CLEAR_DRAWED(base->msg.wflags);
+		/* def */
 
+		/* create widget */
+		for( widget_def * wbase = base->wchild ; wbase != 0 ; wbase = wbase->peer_linker)
+		{
+			/* set flag */
+			CLEAR_DRAWED(wbase->msg.wflags);
+			/* def */
+		}
+	}
+	/* return */
+	return FS_OK;
+}
 
 
 
