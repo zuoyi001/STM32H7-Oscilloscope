@@ -24,6 +24,7 @@
 #include "osc_ui.h"
 #include "gui.h"
 #include "hz_out.h"
+#include "string.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_INODE_REGISTER("osc_ui",osc_create_ui,0,0,1);
 /* define win */
@@ -143,6 +144,7 @@ int osc_create_ui(void)
 	win_menu.msg.x = dev->width - win_menu.msg.x_size;
 	win_menu.msg.y = 0;
 	win_menu.dev = dev;
+	win_menu.msg.wflags = GUI_HIDE;
 	/* set callback */
 	win_menu.draw = osc_menu_win_draw;
 	/* create */
