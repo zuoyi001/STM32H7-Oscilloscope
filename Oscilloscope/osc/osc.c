@@ -81,7 +81,7 @@ static int grid_grobal_data(unsigned short width, unsigned short height)
 	draw_area.start_pos_x = LEFT_REMAIN_PIXEL + 1;
 	draw_area.start_pos_y = TOP_REMAIN_PIXEL + 1;
 	draw_area.stop_pos_x  = LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL);
-	draw_area.start_pos_y = TOP_REMAIN_PIXEL  + 1 + EM * (VERTICAL_GRID_TOTAL);
+	draw_area.stop_pos_y = TOP_REMAIN_PIXEL  + 1 + EM * (VERTICAL_GRID_TOTAL);
 	/* num grid of horizontal and vertical */
 	draw_area.num_horizontal = HORIZONTAL_GRID_NUM;
 	draw_area.num_vertical = VERTICAL_GRID_NUM;
