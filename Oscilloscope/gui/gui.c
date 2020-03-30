@@ -140,7 +140,28 @@ int gui_clear_all(void)
 	/* return */
 	return FS_OK;
 }
-
+/* find the connect */
+/* int gui draw */
+int gui_find_connect(window_def * ori,unsigned short x,unsigned short y)
+{
+	/* from zero to end creating the pic */
+	for( window_def * base = ori->win_child ; base != 0 ; base = base->win_child )
+	{
+		if( base->msg.wflags & GUI_HIDE )
+		{
+			continue;
+		}
+		if( x >= base->msg.x && x <= (base->msg.x + base->msg.x_size) )
+		{
+			if( y >= base->msg.y && y <= (base->msg.y + base->msg.y_size) )
+			{
+				return 1;
+			}
+		}
+	}
+	/* return */
+	return 0;
+}
 
 
 

@@ -47,6 +47,10 @@ typedef struct
 int create_grid_data(gui_dev_def * dev);
 int draw_group_win(gui_dev_def * dev,gui_info_def * info);
 int draw_menu_win( gui_dev_def * dev,gui_info_def * info );
+void osc_calculate_main_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf);
+void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,window_def * win1,window_def * win2,window_def * win3,void * draw);
+void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf);
+void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,unsigned short btn_num);
 
 #endif
 

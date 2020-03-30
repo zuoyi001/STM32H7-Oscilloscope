@@ -109,6 +109,8 @@ typedef struct win
 int gui_static_creater(void);
 int gui_win_creater(window_def * win);
 int gui_widget_creater( widget_def * widget );
+int gui_find_connect(window_def * ori,unsigned short x,unsigned short y);
+
 /* end of files */
 #endif
 

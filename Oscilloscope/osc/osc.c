@@ -260,7 +260,7 @@ int create_grid_data(gui_dev_def * dev)
 	dev->set_point(LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) + 1, TOP_REMAIN_PIXEL, COLOR_GRID_POINT);
 	dev->set_point(LEFT_REMAIN_PIXEL + EN * (HORIZONTAL_GRID_TOTAL) + 1, TOP_REMAIN_PIXEL + EM * (VERTICAL_GRID_TOTAL) + 1 + 1, COLOR_GRID_POINT);
 	/* for test */
-#if 1
+#if 0
   /* draw other grid data */
 	double sin_x = 0;
 	/* sinx */
@@ -703,10 +703,106 @@ void osc_create_button(struct widget * widget)
 		widget->dev->set_point(pos_x_m + pos_btn_x + 4 + i, pos_y_m + pos_btn_y + MENU_BTN_HEIGHT - 1, RGB(7, 3, 15));/* 7,3,15*/
 	}
 }
-
-
-
-
+/* create win_main_pos */
+void osc_calculate_main_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf)
+{
+	/* create the win */
+	win->msg.x = 0;
+	win->msg.y = 0;
+	win->msg.x_size = dev->width;
+	win->msg.y_size = dev->height;
+	win->dev = dev;
+	/* set callback */
+	win->draw = (void (*)(window_def *))draw;
+	/* wf */
+	win->msg.wflags = wf;
+	/* ------- */
+	/* create win creater */
+	gui_win_creater(win);	
+}
+/* static group pos */
+void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,window_def * win1,window_def * win2,window_def * win3,void * draw)
+{
+	/* create the win */
+	win0->msg.x = 1;
+	win0->msg.y = dev->height - 22 - 4;
+	win0->msg.x_size = dev->width - 3;
+	win0->msg.y_size = 22;
+	win0->dev = dev;
+	/* set callback */
+	win0->draw = (void (*)(window_def *))draw;
+	/* create second */
+	win1->msg.x = 1;
+	win1->msg.y = dev->height - 22*2 - 4 - 1;
+	win1->msg.x_size = (unsigned short)(((float)347 / ( float)790) * (dev->width -10));
+	win1->msg.y_size = 22;
+	win1->dev = dev;
+	/* set callback */
+	win1->draw = (void (*)(window_def *))draw;
+	/* create the group */
+	win2->msg.x = win1->msg.x_size + 4;
+	win2->msg.y = dev->height - 22*2 - 4 - 1;
+	win2->msg.x_size = (unsigned short)(((float)202 / ( float)790) * (dev->width - 10));
+	win2->msg.y_size = 22;
+	win2->dev = dev;
+	/* set callback */
+	win2->draw = (void (*)(window_def *))draw;	
+	/* create the group */
+	win3->msg.x = win2->msg.x + win2->msg.x_size + 4;
+	win3->msg.y = dev->height - 22*2 - 4 - 1;
+	win3->msg.x_size = (unsigned short)(((float)241 / ( float)790) * (dev->width - 10) );
+	win3->msg.y_size = 22;
+	win3->dev = dev;
+	/* set callback */
+	win3->draw = (void (*)(window_def *))draw;
+  /* ok create the win */
+	gui_win_creater(win0);
+	gui_win_creater(win1);
+	gui_win_creater(win2);
+	gui_win_creater(win3);	
+}
+/* create win_menu_pos */
+void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf)
+{
+	/* create the win */
+	win->msg.x_size = (unsigned short)(((float)107 / (float)800)*dev->width);
+	win->msg.y_size = dev->height - 22*2 - 1 - 1 - 4;
+	win->msg.x = dev->width - win->msg.x_size;
+	win->msg.y = 0;
+	win->dev = dev;
+	/* set wflags d*/
+	win->msg.wflags = wf;
+	/* set callback */
+	win->draw = (void (*)(window_def *))draw;
+	/* ok */
+	/* create */
+	gui_win_creater(win);		
+}
+/* create win_btn_pos */
+void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,unsigned short btn_num)
+{
+	/* button ypos */
+	unsigned short btn_tpos = 0;
+	/* calculate x size and y size */
+	unsigned short x_size_g = (unsigned short)(((float)102 / (float)800)*dev->width);
+	unsigned short y_size_g = (win->msg.y_size - 24 - 1 ) / btn_num - 2;
+	/* create btn */
+	for( int i = 0 ; i < btn_num ; i ++ )
+	{
+		/* calculate the y size */
+		btn_tpos = ( y_size_g + 2 ) * i + 24;
+		/* set det */
+		wd[i].msg.x = 5;
+		wd[i].msg.y = btn_tpos;
+		wd[i].msg.x_size = x_size_g;
+		wd[i].msg.y_size = y_size_g;
+		wd[i].dev = dev;
+		wd[i].draw = osc_create_button;
+		wd[i].parent = win;	
+		/* create btn */
+		gui_widget_creater(&wd[i]);
+	}
+}
 
 
 

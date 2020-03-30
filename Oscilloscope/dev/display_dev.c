@@ -24,7 +24,7 @@
 #include "sdram.h"
 #include "middle.h"
 /* Private includes ----------------------------------------------------------*/
-static unsigned short gram[1366*768] __attribute__((at(Bank5_SDRAM_ADDR)));
+unsigned short gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
 /* Define all supported display panel information */
 const display_dev_def display_dev[7] = 
 {
