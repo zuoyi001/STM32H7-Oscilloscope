@@ -149,7 +149,7 @@ int create_grid_data(window_def * win)
 		}
 	}
 #endif
-/* draw other grid data */
+  /* draw other grid data */
 	for(int j = 0; j < ( VERTICAL_GRID_NUM + 1 ); j++ )
 	{
 		for (int i = 0 ; i < ( HORIZONTAL_GRID_TOTAL + 1 ); i++ )
@@ -157,7 +157,7 @@ int create_grid_data(window_def * win)
 			win->dev->set_point( LEFT_REMAIN_PIXEL + 1 + i * EN, TOP_REMAIN_PIXEL + 1 + j * EM * LITTLE_GRIG_NUM , COLOR_GRID_POINT);
 		}
 	}
-/* draw other grid data */
+  /* draw other grid data */
 	for( int j = 0 ; j < ( HORIZONTAL_GRID_NUM + 1 ) ; j++ )
 	{
 		for (int i = 0; i < (VERTICAL_GRID_TOTAL + 1); i++ )
@@ -165,7 +165,7 @@ int create_grid_data(window_def * win)
 			win->dev->set_point(LEFT_REMAIN_PIXEL + 1 + j * EN * LITTLE_GRIG_NUM , TOP_REMAIN_PIXEL + 1 + i * EM, COLOR_GRID_POINT);
 		}
 	}
-/* draw other grid data */
+  /* draw other grid data */
 	for( int i = 0 ; i < EN * ( HORIZONTAL_GRID_TOTAL ) ; i++ )
 	{
 	  /* draw other grid data */ 
@@ -177,7 +177,7 @@ int create_grid_data(window_def * win)
 			win->dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 5, COLOR_GRID_POINT);
 		}
 	}
-/* draw other grid data */
+  /* draw other grid data */
 	for( int i = 0 ; i < EN * (HORIZONTAL_GRID_TOTAL); i++)
 	{
 		win->dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL) + 1, COLOR_GRID_POINT);
@@ -188,7 +188,7 @@ int create_grid_data(window_def * win)
 			win->dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL) + 1 - 6, COLOR_GRID_POINT);
 		}
 	}
-/* draw other grid data */
+  /* draw other grid data */
 	for( int i = 0; i < EM * (VERTICAL_GRID_TOTAL) + 1; i++)
 	{
 		/* draw other grid data */
@@ -205,7 +205,7 @@ int create_grid_data(window_def * win)
 			win->dev->set_point(LEFT_REMAIN_PIXEL + 1 + EN * (HORIZONTAL_GRID_TOTAL) - 5, TOP_REMAIN_PIXEL + 1 + i, COLOR_GRID_POINT);
 		}
 	}
-/* draw other grid data */
+  /* draw other grid data */
 	for( int i = 0; i < EN * (HORIZONTAL_GRID_TOTAL); i++)
 	{
 		/* draw other grid data */
@@ -219,7 +219,7 @@ int create_grid_data(window_def * win)
 			win->dev->set_point(LEFT_REMAIN_PIXEL + 1 + i, TOP_REMAIN_PIXEL + 1 + EM * (VERTICAL_GRID_TOTAL / 2) + 4, COLOR_GRID_POINT);
 		}
 	}
-/* draw other grid data */
+  /* draw other grid data */
 	for (int i = 0; i < EM * (VERTICAL_GRID_TOTAL) + 1; i++)
 	{
 		/* draw other grid data */
@@ -272,11 +272,6 @@ int create_grid_data(window_def * win)
 /* end of func */	
 	return 0;
 }
-
-
-extern void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned short y );
-
-
 /* draw group win */
 int draw_group_win(window_def * win)
 {
@@ -364,18 +359,7 @@ int draw_group_win(window_def * win)
 		/* ch2 */
 		osc_create_chn_icon(win,2,v_start * 2 + 16,2);
 		osc_create_chn_icon(win,2 + eh,v_start * 2 + 16,2);
-		osc_create_chn_icon(win,2 + eh*2,v_start * 2 + 16,2);		
-		
-		
-		extern void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned short y );
-		
-	  //gui_static_string(win,"FreQ 100.00HZ",32+5,6);
-		
-		win->msg.wflags &=~ 0x6000;
-		
-		win->msg.wflags |= 0x2000; 
-		
-		gui_static_string(win,"ÆµÂÊ 100.00HZ",35,v_start);
+		osc_create_chn_icon(win,2 + eh*2,v_start * 2 + 16,2);	
 	}
 	else if( win->msg.wflags & 0x0200 )
 	{
@@ -386,26 +370,10 @@ int draw_group_win(window_def * win)
 		/* create icon */
 		osc_create_chn_icon(win,2,v_start,1);	
 		osc_create_chn_icon(win,2 + eh ,v_start,2);	
-		
-		win->msg.wflags |= 0x1000;
-		win->msg.wflags &=~ 0x6000;
-		
-		win->msg.wflags |= 0x2000; 		
-		gui_static_string(win,"100mV",42,1);
-		
-		win->msg.wflags &=~ 0x6000;
-		
-		win->msg.wflags |= 0x4000;		
-		
-		gui_static_string(win,"500mV",165,1);
 	}
 	else if( win->msg.wflags & 0x0800 )
 	{
-		
-		win->msg.wflags |= 0x1000;
-		
-		gui_static_string(win,"M 500us",10,1);
-		
+		/* nothing to do */
 	}
 	/* return */
 	return FS_OK;
