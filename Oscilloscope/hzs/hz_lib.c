@@ -1,12 +1,12 @@
 
 
-
-tex0 = GBK2312_ASSETS_HZ16("牛哥");
-tex1 = GBK2312_ASSETS_HZ16("傻逼");
-tex2 = GBK2312_ASSETS_HZ16("天才");
-tex3 = GBK2312_ASSETS_HZ16("呵哦");
-tex4 = GBK2312_ASSETS_HZ16("峰");
-
+tex4 = GBK2312_ASSETS_HZ16("频率");
+tex4 = GBK2312_ASSETS_HZ16("峰值");
+tex4 = GBK2312_ASSETS_HZ16("平均值");
+tex4 = GBK2312_ASSETS_HZ16("正脉宽");
+tex4 = GBK2312_ASSETS_HZ16("负脉宽");
+tex4 = GBK2312_ASSETS_HZ16("最大值");
+tex4 = GBK2312_ASSETS_HZ16("最小值");
 
 
 

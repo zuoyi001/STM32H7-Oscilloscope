@@ -26,6 +26,29 @@
 
 #include "gui_dev.h"
 #include "gui.h"
+/* Includes ------------------------------------------------------------------*/
+#define VERTICAL_GRID_NUM      (8)
+#define HORIZONTAL_GRID_NUM    (10)
+#define LITTLE_GRIG_NUM        (5)
+#define VERTICAL_GRID_TOTAL    (VERTICAL_GRID_NUM * LITTLE_GRIG_NUM)
+#define HORIZONTAL_GRID_TOTAL  (HORIZONTAL_GRID_NUM * LITTLE_GRIG_NUM)
+/* left remind and up */
+#define TOP_REMAIN_PIXEL       (16)
+#define LEFT_REMAIN_PIXEL      (20)
+#define BOTTOM_REMAIN_PIXEL    (45)
+/* THREE color */
+#define COLOR_GRID_POINT       (RGB(199, 195, 199))
+#define COLOR_GRID_AREA_BG     (RGB(7, 3, 7))
+#define COLOR_BACK_GROUND      (RGB(63, 75, 151))
+/* menu win color table */
+#define COLOR_MENU_ONE         (RGB(183, 83, 7))	/* color table */
+/* button color table */
+#define COLOR_BUTTON           (RGB(87,131,231))
+/* char and hz table */
+#define COLOR_CHAR             (RGB(255,255,255))
+/* lines color */
+#define COLOR_CH1              (RGB(255,255,7))
+#define COLOR_CH2              (RGB(7,227,231))
 /* Define the area information occupied by the drawing area of the current screen */
 typedef struct
 {
@@ -38,17 +61,19 @@ typedef struct
 	unsigned short pixel_vertiacl;
 	unsigned short pixel_horizontal;
 	unsigned short little_grid;
+	unsigned short total_pixel_h;
+	unsigned short total_pixel_v;
 	unsigned short rev0;
 	unsigned short rev1;
 }draw_area_def;
 
-
 /* create grid data */
-int create_grid_data(gui_dev_def * dev);
-int draw_group_win(gui_dev_def * dev,gui_info_def * info);
-int draw_menu_win( gui_dev_def * dev,gui_info_def * info );
+int create_grid_data(window_def * win);
+int draw_group_win(window_def * win);
+int draw_menu_win(window_def * win);
+static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigned short y,unsigned short chn);
 void osc_calculate_main_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf);
-void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,window_def * win1,window_def * win2,window_def * win3,void * draw);
+void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,void * draw);
 void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf);
 void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,unsigned short btn_num);
 

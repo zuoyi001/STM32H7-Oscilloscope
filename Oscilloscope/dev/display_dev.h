@@ -25,11 +25,7 @@
 #ifndef __DISPLAY_DEV_H__
 #define __DISPLAY_DEV_H__
 
-#ifndef _VC_SIMULATOR_
-/* RGB */
-#define RGB(r,g,b) (( ( r & 0xF8 ) << 8 ) | ( ( g & 0xFC ) << 3 ) | ( ( b& 0xF8 ) >> 3 ))
 /* lcd and vga dev struct */
-#endif
 typedef struct
 {
 	/* Characters to display when setting */
@@ -69,6 +65,7 @@ typedef struct
 /* function delares */
 display_info_def * get_display_dev_info(void);
 static void LTDC_Init(display_dev_def * info);
+static int dev_init(void);
 /* end */
 #endif
 /* end of files */

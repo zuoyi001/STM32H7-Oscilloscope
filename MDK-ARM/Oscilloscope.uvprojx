@@ -594,14 +594,14 @@
               <FilePath>..\Oscilloscope\gui\gui_tsk.c</FilePath>
             </File>
             <File>
-              <FileName>win.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\gui\win.c</FilePath>
-            </File>
-            <File>
               <FileName>gui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\gui\gui.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_ascii.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui_ascii.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -23,8 +23,11 @@
 #include "main.h"
 #include "sdram.h"
 #include "middle.h"
+#include "fos.h"
 /* Private includes ----------------------------------------------------------*/
 unsigned short gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
+/* Private includes ----------------------------------------------------------*/
+FOS_INODE_REGISTER("dev_init",dev_init,0,0,0);
 /* Define all supported display panel information */
 const display_dev_def display_dev[7] = 
 {
@@ -208,13 +211,35 @@ static display_dev_def * display_info_s = (display_dev_def *)&display_dev[1]; /*
 static display_info_def display_info;
 /* init flags */
 static unsigned char init_dev_flags = 0;
-/* get information for the display */
-display_info_def * get_display_dev_info(void)
+/* init dev */
+static int dev_init(void)
 {
+	/* read data from eeprom and config */
+	
 	/* pointer to curren dev */
 	display_info.display_dev = display_info_s;
 	/* gram */
 	display_info.gram_addr = (unsigned int)gram;
+	/* has inited or not */
+	if( init_dev_flags == 0 )
+	{
+		/* set up flag */
+		init_dev_flags = 1;
+		/* init ltdc init or other dev */
+		LTDC_Init(display_info.display_dev);
+		/* sram init */
+		sdram_init();
+		/* srame test that will add at next version */
+		/* init middle */
+		middle_layer_init(&display_info);
+		/* end of if */
+	}
+	/* return INIT OK */
+	return FS_OK;
+}
+/* get information for the display */
+display_info_def * get_display_dev_info(void)
+{
 	/* has inited or not */
 	if( init_dev_flags == 0 )
 	{

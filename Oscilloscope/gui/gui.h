@@ -39,6 +39,11 @@
 /* gui level */
 #define GUI_SAME_LEVEL   (0)
 #define GUI_CHILD_LEVEL  (1)
+
+#ifndef _VC_SIMULATOR_
+/* RGB */
+#define RGB(r,g,b) (( ( r & 0xF8 ) << 8 ) | ( ( g & 0xFC ) << 3 ) | ( ( b& 0xF8 ) >> 3 ))
+#endif
 /* decleare */
 typedef struct win window_def;
 /* Message type */
