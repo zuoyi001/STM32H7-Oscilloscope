@@ -35,6 +35,16 @@ window_def win_group[4];
 window_def win_menu;
 /* btn */
 widget_def btn[5];
+/* text */
+widget_def voltage_ch[2];
+/* time */
+widget_def time_ch[2];
+/* ch1 measure */
+widget_def measure_ch1[6];
+widget_def measure_ch2[6];
+/* table */
+char * mert[6] = {"频率","1.00K","峰峰值","200mV","最大值","3.38V"};
+char * mert1[6] = {"频率","1.00K","正脉宽","200mV","平均值","3.38V"};
 /* gui dev */
 static gui_dev_def * dev;
 /* osc create ui */
@@ -43,13 +53,20 @@ int osc_create_ui(void)
 	/* gui dev get */
   dev = get_gui_dev();
 	/* calculate main size */
-  osc_calculate_main_size(dev,&win_main,create_grid_data,0);
+  osc_calculate_main_size(dev,&win_main,0);
 	/* create the group */
-	osc_calculate_sg_size(dev,win_group,sizeof(win_group) / sizeof(win_group[0]),draw_group_win);	
+	osc_calculate_sg_size(dev,win_group,sizeof(win_group) / sizeof(win_group[0]));	
 	/* create the menu win ui */
-  osc_calculate_menu_size(dev,&win_menu,draw_menu_win,0);
+  osc_calculate_menu_size(dev,&win_menu,0);
 	/* btn */
   osc_calculate_btn_size(dev,&win_menu,btn,sizeof(btn) / sizeof(btn[0]));
+	/* voltage */
+	osc_calculate_volage_string(&win_group[1],voltage_ch,sizeof(voltage_ch) / sizeof(voltage_ch[0]) , "100mV","200mV");
+	/* time */
+	osc_calculate_time_string(&win_group[3],time_ch,2,"M","500ms");
+	/* measure */
+	osc_calculate_measure_ch(&win_group[0],measure_ch1,6,mert,1);
+	osc_calculate_measure_ch(&win_group[0],measure_ch2,6,mert1,2);	
 	/* return */
 	return FS_OK;
 }

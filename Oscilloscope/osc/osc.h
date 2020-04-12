@@ -68,14 +68,14 @@ typedef struct
 }draw_area_def;
 
 /* create grid data */
-int create_grid_data(window_def * win);
-int draw_group_win(window_def * win);
-int draw_menu_win(window_def * win);
 static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigned short y,unsigned short chn);
-void osc_calculate_main_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf);
-void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,void * draw);
-void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf);
+void osc_calculate_main_size(gui_dev_def * dev,window_def * win,unsigned short wf);
+void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num);
+void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,unsigned short wf);
 void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,unsigned short btn_num);
+void osc_calculate_volage_string(window_def * pwin,widget_def *wd,int num,char * ch1,char * ch2);
+void osc_calculate_time_string(window_def * pwin,widget_def *wd,int num,char * M,char * time);
+void osc_calculate_measure_ch(window_def * pwin,widget_def *wd,int num,char ** item,unsigned char ch);
 
 #endif
 

@@ -117,16 +117,19 @@ static void draw_hz(gui_dev_def * dev , unsigned char * hzd,unsigned short x,uns
 	}
 }
 /* show a mix string */
-void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned short y )
+void gui_dynamic_string(struct widget * wid)
 {
 	/* start pos */
-	unsigned short posx = win->msg.x;
-	unsigned short posy = win->msg.y;
+	unsigned short posx = wid->parent->msg.x + wid->msg.x;
+	unsigned short posy = wid->parent->msg.y + wid->msg.y;
+	/* get char pointer */
+	unsigned char * hzc = wid->msg.pri_data;
+	unsigned short x = 0;
 	/* get back and font color and size */
 	unsigned short color;
-	unsigned char size = (win->msg.wflags & 0x1000) ? 24 : 16;
+	unsigned char size = (wid->msg.wflags & 0x1000) ? 24 : 16;
 	/* color */
-	switch(win->msg.wflags & 0x6000)
+	switch(wid->msg.wflags & 0x6000)
 	{
 		case 0x0000:
 			color = COLOR_CHAR;
@@ -141,8 +144,6 @@ void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned sho
 			color = COLOR_CHAR;
 			break;
 	}
-	/* char */
-	
 	/* judge Is this a char or hz */
 	while( *hzc != 0 )
 	{
@@ -150,7 +151,7 @@ void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned sho
 		if( (unsigned char)(*hzc) > 0x80 )
 		{
 			/* show a hz */
-			draw_hz(win->dev,(unsigned char *)hzc,posx + x , posy + y, color,0x0000);
+			draw_hz(wid->dev,(unsigned char *)hzc,posx + x , posy, color,0x0000);
 			/* channge pos */
 			x += 16;
 			hzc += 2;
@@ -158,7 +159,7 @@ void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned sho
 		else
 		{
 			/* show a char */
-			gui_char(win->dev,posx + x , posy + y,*hzc,size,color,0x0000);
+			gui_char(wid->dev,posx + x , posy,*hzc,size,color,0x0000);
 		  /* channge pos */
 			if( size == 16 )
 			{
@@ -173,7 +174,6 @@ void gui_static_string(window_def * win,char * hzc,unsigned short x,unsigned sho
 		}
 	}
 }
-
 
 
 

@@ -24,6 +24,7 @@
 #include "osc.h"
 #include "gui.h"
 #include "fos.h"
+#include "string.h"
 /* Private includes ----------------------------------------------------------*/
 #include "osc_icon.h"
 /* draw area defines */
@@ -91,7 +92,7 @@ draw_area_def * get_draw_area_msg(void)
 	return &draw_area;
 }
 /* create grid data */
-int create_grid_data(window_def * win)
+static void create_grid_data(window_def * win)
 {	
   /* get gui dev */
 	/* set grid data */
@@ -100,7 +101,7 @@ int create_grid_data(window_def * win)
 	if( ret != 0 )
 	{
 		/* oh no , feels not good , What seems to be the problem */
-		return FS_ERR;		
+		return;		
 	}
   /* sraw */
 #if HARDWARE_ACCEL_SUPPLY
@@ -270,10 +271,9 @@ int create_grid_data(window_def * win)
 /* set the flag */
 	grid_init_flag = 1;
 /* end of func */	
-	return 0;
 }
 /* draw group win */
-int draw_group_win(window_def * win)
+static void draw_group_win(window_def * win)
 {
 	/* size and corner dis */
 	const unsigned short mod0 = 0x0364;
@@ -366,7 +366,6 @@ int draw_group_win(window_def * win)
 		/* calbrate pos */
 		unsigned short eh = ( win->msg.x_size - 4 ) / 2;
 		unsigned short v_start = ( win->msg.y_size - 16 ) / 2;		
-		
 		/* create icon */
 		osc_create_chn_icon(win,2,v_start,1);	
 		osc_create_chn_icon(win,2 + eh ,v_start,2);	
@@ -375,11 +374,9 @@ int draw_group_win(window_def * win)
 	{
 		/* nothing to do */
 	}
-	/* return */
-	return FS_OK;
 }
 /* draw the menu window */
-int draw_menu_win(window_def * win)
+static void draw_menu_win(window_def * win)
 {
 	/* transfer the menu size */
 	unsigned short MENU_WIDTH = win->msg.x_size;//107;
@@ -421,8 +418,6 @@ int draw_menu_win(window_def * win)
 		win->dev->set_point(pos_x_m + 1, pos_y_m + i + 3, COLOR_MENU_ONE);
 		win->dev->set_point(pos_x_m + 2, pos_y_m + i + 3, COLOR_MENU_ONE);
 	}
-	/* return */
-	return FS_OK;
 }
 /* create icon */
 static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigned short y,unsigned short chn)
@@ -460,7 +455,7 @@ static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigne
 	}
 }
 /* create button */
-void osc_create_button(struct widget * widget)
+static void osc_create_button(struct widget * widget)
 {
 	/* create btn */
 	/* define the btn size */
@@ -496,7 +491,7 @@ void osc_create_button(struct widget * widget)
 #endif
 }
 /* create win_main_pos */
-void osc_calculate_main_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf)
+void osc_calculate_main_size(gui_dev_def * dev,window_def * win,unsigned short wf)
 {
 	/* create the win */
 	win->msg.x = 0;
@@ -505,7 +500,7 @@ void osc_calculate_main_size(gui_dev_def * dev,window_def * win,void * draw,unsi
 	win->msg.y_size = dev->height;
 	win->dev = dev;
 	/* set callback */
-	win->draw = (void (*)(window_def *))draw;
+	win->draw = create_grid_data;
 	/* wf */
 	win->msg.wflags = wf;
 	/* ------- */
@@ -539,7 +534,7 @@ static int osc_grid_fast(gui_dev_def * tdev,unsigned short * total_ph,unsigned s
 	return FS_OK;
 }
 /* static group pos */
-void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,void * draw)
+void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num)
 {
 	/* def*/
 	unsigned short vertical_pixel_total;
@@ -562,7 +557,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,
 	win0[0].dev = dev;
 	win0[0].msg.wflags = 0x0100;
 	/* set callback */
-	win0[0].draw = (void (*)(window_def *))draw;
+	win0[0].draw = draw_group_win;
 	/* create the group */
 	win0[1].msg.x = 1;//win0[0].msg.x + win0[0].msg.x_size + 2;
 	win0[1].msg.y = win0[0].msg.y;
@@ -571,7 +566,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,
 	win0[1].dev = dev;
 	win0[1].msg.wflags = 0x0200;
 	/* set callback */
-	win0[1].draw = (void (*)(window_def *))draw;
+	win0[1].draw = draw_group_win;
 	/* create the group */
 	win0[2].msg.x = win0[1].msg.x;
 	win0[2].msg.y = win0[1].msg.y + win0[1].msg.y_size + 1;
@@ -580,7 +575,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,
 	win0[2].dev = dev;
 	win0[2].msg.wflags = 0x0400;
 	/* set callback */
-	win0[2].draw = (void (*)(window_def *))draw;
+	win0[2].draw = draw_group_win;
 	/* create the group */
 	win0[3].msg.x = win0[1].msg.x + win0[1].msg.x_size + 2;
 	win0[3].msg.y = win0[1].msg.y;
@@ -589,7 +584,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,
 	win0[3].dev = dev;
 	win0[3].msg.wflags = 0x0800;
 	/* set callback */
-	win0[3].draw = (void (*)(window_def *))draw;	
+	win0[3].draw = draw_group_win;
   /* ok create the win */
 	gui_win_creater(&win0[0]);
 	gui_win_creater(&win0[1]);
@@ -597,7 +592,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num,
   gui_win_creater(&win0[3]);	
 }
 /* create win_menu_pos */
-void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,void * draw,unsigned short wf)
+void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,unsigned short wf)
 {
 	/* def*/
 	unsigned short vertical_pixel_total;
@@ -616,7 +611,7 @@ void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,void * draw,unsi
 	/* set wflags d*/
 	win->msg.wflags = wf;
 	/* set callback */
-	win->draw = (void (*)(window_def *))draw;
+	win->draw = draw_menu_win;
 	/* ok */
 	/* create */
 	gui_win_creater(win);		
@@ -646,10 +641,158 @@ void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,un
 		gui_widget_creater(&wd[i]);
 	}
 }
-
-
-
-
+/* create the voltage title */
+void osc_calculate_volage_string(window_def * pwin,widget_def *wd,int num,char * ch1,char * ch2)
+{
+	/* if num is not epue */
+	if( num != 2 )
+	{
+		return;//reutrn,bad data
+	}
+	/* calbrate the pox */
+	unsigned short ev = ( pwin->msg.y_size - 24/* char height */) / 2 ; 
+	unsigned short eh = pwin->msg.x_size / 2 ;
+	/* setting */
+  for( int i = 0 ; i < num ; i ++ )
+	{
+		/* default is 24 size */
+		wd[i].msg.wflags |= 0x1000;
+		/* channel */
+		wd[i].msg.wflags |= ( 0x2000 << i );	
+		/* set ch1 */
+		wd[i].msg.x = eh * i + 32 + 5;
+		wd[i].msg.y = ev;
+		/* not supply size now */
+#if 0
+		wd[i].msg.x_size = 0;
+		wd[i].msg.y_size = 0;
+#endif
+		if( i == 0 )
+		{
+		  wd[i].msg.pri_data = ch1;
+		}
+		else
+		{
+			wd[i].msg.pri_data = ch2;
+		}
+		/* parent */
+		wd[i].dev = pwin->dev;
+		wd[i].parent = pwin;
+		wd[i].draw = gui_dynamic_string;
+		/* other */
+		wd[i].peer_linker = 0;
+		/* create the wisget */
+		gui_widget_creater(&wd[i]);		
+	}
+}
+/* create the voltage title */
+void osc_calculate_time_string(window_def * pwin,widget_def *wd,int num,char * M,char * time)
+{
+	/* if num is not epue */
+	if( num != 2 )
+	{
+		return;//reutrn,bad data
+	}
+	/* calbrate the pox */
+	unsigned short ev = ( pwin->msg.y_size - 24/* char height */) / 2 ; 
+	/* setting */
+  for( int i = 0 ; i < num ; i ++ )
+	{
+		/* default is 24 size */
+		wd[i].msg.wflags |= 0x1000;
+		/* channel */
+		wd[i].msg.wflags |= 0x6000;
+		/* set ch1 */
+		wd[i].msg.x = 12 * i + i * 5 + 10;
+		wd[i].msg.y = ev;
+		/* not supply size now */
+#if 0
+		wd[i].msg.x_size = 0;
+		wd[i].msg.y_size = 0;
+#endif
+		if( i == 0 )
+		{
+		  wd[i].msg.pri_data = M;
+		}
+		else
+		{
+			wd[i].msg.pri_data = time;
+		}
+		/* parent */
+		wd[i].dev = pwin->dev;
+		wd[i].parent = pwin;
+		wd[i].draw = gui_dynamic_string;
+		/* other */
+		wd[i].peer_linker = 0;
+		/* create the wisget */
+		gui_widget_creater(&wd[i]);		
+	}
+}
+/* */
+/* create the voltage title */
+void osc_calculate_measure_ch(window_def * pwin,widget_def *wd,int num,char ** item,unsigned char ch)
+{
+	/* if num is not epue */
+	if( num != 6 )
+	{
+		return;//reutrn,bad data
+	}
+	/* calbrate the pox */
+	unsigned short eh = pwin->msg.x_size / 3;
+	unsigned short v_start = ( pwin->msg.y_size - 16 * 2 ) / 3;
+	/* strlen */
+	int strl = 0;
+	/* setting */
+  for( int i = 0 ; i < num ; i ++ )
+	{
+		/* default is 16 size */
+		wd[i].msg.wflags &=~ 0x1000;
+		/* channel */
+		if( ch == 1 )
+		{
+			wd[i].msg.wflags |= 0x2000;
+		}
+		else
+		{
+			wd[i].msg.wflags |= 0x4000;
+		}
+		/* set ch1 */
+		if( i % 2 )
+		{
+			wd[i].msg.x = eh * (i/2) + 32 + 16 * strl / 2 + 16;
+		}
+		else
+		{
+			wd[i].msg.x = eh * i / 2 + 32 + 2;
+			/* get strlen len */
+			strl = strlen(item[i]);
+		}
+		/* vertical */
+		if( ch == 1 )
+		{
+			wd[i].msg.y = v_start;
+		}
+		else
+		{
+			wd[i].msg.y = v_start * 2 + 16;
+		}
+		/* not supply size now */
+#if 0
+		wd[i].msg.x_size = 0;
+		wd[i].msg.y_size = 0;
+#endif
+		/* item */
+		wd[i].msg.pri_data = item[i];
+		/* parent */
+		wd[i].dev = pwin->dev;
+		wd[i].parent = pwin;
+		wd[i].draw = gui_dynamic_string;
+		/* other */
+		wd[i].peer_linker = 0;
+		/* create the wisget */
+		gui_widget_creater(&wd[i]);		
+	}
+}
 
 
 
