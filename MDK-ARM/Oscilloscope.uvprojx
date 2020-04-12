@@ -603,6 +603,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\layer\hal_tim.c</FilePath>
             </File>
+            <File>
+              <FileName>hal_iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_iic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -18,27 +18,32 @@
   */
 /* USER CODE END Header */
 
-#ifndef __OOSC_API_H__
-#define __OOSC_API_H__
 /* Includes ------------------------------------------------------------------*/
-/* FIFO DEEP */
-#define FIFO_DEEP (4096)
-/* Private includes ----------------------------------------------------------*/
+#ifndef _MYIIC_H
+#define _MYIIC_H
 
-void osc_stop_clock(void);
-void osc_start_clock(unsigned char internal);
-void osc_read_fifo_data(unsigned short * ch1,unsigned short * ch1n,unsigned short * ch2,unsigned short * ch2n,unsigned short fifo_deep);
-void osc_trig_read(unsigned short * ch1,unsigned short * ch1n,unsigned short * ch2,unsigned short * ch2n , signed char * ch1_o,signed char * ch2_o,int trig_type,int trig_source,int tflag);
-void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m );
-void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d);
+#define SDA_IN()  {GPIOB->MODER&=~(3<<(11*2));GPIOB->MODER|=0<<11*2;}
+#define SDA_OUT() {GPIOB->MODER&=~(3<<(11*2));GPIOB->MODER|=1<<11*2;}
+
+#define IIC_SCL   PBout(10) //SCL
+#define IIC_SDA   PBout(11) //SDA
+#define READ_SDA  PBin(11)  //
+
+static void iic_init(void);             				 
+void IIC_Start(void);
+void IIC_Stop(void);	 
+void IIC_Send_Byte(unsigned char txd);			
+unsigned char IIC_Read_Byte(unsigned char ack);
+unsigned char IIC_Wait_Ack(void); 
+void IIC_Ack(void);
+void IIC_NAck(void);
+
+void IIC_Write_One_Byte(unsigned char daddr,unsigned char addr,unsigned char data);
+unsigned char IIC_Read_One_Byte(unsigned char daddr,unsigned char addr);	 
+static int hal_iic_init(void);
+void dac_update(unsigned short volA,unsigned short B,unsigned short C,unsigned short D);
+
 #endif
-
-
-
-
-
-
-
 
 
 

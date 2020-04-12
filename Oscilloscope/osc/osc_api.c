@@ -26,6 +26,7 @@
 #include "hal_tim.h"
 #include "osc_api.h"
 #include "string.h"
+#include "hal_iic.h"
 /* static temp cache */
 static unsigned char cache_fifo[4][ FIFO_DEEP * 2 ]  __attribute__((at(0x10000000)));
 /* Private includes ----------------------------------------------------------*/
@@ -263,7 +264,11 @@ void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned sho
 		ch2_m[i] = area->total_pixel_v - (float)(ch2_o[i] + 128) / 255.0f * area->total_pixel_v;
 	}	
 }
-
+/* osc output dac */
+void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d)
+{
+  dac_update(a,b,c,d);
+}
 
 
 

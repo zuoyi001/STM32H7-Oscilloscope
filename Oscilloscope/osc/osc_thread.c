@@ -27,14 +27,22 @@
 #include "osc_api.h"
 /* functions declare */
 static void osc_thread(void);
+static int osc_thead_init(void);
 /* Includes ------------------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_thread,PRIORITY_IDLE,100); /* gui detecter task run as idle */
+FOS_INODE_REGISTER("osc_thread",0,osc_thead_init,0,1);
 /* buffer */
 static unsigned char clock_sta = 0;
 /* cache data */
 static unsigned short cache_fifo_ori[4][FIFO_DEEP];
 static signed char cache_ch[2][FIFO_DEEP*2];
 static unsigned short cache_dev[2][1366];//max supply num is 1366
+/* upload default setting */
+static int osc_thead_init(void)
+{
+	/* for test */
+	osc_voltage_output(1870,2000,0,270);
+}
 /* gui task */
 static void osc_thread(void)
 {
