@@ -129,7 +129,7 @@ void gui_dynamic_string(struct widget * wid)
 	unsigned short color;
 	unsigned char size = (wid->msg.wflags & 0x1000) ? 24 : 16;
 	/* color */
-	switch(wid->msg.wflags & 0x6000)
+	switch(wid->msg.wflags & 0xE000)
 	{
 		case 0x0000:
 			color = COLOR_CHAR;
@@ -140,13 +140,30 @@ void gui_dynamic_string(struct widget * wid)
 		case 0x4000:
 			color = COLOR_CH2;
 			break;		
+		case 0x6000:
+			color = COLOR_TIPS_ERROR;
+			break;			
+		case 0x8000:
+			color = COLOR_TIPS_WARNING;
+			break;
+		case 0xA000:
+			color = COLOR_TIPS_NORMAL;
+			break;		
 		default:
-			color = COLOR_CHAR;
+			color = COLOR_GRID_AREA_BG;
 			break;
 	}
 	/* judge Is this a char or hz */
 	while( *hzc != 0 )
 	{
+		/* enter */
+		if( *hzc == '\n' )
+		{
+			x = 0;
+			posy += 16;
+			/* skip it */
+			hzc++;
+		}
 		/* show a hz or char */
 		if( (unsigned char)(*hzc) > 0x80 )
 		{

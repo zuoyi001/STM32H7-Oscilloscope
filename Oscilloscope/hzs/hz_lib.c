@@ -7,7 +7,18 @@ tex4 = GBK2312_ASSETS_HZ16("正脉宽");
 tex4 = GBK2312_ASSETS_HZ16("负脉宽");
 tex4 = GBK2312_ASSETS_HZ16("最大值");
 tex4 = GBK2312_ASSETS_HZ16("最小值");
-
-
-
+tex4 = GBK2312_ASSETS_HZ16("系统菜单");
+tex4 = GBK2312_ASSETS_HZ16("通道选择");
+tex4 = GBK2312_ASSETS_HZ16("耦合方式");
+tex4 = GBK2312_ASSETS_HZ16("测量");
+tex4 = GBK2312_ASSETS_HZ16("关闭");
+tex4 = GBK2312_ASSETS_HZ16("下一页");
+tex4 = GBK2312_ASSETS_HZ16("直流");
+tex4 = GBK2312_ASSETS_HZ16("交流");
+tex4 = GBK2312_ASSETS_HZ16("系统参数丢失，重新校准或使用默认");
+tex4 = GBK2312_ASSETS_HZ16("扫描时间已到达最大值");
+tex4 = GBK2312_ASSETS_HZ16("切换");
+tex4 = GBK2312_ASSETS_HZ16("扫描时间已到达最大值");
+tex4 = GBK2312_ASSETS_HZ16("隐藏菜单");
+tex4 = GBK2312_ASSETS_HZ16("探头比例");
 

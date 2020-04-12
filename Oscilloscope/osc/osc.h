@@ -49,6 +49,14 @@
 /* lines color */
 #define COLOR_CH1              (RGB(255,255,7))
 #define COLOR_CH2              (RGB(7,227,231))
+/* TIPS_COLOR */
+#define COLOR_TIPS_ERROR       (RGB(255,0,0))
+#define COLOR_TIPS_WARNING     (COLOR_CH1)
+#define COLOR_TIPS_NORMAL      (COLOR_CHAR)
+/* #define tips level */
+#define TIPS_ERROR             (0x6000)
+#define TIPS_WARNING           (0x8000)
+#define TIPS_NORMAL            (0xA000)
 /* Define the area information occupied by the drawing area of the current screen */
 typedef struct
 {
@@ -76,6 +84,11 @@ void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,un
 void osc_calculate_volage_string(window_def * pwin,widget_def *wd,int num,char * ch1,char * ch2);
 void osc_calculate_time_string(window_def * pwin,widget_def *wd,int num,char * M,char * time);
 void osc_calculate_measure_ch(window_def * pwin,widget_def *wd,int num,char ** item,unsigned char ch);
+void osc_calculate_menu(window_def * pwin,widget_def *wd,int num,char ** item);
+void osc_calculate_tips(window_def * pwin,widget_def *wd,unsigned short level,char * tip);
+void osc_calculate_base_arrow(window_def * pwin,widget_def *wd,int chn);
+void osc_calculate_title_string(window_def * pwin,widget_def *wd,int chn,char ** fast_title);
+static void osc_create_TITLE(window_def * win);
 
 #endif
 
