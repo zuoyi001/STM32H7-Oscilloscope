@@ -57,6 +57,14 @@
 #define TIPS_ERROR             (0x6000)
 #define TIPS_WARNING           (0x8000)
 #define TIPS_NORMAL            (0xA000)
+/* trig mode */
+#define TRIG_MODE_RISING       (0x0000)
+#define TRIG_MODE_FALLING      (0x0001)
+#define TRIG_MODE_PULSE        (0x0002)
+/* trig source */
+#define TRIG_SOURCE_CH1        (0x0000)
+#define TRIG_SOURCE_CH2        (0x0001)
+#define TRIG_SOURCE_BOTH       (0x0002)
 /* Define the area information occupied by the drawing area of the current screen */
 typedef struct
 {
@@ -89,6 +97,7 @@ void osc_calculate_tips(window_def * pwin,widget_def *wd,unsigned short level,ch
 void osc_calculate_base_arrow(window_def * pwin,widget_def *wd,int chn);
 void osc_calculate_title_string(window_def * pwin,widget_def *wd,int chn,char ** fast_title);
 static void osc_create_TITLE(window_def * win);
+draw_area_def * get_draw_area_msg(void);
 
 #endif
 

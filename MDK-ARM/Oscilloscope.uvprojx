@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F429xx,USE_HAL_DRIVER,STM32F429xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\dev;..\Oscilloscope\osc;..\Oscilloscope\gui;..\Oscilloscope\fos;..\Oscilloscope\hzs;..\Oscilloscope\vc</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\dev;..\Oscilloscope\osc;..\Oscilloscope\gui;..\Oscilloscope\fos;..\Oscilloscope\hzs;..\Oscilloscope\vc;..\Oscilloscope\layer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -577,6 +577,31 @@
               <FileName>osc_ui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\osc\osc_ui.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_api.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_api.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_thread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_thread.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>layer</GroupName>
+          <Files>
+            <File>
+              <FileName>hal_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_tim.c</FilePath>
             </File>
           </Files>
         </Group>

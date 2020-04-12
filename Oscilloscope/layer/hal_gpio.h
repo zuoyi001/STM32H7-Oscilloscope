@@ -23,6 +23,17 @@
 
 #define GPIO_DEFAULT_HIGH   (1)
 #define GPIO_DEFAULT_LOW    (0)
+
+/* hal afio map */
+#define FIFO_DATA           (0)
+#define DIO_CLOCK_SEL       (22)
+#define DIO_CLOCK_STA       (15)
+#define DIO_R0              (18)
+#define DIO_R1              (19)
+#define DIO_R2              (20)
+#define DIO_R3              (21)
+#define FIFO_DATA_D8        (27)
+#define FIFO_FULL0          (1)
 /* typedef gpio config table */
 
 typedef struct{
@@ -36,6 +47,8 @@ typedef struct{
 
 /* function declears */
 static int hal_gpio_init(void);
+void hal_write_gpio(unsigned short index,unsigned short sta);
+unsigned short hal_read_gpio(unsigned short index);
 /* end of files */
 #endif
 
