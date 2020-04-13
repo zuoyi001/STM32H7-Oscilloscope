@@ -526,6 +526,26 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>layer</GroupName>
+          <Files>
+            <File>
+              <FileName>hal_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_iic.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>fos</GroupName>
           <Files>
             <File>
@@ -587,26 +607,6 @@
               <FileName>osc_thread.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\osc\osc_thread.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>layer</GroupName>
-          <Files>
-            <File>
-              <FileName>hal_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\layer\hal_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>hal_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\layer\hal_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>hal_iic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\layer\hal_iic.c</FilePath>
             </File>
           </Files>
         </Group>

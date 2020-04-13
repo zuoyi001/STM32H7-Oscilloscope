@@ -60,9 +60,9 @@ void osc_start_clock(unsigned char internal)
 /* static delay_us but maybe not usefull */
 static void delay_us_fifo(unsigned int t)
 {
-	t *= 100;
-	/* waitting */
-	while(t--);
+//	t *= 100;
+//	/* waitting */
+//	while(t--);
 }
 /* read data from fifo */
 void osc_read_fifo_data(unsigned short * ch1,unsigned short * ch1n,unsigned short * ch2,unsigned short * ch2n,unsigned short fifo_deep)
@@ -243,7 +243,7 @@ void osc_trig_read(unsigned short * ch1,unsigned short * ch1n,unsigned short * c
 		if( trig_source_p[i] == t0 && trig_source_p[i+1] == t1 )
 		{
 			/* ok we find the pos*/
-			trig_pos = i - area->total_pixel_h / 2 ;
+			trig_pos = i - area->total_pixel_h / 2 + 5;
 			/* break ,and copy data */
 			break;
 			/*----------------------*/
