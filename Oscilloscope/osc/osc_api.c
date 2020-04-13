@@ -51,6 +51,8 @@ void osc_start_clock(unsigned char internal)
 	}
 	else
 	{
+		/* restart pwm */
+		hal_pwm_stop();	
 		/* ex clock */
 		hal_write_gpio(DIO_CLOCK_SEL,1);		
 	}
@@ -269,7 +271,11 @@ void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsig
 {
   dac_update(a,b,c,d);
 }
-
+/* fifo clock enable */
+void osc_fifo_clock(unsigned short sta)
+{
+	hal_write_gpio(FIFO_DIO_TR,sta);
+}
 
 
 

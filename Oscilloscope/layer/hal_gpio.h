@@ -34,6 +34,7 @@
 #define DIO_R3              (21)
 #define FIFO_DATA_D8        (27)
 #define FIFO_FULL0          (1)
+#define FIFO_DIO_TR         (17)
 /* typedef gpio config table */
 
 typedef struct{

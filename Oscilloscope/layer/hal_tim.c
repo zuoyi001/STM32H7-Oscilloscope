@@ -22,6 +22,7 @@
 #include "main.h"
 #include "hal_tim.h"
 #include "fos.h"
+#include "string.h"
 /* enable or disable the test pwm */
 #define DEBUG_PWM   (1)
 /* register a init inode */
@@ -32,11 +33,13 @@ static TIM_HandleTypeDef TIM_Handle;
 static int hal_tim_init(void)
 {
 	/* enable the clk */
-	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_TIM1_CLK_ENABLE();
   /* define a struction */
 	GPIO_InitTypeDef GPIO_Handle;
 	TIM_OC_InitTypeDef TIM_OC_Handle;
+	/* clear data */
+	memset(&TIM_OC_Handle,0,sizeof(TIM_OC_Handle));
 	/* define a struction */
 	GPIO_Handle.Pin = GPIO_PIN_8;
 	GPIO_Handle.Mode = GPIO_MODE_AF_PP;
@@ -77,6 +80,9 @@ static void hal_test_init(void)
 	/* enable the clk */
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_TIM2_CLK_ENABLE();
+	/* clear data */
+	memset(&TIM_Handle_TIM2,0,sizeof(TIM_Handle_TIM2));
+	memset(&TIM_OC_Handle,0,sizeof(TIM_OC_Handle));
   /* define a struction */
 	GPIO_Handle.Pin = GPIO_PIN_1; 
 	GPIO_Handle.Mode = GPIO_MODE_AF_PP;

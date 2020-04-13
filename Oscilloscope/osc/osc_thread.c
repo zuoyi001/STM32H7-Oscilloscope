@@ -42,6 +42,8 @@ static int osc_thead_init(void)
 {
 	/* for test */
 	osc_voltage_output(1870,2000,0,270);
+	/* return as usual */
+	return FS_OK;
 }
 /* gui task */
 static void osc_thread(void)
@@ -53,6 +55,8 @@ static void osc_thread(void)
 	}
 	/* ok we've some data , stop the clock first */
 	osc_stop_clock();
+	/* disable the tr */
+	osc_fifo_clock(0);
 	/* read data from fifo */
 	osc_read_fifo_data(cache_fifo_ori[0],cache_fifo_ori[1],cache_fifo_ori[2],cache_fifo_ori[3],FIFO_DEEP);
 	/* transfor data */
@@ -61,6 +65,8 @@ static void osc_thread(void)
 	osc_create_analog_data(cache_ch[0],cache_ch[1],cache_dev[0],cache_dev[1]);
 	/* read next seq */
 	clock_sta = hal_read_gpio(DIO_CLOCK_STA) ? 1 : 0;
+	/* enable tr */
+	osc_fifo_clock(1);
 	/* restart pwm */
 	osc_start_clock(0);//for test select the inter clock
 }

@@ -31,6 +31,8 @@ void osc_read_fifo_data(unsigned short * ch1,unsigned short * ch1n,unsigned shor
 void osc_trig_read(unsigned short * ch1,unsigned short * ch1n,unsigned short * ch2,unsigned short * ch2n , signed char * ch1_o,signed char * ch2_o,int trig_type,int trig_source,int tflag);
 void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m );
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d);
+void osc_fifo_clock(unsigned short sta);
+
 #endif
 
 
