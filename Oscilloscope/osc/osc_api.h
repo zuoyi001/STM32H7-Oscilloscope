@@ -25,11 +25,11 @@
 #define FIFO_DEEP (4096)
 /* Private includes ----------------------------------------------------------*/
 
-void osc_stop_clock(void);
-void osc_start_clock(unsigned char internal);
-void osc_read_fifo_data(unsigned short * ch1,unsigned short * ch1n,unsigned short * ch2,unsigned short * ch2n,unsigned short fifo_deep);
-void osc_trig_read(unsigned short * ch1,unsigned short * ch1n,unsigned short * ch2,unsigned short * ch2n , signed char * ch1_o,signed char * ch2_o,int trig_type,int trig_source,int tflag);
-void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m );
+void osc_stop_adc_clock(void);
+void osc_start_adc_clock(unsigned char internal);
+void osc_read_fifo_data(unsigned char clock_sta);
+void osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag);
+static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m );
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d);
 void osc_fifo_clock(unsigned short sta);
 

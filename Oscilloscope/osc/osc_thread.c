@@ -39,9 +39,7 @@ FOS_INODE_REGISTER("osc_thread",0,osc_thead_init,0,1);
 /* buffer */
 static unsigned char clock_sta = 0;
 /* cache data */
-static unsigned short cache_fifo_ori[4][FIFO_DEEP];
-static signed char cache_ch[2][FIFO_DEEP*2];
-static unsigned short cache_dev[2][1366];//max supply num is 1366
+
 
 unsigned short dfefef;
 
@@ -55,6 +53,8 @@ gui_dev_def * dev;
 
 draw_area_def * msg_area;
 
+ static unsigned int cnt_p = 0;
+	
 unsigned short line_show[5][800];
 unsigned short line_show2[5][800];
 
@@ -90,19 +90,14 @@ static void osc_thread(void)
 		return; // not use to deal
 	}
 	/* ok we've some data , stop the clock first */
-	osc_stop_clock();
+	osc_stop_adc_clock();
 	/* disable the tr */
 	osc_fifo_clock(0);
 	/* read data from fifo */
-	osc_read_fifo_data(cache_fifo_ori[0],cache_fifo_ori[1],cache_fifo_ori[2],cache_fifo_ori[3],FIFO_DEEP);
+	osc_read_fifo_data(clock_sta);
 	/* transfor data */
-	osc_trig_read(cache_fifo_ori[0],cache_fifo_ori[1],cache_fifo_ori[2],cache_fifo_ori[3],cache_ch[0],cache_ch[1],TRIG_MODE_RISING,TRIG_SOURCE_CH1,clock_sta);
-	/* create the analog data */
-	osc_create_analog_data(cache_ch[0],cache_ch[1],cache_dev[0],cache_dev[1]);
-	/* */
+	osc_trig_read(line_show[cnt_p%2],line_show2[cnt_p%2],TRIG_MODE_RISING,TRIG_SOURCE_CH1,clock_sta);
 	
- static unsigned int cnt_p = 0;
-
 
 //  if( cnt_p >= 2  )
 //	{
@@ -110,8 +105,7 @@ static void osc_thread(void)
 //		//hide_line(line_show[1],1);
 //		//hide_line(line_show[2],2);
 //	}
-	
-	memcpy(line_show[cnt_p%2],cache_dev[0],800*2);
+
 	//memcpy(line_show2[cnt_p%2],cache_dev[1],800*2);
 	
 	//create_sin_lines(line_show[cnt_p%2],&red_r0[pos_r-375+5],cnt_p%2);
@@ -146,7 +140,7 @@ static void osc_thread(void)
 	/* enable tr */
 	osc_fifo_clock(1);
 	/* restart pwm */
-	osc_start_clock(0);//for test select the inter clock
+	osc_start_adc_clock(0);//for test select the inter clock
 }
 /* the follow is for test */
 #if 1
