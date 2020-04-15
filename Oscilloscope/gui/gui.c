@@ -37,7 +37,8 @@ int gui_static_creater(void)
 			base->draw(base);
 			/* set flag */
 			SET_DRAWED(base->msg.wflags);
-			/* def */
+			/* clear the mark */
+			base->msg.mark_flag = 0;
 		}
 		else
 		{
