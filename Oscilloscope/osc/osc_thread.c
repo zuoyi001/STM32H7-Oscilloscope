@@ -81,9 +81,64 @@ void delay_us(unsigned int t)
 	while(t--);
 }
 
+unsigned char fe,fw = 1;
+
+unsigned char fees = 0;
+
+extern window_def win_menu;
 /* gui task */
 static void osc_thread(void)
 {
+	
+	unsigned short sta = osc_read_key_menu() ? 1 : 0;
+	
+	if( sta == 1 )
+	{
+		if( fw == 0 )
+		{
+			fw = 1;
+			
+			
+			if( fees % 2 )
+			{
+				fe = 2;
+			}
+			else
+			{
+				fe = 1;
+			}
+			
+			fees ++;
+		}
+	}else
+	{
+		if( fw == 1 )
+		{
+			fw = 0;
+		}
+	}
+	
+	//if( osc_read_key_menu(
+	
+	
+	if( fe == 1 )
+	{
+		
+		fe = 0;
+		
+		gui_hide_win(&win_menu);
+		
+		gui_static_creater();
+	}else if( fe == 2 )
+	{
+		
+		fe = 0;
+		
+		gui_show_win(&win_menu);
+		
+		gui_static_creater();
+	}
+	
 	/* nothing to do */
 	if( hal_read_gpio(FIFO_FULL0) != 0 )
 	{
@@ -198,10 +253,10 @@ int LCD_DrawLine_ili(unsigned short x1, unsigned short y1, unsigned short x2, un
 	{
 		if( chn == 0 )
 		{
-       dev->set_point(uRow,uCol,RGB(255,255,7));
+       dev->set_noload_point(uRow,uCol,RGB(255,255,7));
 		}else
 		{
-			 dev->set_point(uRow,uCol,RGB(7,227,231));
+			 dev->set_noload_point(uRow,uCol,RGB(7,227,231));
 		}
 		
 	  if( chn == 0 )
@@ -281,23 +336,23 @@ int LCD_DrawLine_cleat(unsigned short x1, unsigned short y1, unsigned short x2, 
 		{
 			if( osc_arr[uRow + uCol*dev->width] & 0x0400 )
 			{
-				dev->set_point(uRow,uCol,RGB(7,3,7));
+				dev->set_noload_point(uRow,uCol,RGB(7,3,7));
 			}
 			else
 			{
-				dev->set_point(uRow,uCol,RGB(199, 195, 199));
+				dev->set_noload_point(uRow,uCol,RGB(199, 195, 199));
 			}
 		}
 		else
 		{
-			//dev->set_point(uRow,uCol,RGB(0, 255, 0));
+			//dev->set_noload_point(uRow,uCol,RGB(0, 255, 0));
 		}
 	}
 	else
 	{
-//    dev->set_point(uRow,uCol,color);
+//    dev->set_noload_point(uRow,uCol,color);
 //		osc_arr[uRow + uCol*dev->width] |= (1<<to);
-		//dev->set_point(uRow,uCol,RGB(0, 0, 255));
+		//dev->set_noload_point(uRow,uCol,RGB(0, 0, 255));
   }
 	
 	osc_arr[uRow + uCol*dev->width] &=~ (1<<to);

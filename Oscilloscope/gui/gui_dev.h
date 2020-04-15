@@ -28,7 +28,8 @@
 typedef struct
 {
 	/* clear and set read point */
-	void (*set_point)( unsigned short , unsigned short , unsigned int );
+	void (*set_point)( unsigned short *,unsigned short , unsigned short , unsigned int );
+	void (*set_noload_point)( unsigned short x , unsigned short y , unsigned int color ); 
 	unsigned short (*read_point)( unsigned short , unsigned short );
 #if HARDWARE_ACCEL_SUPPLY	
 	/* for hardware */

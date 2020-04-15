@@ -25,7 +25,8 @@
 
 /* function declares */
 int middle_layer_init(display_info_def * dev_info);
-void set_point( unsigned short x , unsigned short y , unsigned int color );
+void set_noload_point( unsigned short x , unsigned short y , unsigned int color );
+void set_point( unsigned short * mark , unsigned short x , unsigned short y , unsigned int color );
 unsigned short get_point( unsigned short x , unsigned short y );
 void fill_rect(unsigned short psx,unsigned short psy,unsigned short pex,unsigned short pey,unsigned int color);
 void fill_color(unsigned short psx,unsigned short psy,unsigned short pex,unsigned short pey,unsigned short * color);

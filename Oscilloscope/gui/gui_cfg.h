@@ -27,7 +27,7 @@
 
 #ifndef _VC_SIMULATOR_
 /* hardware accel */
-#define HARDWARE_ACCEL_SUPPLY   1
+#define HARDWARE_ACCEL_SUPPLY   0
 #else
 #define HARDWARE_ACCEL_SUPPLY   0
 #endif

@@ -47,6 +47,7 @@ int gui_dev_init(void)
 	/* configrate the other funcs */
 	gui_dev_s.set_point = set_point;
 	gui_dev_s.read_point = get_point;	
+	gui_dev_s.set_noload_point = set_noload_point;
 #else
 	/* get width and height */
 	gui_dev_s.width = 800;//dev_info->display_dev->pwidth;

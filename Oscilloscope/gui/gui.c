@@ -127,8 +127,6 @@ int gui_clear_all(void)
 	{
 		/* clear */
 		CLEAR_DRAWED(base->msg.wflags);
-		/* def */
-
 		/* create widget */
 		for( widget_def * wbase = base->wchild ; wbase != 0 ; wbase = wbase->peer_linker)
 		{
@@ -141,7 +139,6 @@ int gui_clear_all(void)
 	return FS_OK;
 }
 /* find the connect */
-/* int gui draw */
 int gui_find_connect(window_def * ori,unsigned short x,unsigned short y)
 {
 	/* from zero to end creating the pic */
@@ -162,9 +159,72 @@ int gui_find_connect(window_def * ori,unsigned short x,unsigned short y)
 	/* return */
 	return 0;
 }
-
-
-
+/* gui hide window */
+int gui_hide_win(window_def * win)
+{
+	/* get hide flag */
+	if( CHECK_HIDE(win->msg.wflags) )
+	{
+		return FS_OK;//already hide
+	}
+	/* got xy */
+	int gotxy = 0;
+	/* from zero to end creating the pic */
+	for( window_def * base = original_win ; base != 0 ; base = base->win_child )
+	{
+		/* skip the base */
+		if( win == base )
+		{
+			continue;//skip this win
+		}
+		/* get the cross data */
+		if((( win->msg.x <= base->msg.x ) && ( win->msg.x + win->msg.x_size ) >= base->msg.x ) || 
+			 (( win->msg.x >= base->msg.x ) && ( win->msg.x <= ( base->msg.x + base->msg.x_size ))))
+		{
+		  /* got x */
+			gotxy = 1;
+		}
+		/* get the cross data y */
+		if((( win->msg.y <= base->msg.y ) && ( win->msg.y + win->msg.y_size ) >= base->msg.y ) || 
+			 (( win->msg.y >= base->msg.y ) && ( win->msg.y <= ( base->msg.y + base->msg.y_size ))))
+		{
+		  /* got x */
+			if( gotxy == 1 )
+			{
+			  /* got y */
+				base->msg.mark_flag = 1;
+				/* set other */
+				base->msg.mx = win->msg.x;
+				base->msg.my = win->msg.y;
+				base->msg.mxstop = win->msg.x_size + win->msg.x;
+				base->msg.mystop = win->msg.y_size + win->msg.y;
+				/* clear the redraw flag */
+				CLEAR_DRAWED(base->msg.wflags);
+				/* set hide */
+				SET_HIDE(win->msg.wflags);
+				/* endo if */
+			}
+		}		
+	}
+	/* return ERROR */
+	return FS_OK;
+}
+/* gui show a win*/
+/* gui hide window */
+int gui_show_win(window_def * win)
+{
+	/* get hide flag */
+	if( !CHECK_HIDE(win->msg.wflags) )
+	{
+		return FS_OK;//already show
+	}	
+	/* clear */
+	CLEAR_HIDE(win->msg.wflags);
+	/* set loce */
+	CLEAR_DRAWED(win->msg.wflags);
+	/* return ERROR */
+	return FS_OK;	
+}
 
 
 

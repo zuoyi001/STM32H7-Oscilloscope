@@ -72,6 +72,12 @@ typedef struct gui_info
 	unsigned short wflags;
 	/* memds */
 	unsigned short upd;
+	/* mark k */
+	unsigned short mark_flag;
+	unsigned short mx;
+	unsigned short my;
+	unsigned short mxstop;
+	unsigned short mystop;
 	/* end */
 }gui_info_def;
 /* widget strucr def */
@@ -116,6 +122,8 @@ int gui_win_creater(window_def * win);
 int gui_widget_creater( widget_def * widget );
 int gui_find_connect(window_def * ori,unsigned short x,unsigned short y);
 void gui_dynamic_string(struct widget * wid);
+int gui_hide_win(window_def * win);
+int gui_show_win(window_def * win);
 /* end of files */
 #endif
 

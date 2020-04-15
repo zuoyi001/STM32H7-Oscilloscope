@@ -52,11 +52,11 @@ static void gui_char(gui_dev_def * dev,unsigned short x,unsigned short y,char nu
 			/* one by one */
 			if( temp & 0x80 )
 			{
-				dev->set_point( x, y, color);
+				dev->set_noload_point( x, y, color);
 			}
 			else 
 			{
-				//dev->set_point( x, y, backcolor);
+				//dev->set_noload_point( x, y, backcolor);
 			}
 			/* shift */
 			temp <<= 1;
@@ -105,11 +105,11 @@ static void draw_hz(gui_dev_def * dev , unsigned char * hzd,unsigned short x,uns
 		{
 			if( ( hzc[i] << j ) & 0x80 )
 			{
-				dev->set_point( x + ti / 16 , y + ti % 16 , color);
+				dev->set_noload_point( x + ti / 16 , y + ti % 16 , color);
 			}
 			else
 			{
-				//dev->set_point( x + ti / 16 , y + ti % 16 , backcolor);
+				//dev->set_noload_point( x + ti / 16 , y + ti % 16 , backcolor);
 			}
 			/* inc */
 			ti++;

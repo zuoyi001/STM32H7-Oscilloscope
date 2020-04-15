@@ -46,11 +46,29 @@ int middle_layer_init(display_info_def * dev_info)
 	return 0;
 }
 /* middle functions set point */
-void set_point( unsigned short x , unsigned short y , unsigned int color )
+void set_point( unsigned short * mark , unsigned short x , unsigned short y , unsigned int color )
 {
 	/* get GRAM */
+	if( mark[0] == 0 )
+	{
+		gram_buffer[ y * WIDTH + x ] = color;
+	}
+	else
+	{
+		/* check data */
+		if( ( x >= mark[1] && x <= mark[3] ) && 
+			  ( y >= mark[2] && y <= mark[4] ))
+		{
+			gram_buffer[ y * WIDTH + x ] = color;
+		}
+	}
+}
+/* set noload point */
+void set_noload_point( unsigned short x , unsigned short y , unsigned int color )
+{
 	if( gram_buffer != NULL )
 	{
+		/* get GRAM */
 		gram_buffer[ y * WIDTH + x ] = color;
 	}
 }

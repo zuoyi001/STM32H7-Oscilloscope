@@ -253,8 +253,12 @@ void osc_fifo_clock(unsigned short sta)
 {
 	hal_write_gpio(FIFO_DIO_TR,sta);
 }
-
-
+/* unsigned read key menu */
+unsigned short osc_read_key_menu(void)
+{
+	return hal_read_gpio(KEY_MENU);
+}
+/* coune */
 
 
 
