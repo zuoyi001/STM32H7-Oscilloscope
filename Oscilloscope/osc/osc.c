@@ -524,7 +524,7 @@ void osc_calculate_main_size(gui_dev_def * dev,window_def * win,unsigned short w
 	/* set callback */
 	win->draw = create_grid_data;
 	/* wf */
-	win->msg.wflags = wf;
+	win->msg.wflags = wf | 0xE0;
 	/* ------- */
 	/* create win creater */
 	gui_win_creater(win);	
@@ -577,7 +577,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num)
 	win0[0].msg.x_size = 430;
 	win0[0].msg.y_size = dev->height - vertical_pixel_total - TOP_REMAIN_PIXEL - 2 - 10;
 	win0[0].dev = dev;
-	win0[0].msg.wflags = 0x0100;
+	win0[0].msg.wflags = 0x0100 | 0xC0;
 	/* set callback */
 	win0[0].draw = draw_group_win;
 	/* create the group */
@@ -586,7 +586,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num)
 	win0[1].msg.x_size = ( dev->width - win0[0].msg.x_size ) * 2 / 3;
 	win0[1].msg.y_size = (dev->height - vertical_pixel_total - TOP_REMAIN_PIXEL - 2 - 8) / 2 - 1;
 	win0[1].dev = dev;
-	win0[1].msg.wflags = 0x0200;
+	win0[1].msg.wflags = 0x0200 | 0xC0;
 	/* set callback */
 	win0[1].draw = draw_group_win;
 	/* create the group */
@@ -595,7 +595,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num)
 	win0[2].msg.x_size = dev->width - win0[0].msg.x_size - 5;
 	win0[2].msg.y_size = win0[1].msg.y_size - 1;
 	win0[2].dev = dev;
-	win0[2].msg.wflags = 0x0400;
+	win0[2].msg.wflags = 0x0400 | 0xC0;
 	/* set callback */
 	win0[2].draw = draw_group_win;
 	/* create the group */
@@ -604,7 +604,7 @@ void osc_calculate_sg_size(gui_dev_def * dev,window_def * win0,unsigned int num)
 	win0[3].msg.x_size = dev->width - win0[0].msg.x_size - win0[1].msg.x_size - 6;
 	win0[3].msg.y_size = win0[1].msg.y_size;
 	win0[3].dev = dev;
-	win0[3].msg.wflags = 0x0800;
+	win0[3].msg.wflags = 0x0800 | 0xC0;
 	/* set callback */
 	win0[3].draw = draw_group_win;
   /* ok create the win */
@@ -631,7 +631,7 @@ void osc_calculate_menu_size(gui_dev_def * dev,window_def * win,unsigned short w
 	win->msg.y = 0;
 	win->dev = dev;
 	/* set wflags d*/
-	win->msg.wflags = wf;
+	win->msg.wflags = wf | 0xE0;
 	/* set callback */
 	win->draw = draw_menu_win;
 	/* ok */

@@ -25,7 +25,7 @@
 #include "gui_ascii.h"
 #include "hz_out.h"
 /* Includes ------------------------------------------------------------------*/
-static void gui_char(gui_dev_def * dev,unsigned short x,unsigned short y,char num,unsigned char size,unsigned int color,unsigned int backcolor )
+static void gui_char(gui_dev_def * dev,unsigned short x,unsigned short y,char num,unsigned char size,unsigned int color,unsigned int backcolor,unsigned char show_m)
 {
 	/* define some function */
 	unsigned char temp;
@@ -56,7 +56,10 @@ static void gui_char(gui_dev_def * dev,unsigned short x,unsigned short y,char nu
 			}
 			else 
 			{
-				//dev->set_noload_point( x, y, backcolor);
+				if( show_m )
+				{
+					dev->set_noload_point( x, y, backcolor);
+				}
 			}
 			/* shift */
 			temp <<= 1;
@@ -92,7 +95,7 @@ static unsigned char * find_hz(unsigned char * hzw)
 	return (unsigned char *)HZ_DATAX[0];
 }
 /* show one hz */
-static void draw_hz(gui_dev_def * dev , unsigned char * hzd,unsigned short x,unsigned short y,unsigned int color,unsigned int backcolor)
+static void draw_hz(gui_dev_def * dev , unsigned char * hzd,unsigned short x,unsigned short y,unsigned int color,unsigned int backcolor,unsigned char show_m)
 {
 	/* find the hz */
 	unsigned char * hzc = find_hz(hzd);
@@ -109,27 +112,23 @@ static void draw_hz(gui_dev_def * dev , unsigned char * hzd,unsigned short x,uns
 			}
 			else
 			{
-				//dev->set_noload_point( x + ti / 16 , y + ti % 16 , backcolor);
+				if( show_m )
+				{
+					dev->set_noload_point( x + ti / 16 , y + ti % 16 , backcolor);
+				}
 			}
 			/* inc */
 			ti++;
 		}
 	}
 }
-/* show a mix string */
-void gui_dynamic_string(struct widget * wid)
+/* get color */
+unsigned short gui_color(unsigned short colo)
 {
-	/* start pos */
-	unsigned short posx = wid->parent->msg.x + wid->msg.x;
-	unsigned short posy = wid->parent->msg.y + wid->msg.y;
-	/* get char pointer */
-	unsigned char * hzc = wid->msg.pri_data;
-	unsigned short x = 0;
-	/* get back and font color and size */
+	/* chea */
 	unsigned short color;
-	unsigned char size = (wid->msg.wflags & 0x1000) ? 24 : 16;
-	/* color */
-	switch(wid->msg.wflags & 0xE000)
+	/* front color */
+	switch(colo)
 	{
 		case 0x0000:
 			color = COLOR_CHAR;
@@ -149,10 +148,55 @@ void gui_dynamic_string(struct widget * wid)
 		case 0xA000:
 			color = COLOR_TIPS_NORMAL;
 			break;		
+		case 0xC000:
+			color = COLOR_GRID_AREA_BG;
+			break;			
+		case 0xE000:
+			color = COLOR_BACK_GROUND;
+			break;
 		default:
 			color = COLOR_GRID_AREA_BG;
 			break;
 	}
+	/* return */
+	return color;
+}
+/* show a mix string */
+void gui_dynamic_string(struct widget * wid)
+{
+	/* start pos */
+	unsigned short posx = wid->parent->msg.x + wid->msg.x;
+	unsigned short posy = wid->parent->msg.y + wid->msg.y;
+	/* get char pointer */
+	unsigned char * hzc = wid->msg.pri_data;
+	unsigned short x = 0;
+	/* get back and font color and size */
+	unsigned short color;
+	unsigned char size = (wid->msg.wflags & 0x1000) ? 24 : 16;
+	/* set color */
+	unsigned short color_w,backcolor,back_w;
+	unsigned char show_m = 0;
+	/* check */
+	if(CHECK_REHIDE(wid->msg.wflags))
+	{
+		color_w = (wid->parent->msg.wflags & 0x00E0) << 8;
+	}
+	else
+	{
+		color_w = wid->msg.wflags;
+		/* set backcolor */
+		if( CHECK_OVERM(wid->msg.wflags))
+		{
+			back_w = (wid->parent->msg.wflags & 0x00E0) << 8;
+			/* show back */
+			show_m = 1;
+		}
+	}
+	/* front color */
+	color = gui_color(color_w & 0xE000);
+	/* */
+	/* back color  */
+	backcolor = gui_color(back_w & 0xE000);
 	/* judge Is this a char or hz */
 	while( *hzc != 0 )
 	{
@@ -168,7 +212,7 @@ void gui_dynamic_string(struct widget * wid)
 		if( (unsigned char)(*hzc) > 0x80 )
 		{
 			/* show a hz */
-			draw_hz(wid->dev,(unsigned char *)hzc,posx + x , posy, color,0x0000);
+			draw_hz(wid->dev,(unsigned char *)hzc,posx + x , posy, color,backcolor,show_m);
 			/* channge pos */
 			x += 16;
 			hzc += 2;
@@ -176,7 +220,7 @@ void gui_dynamic_string(struct widget * wid)
 		else
 		{
 			/* show a char */
-			gui_char(wid->dev,posx + x , posy,*hzc,size,color,0x0000);
+			gui_char(wid->dev,posx + x , posy,*hzc,size,color,backcolor,show_m);
 		  /* channge pos */
 			if( size == 16 )
 			{
@@ -190,6 +234,8 @@ void gui_dynamic_string(struct widget * wid)
 			hzc += 1;
 		}
 	}
+	/* clear */
+	CLEAR_OVERM(wid->msg.wflags);
 }
 
 

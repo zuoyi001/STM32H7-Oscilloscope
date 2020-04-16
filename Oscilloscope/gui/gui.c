@@ -23,11 +23,36 @@
 #include "gui.h"
 #include "gui_dev.h"
 #include "string.h"
+#include "gui_dev.h"
 /* Includes ------------------------------------------------------------------*/
 static window_def * original_win = 0;
-/* int gui draw */
-int gui_static_creater(void)
+/* gui event */
+static unsigned int GUI_EVENT = 0;
+/* init a */
+FOS_INODE_REGISTER("gui",gui_dev_init,gui_static_creater,0,0);
+/*----------------------------------------------------------------------------*/
+FOS_TSK_REGISTER(gui_thread,PRIORITY_4,100); /* gui detecter task run as 100 ms*/
+/* gui task */
+static void gui_thread(void)
 {
+	int ret = 0;
+	/* check event */
+	if( GUI_EVENT != 0 )
+	{
+		/* show data */
+		ret = gui_static_creater();
+		/* if */
+		if( ret == 0 )
+		{
+			GUI_EVENT = 0;
+		}
+	}
+}
+/* int gui draw */
+static int gui_static_creater(void)
+{
+	/* int ret */
+	int ret = 0;
 	/* from zero to end creating the pic */
 	for( window_def * base = original_win ; base != 0 ; base = base->win_child )
 	{
@@ -39,22 +64,27 @@ int gui_static_creater(void)
 			SET_DRAWED(base->msg.wflags);
 			/* clear the mark */
 			base->msg.mark_flag = 0;
-		}
-		else
-		{
-			/* can not supply now*/
-			continue;//skip this win
+			/* event */
+			ret ++;
 		}
 		/* create widget */
 		for( widget_def * wbase = base->wchild ; wbase != 0 ; wbase = wbase->peer_linker)
 		{
 			/* if use the default draw function */
-			if((!CHECH_DRAWED(wbase->msg.wflags)) && ( wbase->draw != 0 ) && (!CHECK_HIDE(wbase->msg.wflags)))
+			if((!CHECH_DRAWED(wbase->msg.wflags)) && ( wbase->draw != 0 ) && ((!CHECK_HIDE(wbase->msg.wflags)) || CHECK_REHIDE(wbase->msg.wflags)))
 			{
 				wbase->draw(wbase);
 				/* set flag */
-				//SET_DRAWED(wbase->msg.wflags);
+				SET_DRAWED(wbase->msg.wflags);
 				/* def */
+				if(CHECK_REHIDE(wbase->msg.wflags))
+				{
+					/* clear flag */
+					CLEAR_REHIDE(wbase->msg.wflags);
+					/* end */
+				}
+				/* event */
+				ret ++;				
 			}
 			else
 			{
@@ -63,7 +93,7 @@ int gui_static_creater(void)
 		}
 	}
 	/* return */
-	return FS_OK;
+	return ret;
 }
 /* create and init a win */
 int gui_win_creater(window_def * win)
@@ -160,6 +190,18 @@ int gui_find_connect(window_def * ori,unsigned short x,unsigned short y)
 	/* return */
 	return 0;
 }
+/* set widget to undrawed */
+static int gui_clear_widget(window_def * win)
+{
+	/* find the wchild and clear */
+  for( widget_def * wbase = win->wchild ; wbase != 0 ; wbase = wbase->peer_linker)	
+	{
+		/* clear the redraw flag */
+		CLEAR_DRAWED(wbase->msg.wflags);
+	}
+	/* return */
+	return FS_OK;
+}
 /* gui hide window */
 int gui_hide_win(window_def * win)
 {
@@ -203,6 +245,8 @@ int gui_hide_win(window_def * win)
 				CLEAR_DRAWED(base->msg.wflags);
 				/* set hide */
 				SET_HIDE(win->msg.wflags);
+				/* create gui event */
+				CREATE_GUI_EVENT(GUI_EVENT);
 				/* endo if */
 			}
 		}		
@@ -211,7 +255,6 @@ int gui_hide_win(window_def * win)
 	return FS_OK;
 }
 /* gui show a win*/
-/* gui hide window */
 int gui_show_win(window_def * win)
 {
 	/* get hide flag */
@@ -223,13 +266,84 @@ int gui_show_win(window_def * win)
 	CLEAR_HIDE(win->msg.wflags);
 	/* set loce */
 	CLEAR_DRAWED(win->msg.wflags);
+	/* clear flag */
+	gui_clear_widget(win);
+	/* create gui event */
+	CREATE_GUI_EVENT(GUI_EVENT);	
 	/* return ERROR */
 	return FS_OK;	
 }
-
-
-
-
+/* gui hide a widget */
+int gui_hide_widget(widget_def * wid)
+{
+	/* check hide */
+	if( !CHECK_HIDE(wid->parent->msg.wflags) )
+	{
+		/* check hide */
+		if( !CHECK_HIDE(wid->msg.wflags) )
+		{			
+			/* widget set rehide */
+			SET_REHIDE(wid->msg.wflags);
+			/* set the hide */
+			SET_HIDE(wid->msg.wflags);
+			/* clear */
+			CLEAR_DRAWED(wid->msg.wflags);
+			/* create gui event */
+			CREATE_GUI_EVENT(GUI_EVENT);			
+			/* return OK */
+			return FS_OK;
+		}
+	}
+	else
+	{
+		if( !CHECK_HIDE(wid->msg.wflags) )
+		{
+			/* set the hide */
+			SET_HIDE(wid->msg.wflags);	
+		}
+	}
+	/* return ERROR */
+	return FS_ERR;
+}
+/* gui hide a widget */
+int gui_show_widget(widget_def * wid)
+{
+	/* check hide */
+	if( !CHECK_HIDE(wid->parent->msg.wflags) && CHECK_HIDE(wid->msg.wflags) )
+	{
+		CLEAR_HIDE(wid->msg.wflags);
+		/* create gui event */
+		CREATE_GUI_EVENT(GUI_EVENT);
+		/* return OK */
+		return FS_OK;
+	}
+	/* return ERROR */
+	return FS_ERR;
+}
+/* set window text */
+int gui_set_wid_text(widget_def * wid,char * data)
+{
+	/* set win txt */
+	if( !CHECK_OVERM(wid->msg.wflags))
+	{
+		/* set data */
+		wid->msg.pri_data = data;
+		/* hide ? */
+		if( !CHECK_HIDE(wid->msg.wflags) && !CHECK_HIDE(wid->parent->msg.wflags) )
+		{
+			/* set OVERM */
+			SET_OVERM(wid->msg.wflags);
+			/* clear */
+			CLEAR_DRAWED(wid->msg.wflags);
+			/* create gui event */
+			CREATE_GUI_EVENT(GUI_EVENT);
+			/* return */
+			return FS_OK;
+		}
+	}
+	/* return ERROR */
+	return FS_ERR;
+}
 
 
 

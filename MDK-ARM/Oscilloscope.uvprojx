@@ -619,11 +619,6 @@
               <FilePath>..\Oscilloscope\gui\gui_dev.c</FilePath>
             </File>
             <File>
-              <FileName>gui_tsk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Oscilloscope\gui\gui_tsk.c</FilePath>
-            </File>
-            <File>
               <FileName>gui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\gui\gui.c</FilePath>

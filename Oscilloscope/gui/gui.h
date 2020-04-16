@@ -24,8 +24,12 @@
 #include "gui_dev.h"
 
 /* setting */
+#define CREATE_GUI_EVENT(a)  (a++)
+/* settings */
 #define GUI_HIDE         (0x0001)
 #define GUI_DRAWED       (0x0002)
+#define GUI_REHIDE       (0x0004)
+#define GUI_OVERM        (0x0008)
 /* check maros */
 #define CHECK_HIDE(a)    ((a&GUI_HIDE)?1:0)
 #define SET_HIDE(a)      ((a |= GUI_HIDE))
@@ -34,6 +38,14 @@
 #define CHECH_DRAWED(a)  ((a&GUI_DRAWED)?1:0)
 #define SET_DRAWED(a)    ((a |= GUI_DRAWED))
 #define CLEAR_DRAWED(a)  ((a &=~ GUI_DRAWED))
+/* set REHIDE */
+#define CHECK_REHIDE(a)  ((a&GUI_REHIDE)?1:0)
+#define SET_REHIDE(a)    ((a |= GUI_REHIDE))
+#define CLEAR_REHIDE(a)  ((a &=~ GUI_REHIDE))
+/* set OVER */
+#define CHECK_OVERM(a)   ((a&GUI_OVERM)?1:0)
+#define SET_OVERM(a)     ((a |= GUI_OVERM))
+#define CLEAR_OVERM(a)   ((a &=~ GUI_OVERM))
 /* Includes ------------------------------------------------------------------*/
 #define ORIGINAL_PARENT  (0)
 /* gui level */
@@ -117,13 +129,17 @@ typedef struct win
 /* end if file */
 
 /* Function declaration */
-int gui_static_creater(void);
+static int gui_static_creater(void);
 int gui_win_creater(window_def * win);
 int gui_widget_creater( widget_def * widget );
 int gui_find_connect(window_def * ori,unsigned short x,unsigned short y);
 void gui_dynamic_string(struct widget * wid);
 int gui_hide_win(window_def * win);
 int gui_show_win(window_def * win);
+int gui_hide_widget(widget_def * wid);
+int gui_show_widget(widget_def * wid);
+static void gui_thread(void);
+int gui_set_wid_text(widget_def * wid,char * data);
 /* end of files */
 #endif
 

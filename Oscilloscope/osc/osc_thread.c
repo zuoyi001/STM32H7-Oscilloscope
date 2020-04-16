@@ -45,6 +45,26 @@ unsigned short dfefef;
 
 extern window_def win_main;
 
+extern window_def win_group[4];
+
+/* btn */
+extern widget_def btn[5];
+/* text */
+extern widget_def voltage_ch[2];
+/* time */
+extern widget_def time_ch[2];
+/* ch1 measure */
+extern widget_def measure_ch1[6];
+extern widget_def measure_ch2[6];
+/* menu text */
+extern widget_def menu_text[7];
+/* tips */
+extern widget_def tips_text;
+/* fast tips */
+extern widget_def fast_tips[5];
+/* widget arrow */
+extern widget_def base_vol_arrow[2];
+
 void create_osc_grid_status(void);
 void show_line(unsigned short * line_d,unsigned short index,unsigned char chn );
 void hide_line(unsigned short * line_d,unsigned short index,unsigned char chn );
@@ -128,7 +148,7 @@ static void osc_thread(void)
 		
 		gui_hide_win(&win_menu);
 		
-		gui_static_creater();
+		
 	}else if( fe == 2 )
 	{
 		
@@ -136,7 +156,34 @@ static void osc_thread(void)
 		
 		gui_show_win(&win_menu);
 		
-		gui_static_creater();
+		
+	}
+	
+	if(  fe == 6 )
+	{
+		fe = 0;
+		gui_hide_widget(&fast_tips[1]);
+		
+	}
+	
+	if(  fe == 7 )
+	{
+		fe = 0;
+//		
+//		time_ch[1].msg.pri_data = "500us";
+//		
+//		gui_show_widget(&time_ch[1]);
+		gui_set_wid_text(&fast_tips[1],"CH2:DC");
+	}
+
+	if(  fe == 8 )
+	{
+		fe = 0;
+//		
+//		time_ch[1].msg.pri_data = "500us";
+//		
+ 		gui_show_widget(&fast_tips[1]);
+		//gui_set_wid_text(&time_ch[1],"100us");
 	}
 	
 	/* nothing to do */

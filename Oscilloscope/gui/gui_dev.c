@@ -30,7 +30,6 @@
 void set_vc_point(unsigned short x,unsigned short y,unsigned int color);
 #endif
 /* Private includes ----------------------------------------------------------*/
-FOS_INODE_REGISTER("gui_dev",gui_dev_init,gui_creater,0,0);
 /* structe the display msg */
 static gui_dev_def gui_dev_s;
 /* test data that will delete*/
@@ -65,14 +64,6 @@ int gui_dev_init(void)
 	inited_flag = 1;
 	/* reutrn OK */
 	return 0;
-}
-/* static app and thread gui create */
-int gui_creater(void)
-{
-	/* create the static init */
-	gui_static_creater();
-	/* init */
-	return FS_OK;
 }
 /* get gui_dev */
 gui_dev_def * get_gui_dev(void)
