@@ -25,7 +25,7 @@
 #include "hal_gpio.h"
 #include "hal_tim.h"
 #include "osc_api.h"
-
+#include "osc_cfg.h"
 
 #include "string.h"
 
@@ -121,11 +121,11 @@ static void osc_thread(void)
 			
 			if( fees % 2 )
 			{
-				fe = 2;
+				fe = 11;
 			}
 			else
 			{
-				fe = 1;
+				fe = 11;
 			}
 			
 			fees ++;
@@ -146,7 +146,7 @@ static void osc_thread(void)
 		
 		fe = 0;
 		
-		gui_hide_win(&win_menu);
+		//gui_hide_win(&win_menu);
 		
 		
 	}else if( fe == 2 )
@@ -154,7 +154,7 @@ static void osc_thread(void)
 		
 		fe = 0;
 		
-		gui_show_win(&win_menu);
+		//gui_show_win(&win_menu);
 		
 		
 	}
@@ -198,6 +198,23 @@ static void osc_thread(void)
 		
 		fe = 0;
 	}	
+	
+	if( fe == 11 )
+	{
+		unsigned int cld = 0;
+		char * cef;
+		
+		static unsigned char cs = 3;
+		
+		if( osc_scan_time(cs,&cld,&cef) == FS_OK )
+		{
+			cs++;
+			
+			gui_set_wid_text(&time_ch[1],cef);
+		}
+		fe = 0;
+	}		
+	
 	
 	/* nothing to do */
 	if( hal_read_gpio(FIFO_FULL0) != 0 )

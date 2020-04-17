@@ -608,6 +608,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\osc\osc_thread.c</FilePath>
             </File>
+            <File>
+              <FileName>osc_cfg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_cfg.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
