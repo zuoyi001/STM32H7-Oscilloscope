@@ -220,6 +220,8 @@ int gui_hide_win(window_def * win)
 		{
 			continue;//skip this win
 		}
+		/* clear */
+		gotxy = 0;
 		/* get the cross data */
 		if((( win->msg.x <= base->msg.x ) && ( win->msg.x + win->msg.x_size ) >= base->msg.x ) || 
 			 (( win->msg.x >= base->msg.x ) && ( win->msg.x <= ( base->msg.x + base->msg.x_size ))))
@@ -344,7 +346,27 @@ int gui_set_wid_text(widget_def * wid,char * data)
 	/* return ERROR */
 	return FS_ERR;
 }
-
+/* gui move a widget */
+int gui_move_wid(widget_def * wid,unsigned short px,unsigned short py)
+{
+	/* calbrate the new posion */
+	wid->msg.mx = px;
+	wid->msg.my = py;
+	/* check hide */
+	if( !CHECK_HIDE(wid->parent->msg.wflags) && !CHECK_HIDE(wid->msg.wflags) )
+	{
+		/* do not need notice to gui thread */
+		wid->msg.mark_flag = 2;// move
+		/* clear */
+		CLEAR_DRAWED(wid->msg.wflags);
+		/* create gui event */
+		CREATE_GUI_EVENT(GUI_EVENT);
+		/* return */
+		return FS_OK;
+	}
+  /* return OK */
+	return FS_OK;
+}
 
 
 

@@ -162,7 +162,7 @@ static void osc_thread(void)
 	if(  fe == 6 )
 	{
 		fe = 0;
-		gui_hide_widget(&fast_tips[1]);
+		gui_hide_widget(&base_vol_arrow[1]);
 		
 	}
 	
@@ -182,9 +182,22 @@ static void osc_thread(void)
 //		
 //		time_ch[1].msg.pri_data = "500us";
 //		
- 		gui_show_widget(&fast_tips[1]);
+ 		gui_show_widget(&base_vol_arrow[1]);
 		//gui_set_wid_text(&time_ch[1],"100us");
 	}
+	
+	if( fe == 9 )
+	{
+		gui_move_wid(&base_vol_arrow[0],0,100);
+		
+		fe = 0;
+	}
+	if( fe == 10 )
+	{
+		gui_move_wid(&base_vol_arrow[1],0,200);
+		
+		fe = 0;
+	}	
 	
 	/* nothing to do */
 	if( hal_read_gpio(FIFO_FULL0) != 0 )

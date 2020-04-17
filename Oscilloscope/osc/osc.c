@@ -927,6 +927,8 @@ static void osc_draw_chn_arrow(widget_def * wd)
 {
 	/* color tmp */
 	unsigned short * color;
+	unsigned short backcolor;
+	unsigned char rehide_flag = 0;
 	/* switch chn */
 	if( wd->msg.wflags & 0x8000 )
 	{
@@ -936,23 +938,68 @@ static void osc_draw_chn_arrow(widget_def * wd)
 	{
 		color = (unsigned short *)CH2_ARROW;
 	}
-	/* widget pos */
-	unsigned short pos_x = wd->msg.x;
-	unsigned short pos_y = wd->msg.y;
-	/* create */
-	for( int i = 0 ; i < 12 ; i ++ )
+	/* check rehide */
+	if( CHECK_REHIDE(wd->msg.wflags) || wd->msg.mark_flag == 2 )
 	{
-		for( int j = 0 ; j < 20 ; j ++ )
+		/* get parent color */
+		backcolor = gui_color((wd->parent->msg.wflags & 0x00E0) << 8);
+		/* set */
+		rehide_flag = 1;
+		/* set deft */
+		if( CHECK_REHIDE(wd->msg.wflags) )
 		{
-#ifndef _VC_SIMULATOR_
-			wd->dev->set_noload_point(pos_x + j , pos_y + i , color[i*20+j]);
-#else
-			unsigned short tm = color[i*20+j];
-
-			widget->dev->set_noload_point(pos_x + j , pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
-#endif
+			wd->msg.mark_flag = 1;
 		}
+		/* clear */
+		CLEAR_REHIDE(wd->msg.wflags);		
 	}
+	else
+	{
+		wd->msg.mark_flag = 1;
+	}
+	/* move */
+	while(wd->msg.mark_flag)
+	{
+		/* widget pos */
+		unsigned short pos_x = wd->msg.x;
+		unsigned short pos_y = wd->msg.y;
+		/* create */
+		for( int i = 0 ; i < 12 ; i ++ )
+		{
+			for( int j = 0 ; j < 20 ; j ++ )
+			{
+#ifndef _VC_SIMULATOR_
+				if( rehide_flag == 0 )
+				{
+					wd->dev->set_noload_point(pos_x + j , pos_y + i , color[i*20+j]);
+				}
+				else
+				{
+					wd->dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
+				}
+#else
+				unsigned short tm = color[i*20+j];
+
+				widget->dev->set_noload_point(pos_x + j , pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
+#endif
+			}
+		}
+		/* fe */
+		wd->msg.mark_flag --;
+		/* check */
+		if( wd->msg.mark_flag )
+		{
+			/* repos */
+			wd->msg.x = wd->msg.mx;
+			wd->msg.y = wd->msg.my;
+			/* pos */
+			pos_x = wd->msg.x;
+			pos_x = wd->msg.y;
+			/* redraw */
+			rehide_flag = 0;
+			/* reduce */
+		}
+  }
 }
 /* */
 void osc_calculate_base_arrow(window_def * pwin,widget_def *wd,int chn)

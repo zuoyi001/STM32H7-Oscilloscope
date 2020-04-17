@@ -140,6 +140,8 @@ int gui_hide_widget(widget_def * wid);
 int gui_show_widget(widget_def * wid);
 static void gui_thread(void);
 int gui_set_wid_text(widget_def * wid,char * data);
+unsigned short gui_color(unsigned short colo);
+int gui_move_wid(widget_def * wid,unsigned short px,unsigned short py);
 /* end of files */
 #endif
 
