@@ -28,122 +28,149 @@ const osc_time_def osc_tim[] =
 	{
 		.str = "50ns ",
 		.osc_time = 50, /* 50 ns */
-		.osc_clock_ex = 15,
+		.osc_clock_ex = 1,
 		.osc_unit = OSC_UINT_NS,
+		.osc_zoom_factor = 15, /* default */
 	},
+	{
+		.str = "150ns",
+		.osc_time = 150, /* 250 ns */
+		.osc_clock_ex = 1,
+		.osc_unit = OSC_UINT_NS,
+		.osc_zoom_factor = 5,
+	},	
 	{
 		.str = "250ns",
 		.osc_time = 250, /* 250 ns */
-		.osc_clock_ex = 3,
+		.osc_clock_ex = 1,
 		.osc_unit = OSC_UINT_NS,
+		.osc_zoom_factor = 3,
 	},
 	{
 		.str = "750ns",
 		.osc_time = 750 , /* 750 ns */
 		.osc_clock_ex = 1,
 		.osc_unit = OSC_UINT_NS,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "2.5us",
 		.osc_time = 2.5f , /* 2.5us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "5us  ",
 		.osc_time = 5 , /* 5us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "10us ",
 		.osc_time = 10 , /* 10us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "25us ",
 		.osc_time = 25 , /* 10us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "50us ",
 		.osc_time = 50 , /* 50us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "100us",
 		.osc_time = 100 , /* 100us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "250us",
 		.osc_time = 250 , /* 250us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "500us",
 		.osc_time = 500 , /* 500us */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_US,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "1ms  ",
 		.osc_time = 1 , /* 1ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "2.5ms",
 		.osc_time = 2.5 , /* 2.5ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "5ms  ",
 		.osc_time = 5 , /* 5ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "10ms ",
 		.osc_time = 10 , /* 10ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "25ms ",
 		.osc_time = 25 , /* 25ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "50ms ",
 		.osc_time = 50 , /* 50ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "100ms",
 		.osc_time = 100 , /* 100ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},	
 	{
 		.str = "250ms",
 		.osc_time = 250 , /* 250ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},
 	{
 		.str = "500ms",
 		.osc_time = 500 , /* 500ms */
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
+		.osc_zoom_factor = 1,
 	},
 };
 /* set scan clock */

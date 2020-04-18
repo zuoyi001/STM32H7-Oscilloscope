@@ -40,6 +40,8 @@ typedef struct{
 	unsigned int osc_unit;
 	/* source inter or ex */
 	unsigned int osc_clock_ex;
+	/* Zoom Factor */
+	unsigned int osc_zoom_factor;
 	/* end if */
 }osc_time_def;
 
