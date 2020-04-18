@@ -44,7 +44,7 @@ typedef struct{
 }osc_time_def;
 
 /* set scan time */
-int osc_scan_time(unsigned int index,unsigned int * clock_source,char ** title);
+const osc_time_def * osc_scan_time(unsigned int index);
 
 #endif
 

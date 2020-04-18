@@ -106,6 +106,9 @@ unsigned char fe,fw = 1;
 unsigned char fees = 0;
 
 extern window_def win_menu;
+
+const osc_time_def * osc_time_sw;
+	
 /* gui task */
 static void osc_thread(void)
 {
@@ -204,14 +207,21 @@ static void osc_thread(void)
 		unsigned int cld = 0;
 		char * cef;
 		
-		static unsigned char cs = 3;
+		static unsigned char cs = 0;
 		
-		if( osc_scan_time(cs,&cld,&cef) == FS_OK )
+		//osc_time_def * osc_time_sw;
+		
+		const osc_time_def * osc_time_sg = osc_scan_time(cs);
+		
+		if( osc_time_sg != 0 )
 		{
-			cs++;
+			osc_time_sw = osc_time_sg;
 			
-			gui_set_wid_text(&time_ch[1],cef);
+			gui_set_wid_text(&time_ch[1],osc_time_sw->str);
+			
+			cs++;
 		}
+		
 		fe = 0;
 	}		
 	
@@ -272,7 +282,7 @@ static void osc_thread(void)
 	/* enable tr */
 	osc_fifo_clock(1);
 	/* restart pwm */
-	osc_start_adc_clock(0);//for test select the inter clock
+	osc_start_adc_clock(osc_time_sw->osc_clock_ex);//for test select the inter clock
 }
 /* the follow is for test */
 #if 1

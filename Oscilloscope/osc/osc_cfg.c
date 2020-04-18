@@ -26,7 +26,7 @@
 const osc_time_def osc_tim[] = 
 {
 	{
-		.str = "50ns",
+		.str = "50ns ",
 		.osc_time = 50, /* 50 ns */
 		.osc_clock_ex = 15,
 		.osc_unit = OSC_UINT_NS,
@@ -147,13 +147,13 @@ const osc_time_def osc_tim[] =
 	},
 };
 /* set scan clock */
-int osc_scan_time(unsigned int index,unsigned int * clock_source,char ** title)
+const osc_time_def * osc_scan_time(unsigned int index)
 {
 	/* over */
 	if( index >= sizeof(osc_tim) / sizeof(osc_tim[0]) )
 	{
 		/* return */
-		return FS_ERR;
+		return 0;
 	}
 	/* get draw area */
 	draw_area_def * area = get_draw_area_msg();
@@ -169,17 +169,20 @@ int osc_scan_time(unsigned int index,unsigned int * clock_source,char ** title)
 	{
 		psc = (unsigned short)((float)OSC_BASE_CLOCK * 1000 * osc_tim[index].osc_time / (float)area->pixel_horizontal) / 2;
 	}
+	else if( osc_tim[index].osc_unit == OSC_UINT_NS )
+	{
+		/* return */
+    return &osc_tim[index];		
+	}
 	else
 	{
-		/* ns and s , can not supply new */
-		psc = 0xffff;//error
+		/* unit = s , can not supply now */
+		return 0;
 	}
 	/* set psc */
 	hal_tim_psc(psc);
-	/* set title */
-	*title = osc_tim[index].str;
 	/* return OK */
-	return FS_OK;
+	return &osc_tim[index];
 }
 
 
