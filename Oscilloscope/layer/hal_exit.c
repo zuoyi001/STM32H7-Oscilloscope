@@ -29,7 +29,7 @@ static void osc_rot_thread(unsigned char index);
 /* exit init  */
 FOS_INODE_REGISTER("exit_rot",osc_exit_rot_init,0,0,1);
 /*----------------------------------------------------------------------------*/
-FOS_TSK_REGISTER(exit_thread,PRIORITY_1,100); /* gui detecter task run as 100 ms*/
+FOS_TSK_REGISTER(exit_thread,PRIORITY_0,1); /* gui detecter task run as 100 ms*/
 /* static rot_flag */
 static unsigned char rot_flag[4];
 static signed short rot_updm[4];
@@ -133,11 +133,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			break;
 		case GPIO_PIN_13:
 			/* rot2 */
-		  osc_rot_isr(2,1);			
+		  osc_rot_isr(2,0);			
 			break;
 		case GPIO_PIN_14:
 			/* rot2 */
-		  osc_rot_isr(2,0);			
+		  osc_rot_isr(2,1);			
 			break;
 		case GPIO_PIN_15:
 			/* rot1 */

@@ -34,6 +34,9 @@ static void osc_menu_win_draw(window_def * win);
 void osc_ui_time_str(char * str);
 void osc_ui_vol_str(unsigned char chn,char * str);
 void osc_ui_tips_str(char * str);
+void osc_ui_move_offset_arrow(unsigned char chn,unsigned short pos);
+void osc_calculate_trig_arrow(window_def * pwin,widget_def *wd,int chn);
+void osc_ui_move_trig_arrow(unsigned char chn,unsigned short pos);
 /* Private includes ----------------------------------------------------------*/
 
 #endif

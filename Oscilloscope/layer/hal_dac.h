@@ -18,46 +18,12 @@
   */
 /* USER CODE END Header */
 
-#ifndef __OSC_CFG_H__
-#define __OSC_CFG_H__
+#ifndef __HAL_DAC_H__
+#define __HAL_DAC_H__
 /* Includes ------------------------------------------------------------------*/
-#define OSC_UNIT_US   (0)
-#define OSC_UNIT_MS   (1)
-#define OSC_UNIT_S    (2)
-#define OSC_UINT_NS   (3)
 
-#define OSC_BASE_CLOCK  (180)
-
-/* Private includes ----------------------------------------------------------*/
-/* MACROS */
-#define OSC_TIME_ROT    (3)
-#define OSC_VOL_SCALE   (2)
-#define OSC_TRIG_SCALE  (1)
-/* osc_ time config */
-typedef struct{
-	/* show title */
-  char * str;
-	/* scan time */
-  float osc_time;
-	/* unit */
-	unsigned int osc_unit;
-	/* source inter or ex */
-	unsigned int osc_clock_ex;
-	/* Zoom Factor */
-	unsigned int osc_zoom_factor;
-	/* end if */
-}osc_time_def;
-/* voltage scale */
-typedef struct
-{
-	/* show * str */
-	char * str;
-	/* */
-}osc_vol_scale_def;
-/* set scan time */
-const osc_time_def * osc_scan_thread(void);
-void osc_vol_scale_thread(unsigned char chn);
-void osc_trig_scale_thread(unsigned char chn);
+static int hal_dac_init(void);
+void osc_set_dac(unsigned short mv);
 
 #endif
 

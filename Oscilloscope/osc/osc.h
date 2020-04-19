@@ -98,6 +98,7 @@ void osc_calculate_base_arrow(window_def * pwin,widget_def *wd,int chn);
 void osc_calculate_title_string(window_def * pwin,widget_def *wd,int chn,char ** fast_title);
 static void osc_create_TITLE(window_def * win);
 draw_area_def * get_draw_area_msg(void);
+static void osc_draw_trig_arrow(widget_def * wd);
 
 #endif
 

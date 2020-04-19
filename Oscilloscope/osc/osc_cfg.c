@@ -24,6 +24,8 @@
 #include "osc.h"
 #include "hal_exit.h"
 #include "osc_ui.h"
+#include "osc_api.h"
+#include "hal_dac.h"
 /* Private includes ----------------------------------------------------------*/
 const osc_time_def osc_tim[] = 
 {
@@ -175,9 +177,6 @@ const osc_time_def osc_tim[] =
 		.osc_zoom_factor = 1,
 	},
 };
-/* defines */
-static signed short last_scan_time = 0xff;
-static unsigned char ste = 0;
 /* set scan clock */
 const osc_time_def * osc_scan_time(unsigned int index)
 {
@@ -224,6 +223,9 @@ static int osc_time_scan_leng(void)
 /* osc_cfg_thread */
 const osc_time_def * osc_scan_thread(void)
 {
+	/* defines */
+	static signed short last_scan_time = 0xff;
+	static unsigned char ste = 0;	
 	/* get rotation data */
 	signed short osc_rot = osc_rot_sta(OSC_TIME_ROT);
 	/* get leng */
@@ -279,9 +281,105 @@ const osc_time_def * osc_scan_thread(void)
 	/* return OK */
 	return osc_time_sw;
 }
-
-
-
+/* voltage thread */
+void osc_vol_scale_thread(unsigned char chn)
+{
+	/* last */
+	static signed short lsat_vol = 0xfff;
+  /* void offset thread */
+	signed short vol_scale = osc_rot_sta(OSC_VOL_SCALE);
+	/* get draw area */
+	draw_area_def * area = get_draw_area_msg();
+	/* little */
+	unsigned short max_scale = area->num_vertical * area->little_grid;
+	/* get data */
+	if( vol_scale > max_scale )
+	{
+		/* set max offset */
+		vol_scale = max_scale;
+		/* set vol_scale */
+		osc_rot_set(OSC_VOL_SCALE,vol_scale);
+	}
+	else if( vol_scale < 1 )
+	{
+		/* set max offset */
+		vol_scale = 1;
+		/* set vol_scale */
+		osc_rot_set(OSC_VOL_SCALE,vol_scale);
+	}
+	else
+	{
+		/* to do nothing */
+	}
+	/* change */
+	if( lsat_vol != vol_scale )
+	{
+		/* pos */
+		unsigned short new_pos = vol_scale * area->pixel_vertiacl / area->little_grid  + area->start_pos_y - 6 ;
+		/* channel 1 */
+		osc_ui_move_offset_arrow(chn,new_pos );
+		/* */
+		if( vol_scale >= max_scale / 2 )
+		{
+			/* calbrate the offset voltage */
+			unsigned short out_dac = ( vol_scale -  max_scale / 2 ) * 51 + 20;
+			/* out dac for test */
+			osc_voltage_output(1870,2000,0,out_dac);
+		}
+	}
+	/* ipdate */
+	lsat_vol = vol_scale;
+}
+/* voltage thread */
+void osc_trig_scale_thread(unsigned char chn)
+{
+	/* last */
+	static signed short lsat_vol = 0xfff;
+  /* void offset thread */
+	signed short vol_scale = osc_rot_sta(OSC_TRIG_SCALE);
+	/* get draw area */
+	draw_area_def * area = get_draw_area_msg();
+	/* little */
+	unsigned short max_scale = area->total_pixel_v;
+	/* get data */
+	if( vol_scale > max_scale )
+	{
+		/* set max offset */
+		vol_scale = max_scale;
+		/* set vol_scale */
+		osc_rot_set(OSC_TRIG_SCALE,vol_scale);
+	}
+	else if( vol_scale < 1 )
+	{
+		/* set max offset */
+		vol_scale = 1;
+		/* set vol_scale */
+		osc_rot_set(OSC_TRIG_SCALE,vol_scale);
+	}
+	else
+	{
+		/* to do nothing */
+	}
+	/* change */
+	if( lsat_vol != vol_scale )
+	{
+		/* pos */
+		unsigned short new_pos = vol_scale  + area->start_pos_y - 6 ;
+		/* channel 1 */
+		osc_ui_move_trig_arrow(chn,new_pos );
+		/* calbrate the offset voltage */
+		signed  short out_dac = (float)( max_scale / 2 - vol_scale ) * 512.0f / (float)(max_scale / 2);
+		/* only supply pos vol now */
+		if( vol_scale <= max_scale / 2 )
+		{
+			/* calbrate the offset voltage */
+			osc_set_dac(out_dac);
+			/* out dac for test */
+		}
+	}
+	/* ipdate */
+	lsat_vol = vol_scale;
+}
 
 
 

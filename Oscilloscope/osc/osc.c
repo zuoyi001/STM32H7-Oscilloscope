@@ -659,6 +659,7 @@ void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,un
 		wd[i].dev = dev;
 		wd[i].draw = osc_create_button;
 		wd[i].parent = win;	
+		wd[i].msg.wflags = GUI_HIDE;
 		/* create btn */
 		gui_widget_creater(&wd[i]);
 	}
@@ -887,6 +888,7 @@ void osc_calculate_menu(window_def * pwin,widget_def *wd,int num,char ** item)
 		wd[i].draw = gui_dynamic_string;
 		/* other */
 		wd[i].peer_linker = 0;
+		wd[i].msg.wflags = GUI_HIDE;
 		/* create the wisget */
 		gui_widget_creater(&wd[i]);		
 	}
@@ -1001,6 +1003,91 @@ static void osc_draw_chn_arrow(widget_def * wd)
 		}
   }
 }
+/* create the base voltage icon */
+static void osc_draw_trig_arrow(widget_def * wd)
+{
+	/* color tmp */
+	const unsigned char trig_shape[13] = 
+	{ 0x02,0x06,0x0E,0x1E,0x3E,0x7f,0xff,0x7f,0x3E,0x1E,0x0E,0x06,0x02};
+	unsigned short color;
+	unsigned short backcolor;
+	unsigned char rehide_flag = 0;
+	/* switch chn */
+	if( wd->msg.wflags & 0x8000 )
+	{
+		color = COLOR_CH1;
+	}
+	else
+	{
+		color = COLOR_CH2;
+	}
+	/* check rehide */
+	if( CHECK_REHIDE(wd->msg.wflags) || wd->msg.mark_flag == 2 )
+	{
+		/* get parent color */
+		backcolor = gui_color((wd->parent->msg.wflags & 0x00E0) << 8);
+		/* set */
+		rehide_flag = 1;
+		/* set deft */
+		if( CHECK_REHIDE(wd->msg.wflags) )
+		{
+			wd->msg.mark_flag = 1;
+		}
+		/* clear */
+		CLEAR_REHIDE(wd->msg.wflags);		
+	}
+	else
+	{
+		wd->msg.mark_flag = 1;
+	}
+	/* move */
+	while(wd->msg.mark_flag)
+	{
+		/* widget pos */
+		unsigned short pos_x = wd->msg.x;
+		unsigned short pos_y = wd->msg.y;
+		/* create */
+		for( int i = 0 ; i < 13 ; i ++ )
+		{
+			for( int j = 0 ; j < 8 ; j ++ )
+			{
+#ifndef _VC_SIMULATOR_
+				if( rehide_flag == 0 )
+				{
+					/* check point */
+					if( ( trig_shape[i] << j ) & 0x80 )
+					{
+						wd->dev->set_noload_point(pos_x + j , pos_y + i , color);
+					}
+				}
+				else
+				{
+					wd->dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
+				}
+#else
+				unsigned short tm = color[i*20+j];
+
+				widget->dev->set_noload_point(pos_x + j , pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
+#endif
+			}
+		}
+		/* fe */
+		wd->msg.mark_flag --;
+		/* check */
+		if( wd->msg.mark_flag )
+		{
+			/* repos */
+			wd->msg.x = wd->msg.mx;
+			wd->msg.y = wd->msg.my;
+			/* pos */
+			pos_x = wd->msg.x;
+			pos_x = wd->msg.y;
+			/* redraw */
+			rehide_flag = 0;
+			/* reduce */
+		}
+  }
+}
 /* */
 void osc_calculate_base_arrow(window_def * pwin,widget_def *wd,int chn)
 {
@@ -1034,6 +1121,43 @@ void osc_calculate_base_arrow(window_def * pwin,widget_def *wd,int chn)
 	wd->dev = pwin->dev;
 	wd->parent = pwin;
 	wd->draw = osc_draw_chn_arrow;
+	/* other */
+	wd->peer_linker = 0;
+	/* create the wisget */
+	gui_widget_creater(wd);	
+}
+void osc_calculate_trig_arrow(window_def * pwin,widget_def *wd,int chn)
+{
+	/* set param */
+	/* def*/
+	unsigned short vertical_pixel_total,hori_pixel;
+	/* get msg */
+	if( osc_grid_fast(pwin->dev,&hori_pixel,&vertical_pixel_total) == FS_ERR )
+	{
+		return;
+	}		
+	/* calbrate the pox */
+	/* get chn */
+	if( chn == 1 )
+	{
+	  wd->msg.wflags |= 0x8000;
+	}
+	else
+	{
+		wd->msg.wflags &=~ 0x8000;
+	}
+	/* set ch1 */
+	wd->msg.x = pwin->msg.x + hori_pixel + LEFT_REMAIN_PIXEL + 3;
+	wd->msg.y = vertical_pixel_total / 2 + TOP_REMAIN_PIXEL - 6  + 2 + (chn - 1) * 100 + 50; /* 20 * 12 */
+	/* not supply size now */
+#if 0
+	wd->msg.x_size = 0;
+	wd->msg.y_size = 0;
+#endif
+	/* parent */
+	wd->dev = pwin->dev;
+	wd->parent = pwin;
+	wd->draw = osc_draw_trig_arrow;
 	/* other */
 	wd->peer_linker = 0;
 	/* create the wisget */

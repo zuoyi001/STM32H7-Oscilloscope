@@ -96,8 +96,11 @@ static int osc_thead_init(void)
 	
 	osc_rot_set(OSC_TIME_ROT,10);
 	
+	osc_rot_set(OSC_VOL_SCALE,20);
+	osc_rot_set(OSC_TRIG_SCALE,200);
+	
 	/* for test */
-	osc_voltage_output(1870,2000,0,350);//1870,2000,0,270
+	osc_voltage_output(1870,2000,0,20);//1870,2000,0,270
 	/* return as usual */
 	return FS_OK;
 }
@@ -159,6 +162,9 @@ static void osc_thread(void)
 		fe = 0;
 		gui_show_win(&win_menu);
 	}
+	/* test */
+  osc_vol_scale_thread(0);
+	osc_trig_scale_thread(0);
 	/* get scan time */
 	osc_time_sw = osc_scan_thread();
 	/* nothing to do */
