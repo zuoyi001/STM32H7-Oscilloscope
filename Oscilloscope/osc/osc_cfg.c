@@ -211,6 +211,11 @@ const osc_time_def * osc_scan_time(unsigned int index)
 	/* return OK */
 	return &osc_tim[index];
 }
+/* get scan_time leng */
+int osc_time_scan_leng(void)
+{
+	return sizeof(osc_tim) / sizeof(osc_tim[0]);
+}
 
 
 

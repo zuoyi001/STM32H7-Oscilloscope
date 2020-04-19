@@ -259,7 +259,31 @@ unsigned short osc_read_key_menu(void)
 	return hal_read_gpio(KEY_MENU);
 }
 /* coune */
-
+int osc_read_rot_idle(unsigned index)
+{
+	unsigned short ret = 0;
+	/* index */
+	switch(index)
+	{
+		case 0:
+			ret = hal_read_gpio(DIO_ROT_TIME_UP) || hal_read_gpio(DIO_ROT_TIME_DM);
+		break;
+		case 1:
+			ret = hal_read_gpio(DIO_ROT_VOL_UP) || hal_read_gpio(DIO_ROT_VOL_DM);
+		break;
+		case 2:
+			ret = hal_read_gpio(DIO_ROT_TRIG_UP) || hal_read_gpio(DIO_ROT_TRIG_DM);
+		break;		
+		case 3:
+			ret = hal_read_gpio(DIO_ROT_HORI_UP) || hal_read_gpio(DIO_ROT_HORI_DM);
+		break;		
+		default:
+			ret = 1;
+		break;
+	}
+	/* get osc data */
+	return ret;
+}
 
 
 

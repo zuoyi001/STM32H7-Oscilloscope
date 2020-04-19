@@ -36,6 +36,15 @@
 #define FIFO_FULL0          (1)
 #define FIFO_DIO_TR         (17)
 #define KEY_MENU            (9)
+/* ROT 7 ~ 0 */
+#define DIO_ROT_TIME_UP     (28)
+#define DIO_ROT_TIME_DM     (29)
+#define DIO_ROT_VOL_UP      (30)
+#define DIO_ROT_VOL_DM      (31)
+#define DIO_ROT_TRIG_UP     (32)
+#define DIO_ROT_TRIG_DM     (33)
+#define DIO_ROT_HORI_UP     (34)
+#define DIO_ROT_HORI_DM     (35)
 /* typedef gpio config table */
 
 typedef struct{

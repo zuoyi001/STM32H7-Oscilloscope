@@ -33,6 +33,7 @@ static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsig
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d);
 void osc_fifo_clock(unsigned short sta);
 unsigned short osc_read_key_menu(void);
+int osc_read_rot_idle(unsigned index);
 
 #endif
 

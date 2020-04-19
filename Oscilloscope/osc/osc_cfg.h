@@ -47,6 +47,7 @@ typedef struct{
 
 /* set scan time */
 const osc_time_def * osc_scan_time(unsigned int index);
+int osc_time_scan_leng(void);
 
 #endif
 
