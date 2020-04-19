@@ -26,6 +26,9 @@
 #include "osc_ui.h"
 #include "osc_api.h"
 #include "hal_dac.h"
+/* out dac part */
+static unsigned short trig_dac_part_offset = 0;
+static unsigned short trig_dac_part_rot = 0;
 /* Private includes ----------------------------------------------------------*/
 const osc_time_def osc_tim[] = 
 {
@@ -323,8 +326,12 @@ void osc_vol_scale_thread(unsigned char chn)
 		{
 			/* calbrate the offset voltage */
 			unsigned short out_dac = ( vol_scale -  max_scale / 2 ) * 51 + 20;
+			/* calbrate the trig_dac_part_offset */
+			trig_dac_part_offset = out_dac / 2;//unit is mv
 			/* out dac for test */
 			osc_voltage_output(1870,2000,0,out_dac);
+			/* update dac trig */
+			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 		}
 	}
 	/* ipdate */
@@ -372,8 +379,10 @@ void osc_trig_scale_thread(unsigned char chn)
 		/* only supply pos vol now */
 		if( vol_scale <= max_scale / 2 )
 		{
+			/* calbrate trig_dac_part_rot */
+			trig_dac_part_rot = out_dac;
 			/* calbrate the offset voltage */
-			osc_set_dac(out_dac);
+			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 			/* out dac for test */
 		}
 	}
