@@ -34,7 +34,7 @@ const osc_time_def osc_tim[] =
 	},
 	{
 		.str = "150ns",
-		.osc_time = 150, /* 250 ns */
+		.osc_time = 150, /* 150 ns */
 		.osc_clock_ex = 1,
 		.osc_unit = OSC_UINT_NS,
 		.osc_zoom_factor = 5,

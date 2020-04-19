@@ -66,8 +66,8 @@ extern widget_def fast_tips[5];
 extern widget_def base_vol_arrow[2];
 
 void create_osc_grid_status(void);
-void show_line(unsigned short * line_d,unsigned short index,unsigned char chn );
-void hide_line(unsigned short * line_d,unsigned short index,unsigned char chn );
+void show_line(unsigned short * line_d,unsigned short index,unsigned char chn,unsigned short zm );
+void hide_line(unsigned short * line_d,unsigned short index,unsigned char chn ,unsigned short zm);
 /* gui dev */
 gui_dev_def * dev;
 
@@ -77,6 +77,8 @@ draw_area_def * msg_area;
 	
 unsigned short line_show[5][800];
 unsigned short line_show2[5][800];
+
+unsigned short line_zm[5];
 
 /* upload default setting */
 static int osc_thead_init(void)
@@ -108,7 +110,9 @@ unsigned char fees = 0;
 extern window_def win_menu;
 
 const osc_time_def * osc_time_sw;
-	
+
+unsigned short osc_zm = 1;
+
 /* gui task */
 static void osc_thread(void)
 {
@@ -219,6 +223,8 @@ static void osc_thread(void)
 			
 			gui_set_wid_text(&time_ch[1],osc_time_sw->str);
 			
+			osc_zm = osc_time_sw->osc_zoom_factor;
+			
 			cs++;
 		}
 		
@@ -252,22 +258,24 @@ static void osc_thread(void)
 	
 	//create_sin_lines(line_show[cnt_p%2],&red_r0[pos_r-375+5],cnt_p%2);
 	
-	show_line(line_show[cnt_p%2],cnt_p%2,0);
+	line_zm[cnt_p%2] = osc_zm;
+	
+	show_line(line_show[cnt_p%2],cnt_p%2,0,osc_zm);
   //show_line(line_show2[cnt_p%2],cnt_p%2,1);
 
   if( cnt_p >= 1  )
 	{
 		
-		delay_us(200);
+		delay_us(20);
 		
 		if( cnt_p % 2 )
 		{
-			hide_line(line_show[0],0,0);
+			hide_line(line_show[0],0,0,line_zm[0]);
 			//hide_line(line_show2[0],0,1);
 		}
 		else
 		{
-			hide_line(line_show[1],1,0);
+			hide_line(line_show[1],1,0,line_zm[1]);
 			//hide_line(line_show2[0],0,1);
 		}
 		
@@ -497,22 +505,27 @@ void create_osc_grid_status(void)
 		}
 	}
 }
-void show_line(unsigned short * line_d,unsigned short index,unsigned char chn )
+void show_line(unsigned short * line_d,unsigned short index,unsigned char chn ,unsigned short zm)
 {
-  for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - 1 ; i ++ )
+	int it = 0;
+  for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
 	{
-		LCD_DrawLine_ili(msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[i] , msg_area->start_pos_x + i + 1 ,msg_area->start_pos_y + line_d[i+1],0,dev,index,chn);
+		LCD_DrawLine_ili(msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[it] , msg_area->start_pos_x + i + zm ,msg_area->start_pos_y + line_d[it+1],0,dev,index,chn);
+		
+		it ++;
 	}
 }
 
-void hide_line(unsigned short * line_d,unsigned short index,unsigned char chn )
+void hide_line(unsigned short * line_d,unsigned short index,unsigned char chn,unsigned short zm )
 {
-	msg_area = get_draw_area_msg();
+	int it = 0;
 	
-	for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - 1 ; i ++ )
+  for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
 	{
-		LCD_DrawLine_cleat(msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[i] , msg_area->start_pos_x + i + 1 ,msg_area->start_pos_y + line_d[i+1],0,dev,index,chn);
-	}
+		LCD_DrawLine_cleat(msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[it] , msg_area->start_pos_x + i + zm ,msg_area->start_pos_y + line_d[it+1],0,dev,index,chn);
+		
+		it ++;
+	}	
 }
 
 
