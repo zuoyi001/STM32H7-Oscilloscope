@@ -24,7 +24,7 @@
 #include "fos.h"
 #include "string.h"
 /* enable or disable the test pwm */
-#define DEBUG_PWM   (0)
+#define DEBUG_PWM   (1)
 /* register a init inode */
 FOS_INODE_REGISTER("hal_gpio",hal_tim_init,0,0,14);
 /* static tim handle */

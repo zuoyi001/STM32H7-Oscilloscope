@@ -96,16 +96,16 @@ static int osc_thead_init(void)
 	
 	osc_ts_leng = osc_time_scan_leng();
 	
-	osc_rot_set(0,6);
+	osc_rot_set(2,10);
 	
-	unsigned short osc_rot = (unsigned short)osc_rot_sta(0);
+	unsigned short osc_rot = (unsigned short)osc_rot_sta(2);
 	
 	osc_time_sw = osc_scan_time(osc_rot);
 	
 	
 	
 	/* for test */
-	osc_voltage_output(1870,2000,0,270);//1870,2000,0,270
+	osc_voltage_output(1870,2000,0,350);//1870,2000,0,270
 	/* return as usual */
 	return FS_OK;
 }
@@ -238,14 +238,14 @@ static void osc_thread(void)
 //	
    static unsigned char ste = 0;
 
-   signed short osc_rot = osc_rot_sta(0);
+   signed short osc_rot = osc_rot_sta(2);
 	 
 	 if( osc_rot >= osc_ts_leng )
 	 {
 		 
 		 osc_rot = osc_ts_leng - 1;
 		 
-		 osc_rot_set(0,osc_rot);
+		 osc_rot_set(2,osc_rot);
 		 
 		 if( ste == 1 )
 		 {
@@ -258,7 +258,7 @@ static void osc_thread(void)
 		
 		 osc_rot = 0;
 		 
-     osc_rot_set(0,osc_rot);	
+     osc_rot_set(2,osc_rot);	
 		 
 		 if( ste == 1 )
 		 {
@@ -318,6 +318,8 @@ static void osc_thread(void)
 	//memcpy(line_show2[cnt_p%2],cache_dev[1],800*2);
 	
 	//create_sin_lines(line_show[cnt_p%2],&red_r0[pos_r-375+5],cnt_p%2);
+	
+	osc_zm = osc_time_sw->osc_zoom_factor;
 	
 	line_zm[cnt_p%2] = osc_zm;
 	
