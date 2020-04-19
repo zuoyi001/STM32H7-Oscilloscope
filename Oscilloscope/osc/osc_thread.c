@@ -94,15 +94,7 @@ static int osc_thead_init(void)
 	
 	create_osc_grid_status();
 	
-	osc_ts_leng = osc_time_scan_leng();
-	
-	osc_rot_set(2,10);
-	
-	unsigned short osc_rot = (unsigned short)osc_rot_sta(2);
-	
-	osc_time_sw = osc_scan_time(osc_rot);
-	
-	
+	osc_rot_set(OSC_TIME_ROT,10);
 	
 	/* for test */
 	osc_voltage_output(1870,2000,0,350);//1870,2000,0,270
@@ -157,9 +149,6 @@ static void osc_thread(void)
 		}
 	}
 	
-	//if( osc_read_key_menu(
-	
-	
 	if( fe == 1 )
 	{	
 		fe = 0;
@@ -170,129 +159,8 @@ static void osc_thread(void)
 		fe = 0;
 		gui_show_win(&win_menu);
 	}
-	
-//	if(  fe == 6 )
-//	{
-//		fe = 0;
-//		gui_hide_widget(&base_vol_arrow[1]);
-//		
-//	}
-//	
-//	if(  fe == 7 )
-//	{
-//		fe = 0;
-////		
-////		time_ch[1].msg.pri_data = "500us";
-////		
-////		gui_show_widget(&time_ch[1]);
-//		gui_set_wid_text(&fast_tips[1],"CH2:DC");
-//	}
-
-//	if(  fe == 8 )
-//	{
-//		fe = 0;
-////		
-////		time_ch[1].msg.pri_data = "500us";
-////		
-// 		gui_show_widget(&base_vol_arrow[1]);
-//		//gui_set_wid_text(&time_ch[1],"100us");
-//	}
-//	
-//	if( fe == 9 )
-//	{
-//		gui_move_wid(&base_vol_arrow[0],0,100);
-//		
-//		fe = 0;
-//	}
-//	if( fe == 10 )
-//	{
-//		gui_move_wid(&base_vol_arrow[1],0,200);
-//		
-//		fe = 0;
-//	}	
-//	
-//	if( fe == 11 )
-//	{
-//		unsigned int cld = 0;
-//		char * cef;
-//		
-//		static unsigned char cs = 0;
-//		
-//		//osc_time_def * osc_time_sw;
-//		
-//		const osc_time_def * osc_time_sg = osc_scan_time(cs);
-//		
-//		if( osc_time_sg != 0 )
-//		{
-//			osc_time_sw = osc_time_sg;
-//			
-//			gui_set_wid_text(&time_ch[1],osc_time_sw->str);
-//			
-//			osc_zm = osc_time_sw->osc_zoom_factor;
-//			
-//			cs++;
-//		}
-//		
-//		fe = 0;
-//	}		
-//	
-   static unsigned char ste = 0;
-
-   signed short osc_rot = osc_rot_sta(2);
-	 
-	 if( osc_rot >= osc_ts_leng )
-	 {
-		 
-		 osc_rot = osc_ts_leng - 1;
-		 
-		 osc_rot_set(2,osc_rot);
-		 
-		 if( ste == 1 )
-		 {
-			 ste = 0;
-		   gui_set_wid_text(&tips_text,"扫描时间已经到达最大值");
-		 }
-	 }
-	 else if( osc_rot < 0 )
-	 {
-		
-		 osc_rot = 0;
-		 
-     osc_rot_set(2,osc_rot);	
-		 
-		 if( ste == 1 )
-		 {
-			 ste = 0;
-		   gui_set_wid_text(&tips_text,"扫描时间已经到达最小值");
-		 }
-	 }
-   else
-	 {
-		 if( osc_rot == 0 || osc_rot == ( osc_ts_leng - 1) )
-		 {
-			 
-		 }
-		 else
-		 {
-			   if( ste == 0 )
-				 {
-						ste = 1;
-						gui_set_wid_text(&tips_text,"                       ");
-				 }
-		 }
-	 }
-	 
-	 static signed short last_fe = 0xff;
-	 
-	 if( osc_rot != last_fe )
-	 {
-		 osc_time_sw = osc_scan_time(osc_rot);
-		 
-		 gui_set_wid_text(&time_ch[1],osc_time_sw->str);
-	 }
-	
-	 last_fe = osc_rot;
-	 
+	/* get scan time */
+	osc_time_sw = osc_scan_thread();
 	/* nothing to do */
 	if( hal_read_gpio(FIFO_FULL0) != 0 )
 	{

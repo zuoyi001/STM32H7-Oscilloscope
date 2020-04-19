@@ -22,6 +22,8 @@
 #include "hal_tim.h"
 #include "osc_cfg.h"
 #include "osc.h"
+#include "hal_exit.h"
+#include "osc_ui.h"
 /* Private includes ----------------------------------------------------------*/
 const osc_time_def osc_tim[] = 
 {
@@ -173,6 +175,9 @@ const osc_time_def osc_tim[] =
 		.osc_zoom_factor = 1,
 	},
 };
+/* defines */
+static signed short last_scan_time = 0xff;
+static unsigned char ste = 0;
 /* set scan clock */
 const osc_time_def * osc_scan_time(unsigned int index)
 {
@@ -212,12 +217,68 @@ const osc_time_def * osc_scan_time(unsigned int index)
 	return &osc_tim[index];
 }
 /* get scan_time leng */
-int osc_time_scan_leng(void)
+static int osc_time_scan_leng(void)
 {
 	return sizeof(osc_tim) / sizeof(osc_tim[0]);
 }
-
-
+/* osc_cfg_thread */
+const osc_time_def * osc_scan_thread(void)
+{
+	/* get rotation data */
+	signed short osc_rot = osc_rot_sta(OSC_TIME_ROT);
+	/* get leng */
+	int osc_ts_leng = osc_time_scan_leng();
+	/* check */
+	if( osc_rot >= osc_ts_leng )
+	{
+		/* over the max */
+		osc_rot = osc_ts_leng - 1;
+		/* set max */
+		osc_rot_set(OSC_TIME_ROT,osc_rot);
+		/* once flags */
+		if( ste == 1 )
+		{
+			ste = 0;
+			osc_ui_tips_str("扫描时间已经到达最大值");
+		}
+	}
+	else if( osc_rot < 0 )
+	{
+		/* min */
+		osc_rot = 0;
+		/* set min */
+		osc_rot_set(OSC_TIME_ROT,osc_rot);	
+		/* once flags */
+		if( ste == 1 )
+		{
+			ste = 0;
+			osc_ui_tips_str("扫描时间已经到达最小值");
+		}
+	}
+	else
+	{
+		if( osc_rot != 0 && osc_rot != ( osc_ts_leng - 1) )
+		{
+			/* once flag */
+			if( ste == 0 )
+			{
+				ste = 1;
+				osc_ui_tips_str("                       ");
+			}
+		}
+	}
+	/* scan time */
+	const osc_time_def * osc_time_sw = osc_scan_time(osc_rot);
+	/* set time text */
+	if( osc_rot != last_scan_time )
+	{
+		osc_ui_time_str(osc_time_sw->str);
+	}
+  /* clear flags */
+	last_scan_time = osc_rot;
+	/* return OK */
+	return osc_time_sw;
+}
 
 
 

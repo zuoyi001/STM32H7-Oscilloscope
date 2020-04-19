@@ -89,8 +89,25 @@ int osc_create_ui(void)
 	/* return */
 	return FS_OK;
 }
-
-
+/* set time text */
+void osc_ui_time_str(char * str)
+{
+	gui_set_wid_text(&time_ch[1],str);
+}
+/* set ch1 and ch2 text */
+void osc_ui_vol_str(unsigned char chn,char * str)
+{
+	/* limit */
+	if( chn < 2 )
+	{
+		gui_set_wid_text(&time_ch[chn],str);
+	}
+}
+/* set time text */
+void osc_ui_tips_str(char * str)
+{
+	gui_set_wid_text(&tips_text,str);
+}
 
 
 

@@ -29,7 +29,8 @@
 #define OSC_BASE_CLOCK  (180)
 
 /* Private includes ----------------------------------------------------------*/
-
+/* MACROS */
+#define OSC_TIME_ROT  (2)
 /* osc_ time config */
 typedef struct{
 	/* show title */
@@ -46,8 +47,7 @@ typedef struct{
 }osc_time_def;
 
 /* set scan time */
-const osc_time_def * osc_scan_time(unsigned int index);
-int osc_time_scan_leng(void);
+const osc_time_def * osc_scan_thread(void);
 
 #endif
 

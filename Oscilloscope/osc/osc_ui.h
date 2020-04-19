@@ -31,6 +31,9 @@ void osc_create_ch2_micon(struct widget * widget);
 static void osc_main_draw(window_def * win);
 static void osc_group_draw(window_def * win);
 static void osc_menu_win_draw(window_def * win);
+void osc_ui_time_str(char * str);
+void osc_ui_vol_str(unsigned char chn,char * str);
+void osc_ui_tips_str(char * str);
 /* Private includes ----------------------------------------------------------*/
 
 #endif
