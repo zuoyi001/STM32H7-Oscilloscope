@@ -659,7 +659,6 @@ void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,un
 		wd[i].dev = dev;
 		wd[i].draw = osc_create_button;
 		wd[i].parent = win;	
-		wd[i].msg.wflags = GUI_HIDE;
 		/* create btn */
 		gui_widget_creater(&wd[i]);
 	}
@@ -888,7 +887,6 @@ void osc_calculate_menu(window_def * pwin,widget_def *wd,int num,char ** item)
 		wd[i].draw = gui_dynamic_string;
 		/* other */
 		wd[i].peer_linker = 0;
-		wd[i].msg.wflags = GUI_HIDE;
 		/* create the wisget */
 		gui_widget_creater(&wd[i]);		
 	}

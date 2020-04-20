@@ -67,6 +67,14 @@ static int gui_static_creater(void)
 			/* event */
 			ret ++;
 		}
+		else
+		{
+			/* check hide or not */
+			if( CHECK_HIDE(base->msg.wflags) )
+			{
+				continue; /* skip this window */
+			}
+		}
 		/* create widget */
 		for( widget_def * wbase = base->wchild ; wbase != 0 ; wbase = wbase->peer_linker)
 		{
