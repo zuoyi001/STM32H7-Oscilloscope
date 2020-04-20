@@ -30,10 +30,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* MACROS */
-#define OSC_TIME_ROT           (3)
-#define OSC_VOL_OFFSET_SCALE   (3)
-#define OSC_TRIG_SCALE         (1)
-#define OSC_VOL_SCALE          (2)
+#define OSC_TIME_ROT           (0)
+#define OSC_VOL_SCALE          (1)
+#define OSC_VOL_OFFSET_SCALE   (2)
+#define OSC_TRIG_SCALE         (3)
+
 /* osc_ time config */
 typedef struct{
 	/* show title */
