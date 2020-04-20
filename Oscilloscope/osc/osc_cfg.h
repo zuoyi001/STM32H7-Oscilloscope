@@ -30,9 +30,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* MACROS */
-#define OSC_TIME_ROT    (3)
-#define OSC_VOL_SCALE   (2)
-#define OSC_TRIG_SCALE  (1)
+#define OSC_TIME_ROT           (3)
+#define OSC_VOL_OFFSET_SCALE   (3)
+#define OSC_TRIG_SCALE         (1)
+#define OSC_VOL_SCALE          (2)
 /* osc_ time config */
 typedef struct{
 	/* show title */
@@ -52,12 +53,18 @@ typedef struct
 {
 	/* show * str */
 	char * str;
-	/* */
+	/* gain dac */
+	unsigned short gain_dac;
+	/* gain_offset */
+	unsigned short gain_offset;
+	/* gain_sel */
+	unsigned short gain_sel;
 }osc_vol_scale_def;
 /* set scan time */
 const osc_time_def * osc_scan_thread(void);
-void osc_vol_scale_thread(unsigned char chn);
+void osc_offset_scale_thread(unsigned char chn);
 void osc_trig_scale_thread(unsigned char chn);
+const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn);
 
 #endif
 

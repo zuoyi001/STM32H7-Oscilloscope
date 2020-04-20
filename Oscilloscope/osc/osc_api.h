@@ -34,6 +34,7 @@ void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsig
 void osc_fifo_clock(unsigned short sta);
 unsigned short osc_read_key_menu(void);
 int osc_read_rot_idle(unsigned index);
+void osc_gain_ctrl(unsigned char chn , unsigned char sta);
 
 #endif
 

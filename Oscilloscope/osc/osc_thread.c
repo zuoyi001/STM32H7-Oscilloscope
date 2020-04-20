@@ -163,8 +163,11 @@ static void osc_thread(void)
 		gui_show_win(&win_menu);
 	}
 	/* test */
-  osc_vol_scale_thread(0);
+  osc_offset_scale_thread(0);
 	osc_trig_scale_thread(0);
+
+	osc_vol_scale_thread(0);
+
 	/* get scan time */
 	osc_time_sw = osc_scan_thread();
 	/* nothing to do */

@@ -130,8 +130,15 @@ void osc_ui_move_trig_arrow(unsigned char chn,unsigned short pos)
 		gui_move_wid(&trig_vol_arrow[chn] ,trig_vol_arrow[chn].msg.x , pos);
 	}
 }
-
-
+/* change */
+void osc_ui_vol_scale(unsigned char chn , char * str )
+{
+	/* limit */
+	if( chn < 2 )
+	{	
+	  gui_set_wid_text(&voltage_ch[chn],str);
+	}
+}
 
 
 

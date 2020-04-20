@@ -284,7 +284,19 @@ int osc_read_rot_idle(unsigned index)
 	/* get osc data */
 	return ret;
 }
-
+/* gain ctrl */
+void osc_gain_ctrl(unsigned char chn , unsigned char sta)
+{
+	/* gain ctrl */
+	if( chn == 0 )
+	{
+		hal_write_gpio(DIO_CH1_GAIN_CTRL,sta);
+	}
+	else
+	{
+		hal_write_gpio(DIO_CH2_GAIN_CTRL,sta);
+	}
+}
 
 
 

@@ -45,6 +45,9 @@
 #define DIO_ROT_TRIG_DM     (33)
 #define DIO_ROT_HORI_UP     (34)
 #define DIO_ROT_HORI_DM     (35)
+/* GAIN trl */
+#define DIO_CH1_GAIN_CTRL   (26)
+#define DIO_CH2_GAIN_CTRL   (25)
 /* typedef gpio config table */
 
 typedef struct{
