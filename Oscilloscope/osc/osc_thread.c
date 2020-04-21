@@ -448,6 +448,20 @@ void create_osc_grid_status(void)
 void show_line(unsigned short * line_d,unsigned short index,unsigned char chn ,unsigned short zm)
 {
 	int it = 0;
+	
+	if( zm == 3 )
+	{
+		it = 250;
+	}
+	else if(  zm == 5 )
+	{
+		it = 300;
+	}
+	else if(  zm == 15 )
+	{
+		it = 350;
+	}
+	
   for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
 	{
 		LCD_DrawLine_ili(msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[it] , msg_area->start_pos_x + i + zm ,msg_area->start_pos_y + line_d[it+1],0,dev,index,chn);
@@ -459,6 +473,19 @@ void show_line(unsigned short * line_d,unsigned short index,unsigned char chn ,u
 void hide_line(unsigned short * line_d,unsigned short index,unsigned char chn,unsigned short zm )
 {
 	int it = 0;
+	
+	if( zm == 3 )
+	{
+		it = 250;
+	}
+	else if(  zm == 5 )
+	{
+		it = 300;
+	}
+	else if(  zm == 15 )
+	{
+		it = 350;
+	}	
 	
   for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
 	{
