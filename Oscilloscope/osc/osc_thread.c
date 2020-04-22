@@ -94,8 +94,8 @@ static int osc_thead_init(void)
 	
 	create_osc_grid_status();
 	
-	osc_rot_set(OSC_TIME_ROT,10);
-	
+	osc_rot_set(OSC_TIME_ROT,7);
+	osc_rot_set(OSC_VOL_OFFSET_SCALE,20);
 	osc_rot_set(OSC_VOL_SCALE,20);
 	osc_rot_set(OSC_TRIG_SCALE,200);
 	
