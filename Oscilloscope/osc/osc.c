@@ -922,21 +922,79 @@ void osc_calculate_tips(window_def * pwin,widget_def *wd,unsigned short level,ch
 	/* create the wisget */
 	gui_widget_creater(wd);
 }
+/* draw a chown */
+static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigned short pos_y,unsigned short reh,unsigned short chn,unsigned short backcolor)
+{
+	/* osc table */
+	const unsigned char arrow_table[12] = { 0xC0,0xE0,0xf0,0xF8,0xFC,0xfE,0xFE,0xFC,0xF8,0xf0,0xE0,0xC0};
+	const unsigned char chn1_tab[9] = {0x18,0x38,0x78,0x18,0x18,0x18,0x18,0x18,0x18};
+	const unsigned char chn2_tab[9] = {0x78,0xCC,0x84,0x04,0x0C,0x18,0x30,0x60,0xfE};
+	/* chn */
+	unsigned short color = ( chn == 1 ) ? COLOR_CH1 : COLOR_CH2;
+	const unsigned char * chnn = ( chn == 1 ) ? chn1_tab : chn2_tab;
+	/* set check */
+	for( int i = 0 ; i < 12 ; i ++ )
+	{
+		/* onde */
+		for( int j = 0 ; j < 20 ; j ++ )
+		{
+#ifndef _VC_SIMULATOR_
+			if( reh == 0 )
+			{
+				/* check */
+				if( j >= 12 )
+				{
+					/* arrow table */
+					if( (arrow_table[i] << (j-12)) & 0x80 )
+					{
+					dev->set_noload_point(pos_x + j , pos_y + i , color);
+					}
+				}
+				else
+				{
+					dev->set_noload_point(pos_x + j , pos_y + i , color);
+				}
+				/* chnn */
+				if( i >= 1 && i < 10 )
+				{
+					/* check */
+					if( j >= 5 && j < 13 )
+					{
+						/* set color */
+						if( (chnn[i-1] << (j-5)) & 0x80 )
+						{
+							dev->set_noload_point(pos_x + j , pos_y + i , COLOR_GRID_AREA_BG);
+						}						
+					}
+				}
+			}
+			else
+			{
+				dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
+			}
+#else
+				unsigned short tm = color[i*20+j];
+
+				widget->dev->set_noload_point(pos_x + j , pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
+#endif
+		}
+	}	
+}
 /* create the base voltage icon */
 static void osc_draw_chn_arrow(widget_def * wd)
 {
 	/* color tmp */
-	unsigned short * color;
+	unsigned char chn;
 	unsigned short backcolor;
 	unsigned char rehide_flag = 0;
 	/* switch chn */
 	if( wd->msg.wflags & 0x8000 )
 	{
-		color = (unsigned short *)CH1_ARROW;
+		chn = 1;
 	}
 	else
 	{
-		color = (unsigned short *)CH2_ARROW;
+		chn = 2;
 	}
 	/* check rehide */
 	if( CHECK_REHIDE(wd->msg.wflags) || wd->msg.mark_flag == 2 )
@@ -964,27 +1022,8 @@ static void osc_draw_chn_arrow(widget_def * wd)
 		unsigned short pos_x = wd->msg.x;
 		unsigned short pos_y = wd->msg.y;
 		/* create */
-		for( int i = 0 ; i < 12 ; i ++ )
-		{
-			for( int j = 0 ; j < 20 ; j ++ )
-			{
-#ifndef _VC_SIMULATOR_
-				if( rehide_flag == 0 )
-				{
-					wd->dev->set_noload_point(pos_x + j , pos_y + i , color[i*20+j]);
-				}
-				else
-				{
-					wd->dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
-				}
-#else
-				unsigned short tm = color[i*20+j];
-
-				widget->dev->set_noload_point(pos_x + j , pos_y + i , RGB((tm&0xF100) >> 8 ,(tm&0x7E0) >> 3 , (tm&0x1F) << 3 ));
-#endif
-			}
-		}
-		/* fe */
+		osc_draw_arrow_noload(wd->dev,pos_x,pos_y,rehide_flag,chn,backcolor);
+		/* create */
 		wd->msg.mark_flag --;
 		/* check */
 		if( wd->msg.mark_flag )

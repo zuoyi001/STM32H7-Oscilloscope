@@ -236,9 +236,9 @@ static void osc_thread(void)
 #if 1
 
 
-extern unsigned short gram[800*480*3];
+extern unsigned char gram[800*480*3];
 
-unsigned short * osc_arr = &gram[800*600];
+unsigned short * osc_arr = (unsigned short *)&gram[800*600];
 
 int LCD_DrawLine_ili(unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned int color,gui_dev_def * dev,unsigned int got,unsigned char chn)
 {
@@ -288,10 +288,10 @@ int LCD_DrawLine_ili(unsigned short x1, unsigned short y1, unsigned short x2, un
 	{
 		if( chn == 0 )
 		{
-       dev->set_noload_point(uRow,uCol,RGB(255,255,7));
+       dev->set_noload_point(uRow,uCol,COLOR_CH1);
 		}else
 		{
-			 dev->set_noload_point(uRow,uCol,RGB(7,227,231));
+			 dev->set_noload_point(uRow,uCol,COLOR_CH2);
 		}
 		
 	  if( chn == 0 )
@@ -371,11 +371,11 @@ int LCD_DrawLine_cleat(unsigned short x1, unsigned short y1, unsigned short x2, 
 		{
 			if( osc_arr[uRow + uCol*dev->width] & 0x0400 )
 			{
-				dev->set_noload_point(uRow,uCol,RGB(7,3,7));
+				dev->set_noload_point(uRow,uCol,COLOR_GRID_AREA_BG);
 			}
 			else
 			{
-				dev->set_noload_point(uRow,uCol,RGB(199, 195, 199));
+				dev->set_noload_point(uRow,uCol,COLOR_GRID_POINT);
 			}
 		}
 		else
@@ -430,11 +430,11 @@ void create_osc_grid_status(void)
 				osc_arr[i*dev->width + j] &=~ 0x8000;
 			}
 			
-			if( gram[i*dev->width + j] == RGB(7,3,7) )
+			if( gram[i*dev->width + j] == COLOR_GRID_AREA_BG )
 			{
 				osc_arr[i*dev->width + j] |= 0x0400;
 			}
-			else if( gram[i*dev->width + j] == RGB(199, 195, 199) )
+			else if( gram[i*dev->width + j] == COLOR_GRID_POINT )
 			{
 				osc_arr[i*dev->width + j] &=~ 0x0400;
 			}
