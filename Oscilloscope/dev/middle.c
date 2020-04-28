@@ -24,7 +24,11 @@
 #include "math.h"
 #include "middle.h"
 /* Private includes ----------------------------------------------------------*/
+#if LCD_MODE_L8
+static unsigned char * gram_buffer = NULL;
+#else
 static unsigned short * gram_buffer = NULL;
+#endif
 static unsigned short WIDTH = 0 , HEIGHT = 0;
 /* Define all supported display panel information */
 
@@ -38,7 +42,11 @@ int middle_layer_init(display_info_def * dev_info)
 		return (-1);
 	}
 	/* get information OK */
+#if LCD_MODE_L8	
+	gram_buffer = (unsigned char *)dev_info->gram_addr;
+#else
 	gram_buffer = (unsigned short *)dev_info->gram_addr;
+#endif
 	/* get display size */
 	WIDTH =  dev_info->display_dev->pwidth;
 	HEIGHT = dev_info->display_dev->pheight;

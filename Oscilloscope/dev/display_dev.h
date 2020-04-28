@@ -25,6 +25,8 @@
 #ifndef __DISPLAY_DEV_H__
 #define __DISPLAY_DEV_H__
 
+/* define L8 mode or RGB mode */
+#define LCD_MODE_L8    (1)
 /* lcd and vga dev struct */
 typedef struct
 {

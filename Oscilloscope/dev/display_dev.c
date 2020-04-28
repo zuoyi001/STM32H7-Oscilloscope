@@ -24,8 +24,13 @@
 #include "sdram.h"
 #include "middle.h"
 #include "fos.h"
+#include "osc.h"
 /* Private includes ----------------------------------------------------------*/
+#if LCD_MODE_L8
+unsigned char gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
+#else
 unsigned short gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
+#endif
 /* Private includes ----------------------------------------------------------*/
 FOS_INODE_REGISTER("dev_init",dev_init,0,0,0);
 /* Define all supported display panel information */
@@ -406,6 +411,14 @@ static void LTDC_Init(display_dev_def * info)
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
   hltdc.Init.Backcolor.Red = 0;
+#if LCD_MODE_L8
+	const unsigned int osc_color_table[256] = COLOR_TABLE_L8;
+	/* config the CLUT and ENABLE */
+	HAL_LTDC_ConfigCLUT(&hltdc,(unsigned int * )osc_color_table,256,LTDC_LAYER_1);
+	/* enable */
+	HAL_LTDC_EnableCLUT(&hltdc,LTDC_LAYER_1);	
+	/* end */
+#endif
 	/* init ok or not */
   if (HAL_LTDC_Init(&hltdc) != HAL_OK)
   {
@@ -416,7 +429,11 @@ static void LTDC_Init(display_dev_def * info)
   pLayerCfg.WindowX1 = info->pwidth;
   pLayerCfg.WindowY0 = 0;
   pLayerCfg.WindowY1 = info->pheight;
+#if LCD_MODE_L8
+	pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_L8;
+#else	
   pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
+#endif
   pLayerCfg.Alpha = 255;
   pLayerCfg.Alpha0 = 0;
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;

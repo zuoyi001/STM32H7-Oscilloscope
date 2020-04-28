@@ -26,6 +26,7 @@
 
 #include "gui_dev.h"
 #include "gui.h"
+#include "display_dev.h"
 /* Includes ------------------------------------------------------------------*/
 #define VERTICAL_GRID_NUM      (8)
 #define HORIZONTAL_GRID_NUM    (10)
@@ -36,6 +37,39 @@
 #define TOP_REMAIN_PIXEL       (16)
 #define LEFT_REMAIN_PIXEL      (20)
 #define BOTTOM_REMAIN_PIXEL    (45)
+/* L8 mode color table */
+#if LCD_MODE_L8
+/* RGB color to L8 color */
+#define RGTB(r,g,b)  ((r << 16) | (g << 8) | (b))
+/* */
+#define COLOR_GRID_POINT       (0)//(RGB(199, 195, 199))
+#define COLOR_GRID_AREA_BG     (1)//(RGB(7, 3, 7))
+#define COLOR_BACK_GROUND      (2)//(RGB(63, 75, 151))
+/* menu win color table */
+#define COLOR_MENU_ONE         (3)//(RGB(183, 83, 7))	/* color table */
+/* button color table */
+#define COLOR_BUTTON           (4)//(RGB(87,131,231))
+/* char and hz table */
+#define COLOR_CHAR             (5)//(RGB(255,255,255))
+/* lines color */
+#define COLOR_CH1              (6)//(RGB(255,255,7))
+#define COLOR_CH2              (7)//(RGB(7,227,231))
+/* TIPS_COLOR */
+#define COLOR_TIPS_ERROR       (8)//(RGB(255,0,0))
+/* color table */
+#define COLOR_TABLE_L8        \
+{                             \
+RGTB(199, 195, 199),   /* 0 */\
+RGTB(7, 3, 7),         /* 1 */\
+RGTB(63, 75, 151),     /* 2 */\
+RGTB(183, 83, 7),      /* 3 */\
+RGTB(87,131,231),      /* 4 */\
+RGTB(255,255,255),     /* 5 */\
+RGTB(255,255,7),       /* 6 */\
+RGTB(7,227,231),       /* 7 */\
+RGTB(255,0,0),         /* 8 */\
+}
+#else
 /* THREE color */
 #define COLOR_GRID_POINT       (RGB(199, 195, 199))
 #define COLOR_GRID_AREA_BG     (RGB(7, 3, 7))
@@ -51,6 +85,7 @@
 #define COLOR_CH2              (RGB(7,227,231))
 /* TIPS_COLOR */
 #define COLOR_TIPS_ERROR       (RGB(255,0,0))
+#endif
 #define COLOR_TIPS_WARNING     (COLOR_CH1)
 #define COLOR_TIPS_NORMAL      (COLOR_CHAR)
 /* #define tips level */
