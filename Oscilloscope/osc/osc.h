@@ -56,18 +56,93 @@
 #define COLOR_CH2              (7)//(RGB(7,227,231))
 /* TIPS_COLOR */
 #define COLOR_TIPS_ERROR       (8)//(RGB(255,0,0))
+/* CHN lines color */
+#define COLOR_CH1_BG_0         (9)//(RGB(255,255,7))
+#define COLOR_CH1_BG_1         (10)//(RGB(255,255,7))
+#define COLOR_CH1_BG_F         (11)//(RGB(255,255,7))
+#define COLOR_CH1_GR_0         (12)//(RGB(255,255,7))
+#define COLOR_CH1_GR_1         (13)//(RGB(255,255,7))
+#define COLOR_CH1_GR_F         (14)//(RGB(255,255,7))
+/* CHN lines color */
+#define COLOR_CH2_BG_0         (15)//(RGB(7,227,231))
+#define COLOR_CH2_BG_1         (16)//(RGB(7,227,231))
+#define COLOR_CH2_BG_F         (17)//(RGB(7,227,231))
+#define COLOR_CH2_GR_0         (18)//(RGB(7,227,231))
+#define COLOR_CH2_GR_1         (19)//(RGB(7,227,231))
+#define COLOR_CH2_GR_F         (20)//(RGB(7,227,231))
+/* math0 lines color */
+#define COLOR_MATH0_BG_0       (21)//(RGB(255,0,0))
+#define COLOR_MATH0_BG_1       (22)//(RGB(255,0,0))
+#define COLOR_MATH0_BG_F       (23)//(RGB(255,0,0))
+#define COLOR_MATH0_GR_0       (24)//(RGB(255,0,0))
+#define COLOR_MATH0_GR_1       (25)//(RGB(255,0,0))
+#define COLOR_MATH0_GR_F       (26)//(RGB(255,0,0))
+/* math1 lines color */
+#define COLOR_MATH1_BG_0       (27)//(RGB(0,255,0))
+#define COLOR_MATH1_BG_1       (28)//(RGB(0,255,0))
+#define COLOR_MATH1_BG_F       (29)//(RGB(0,255,0))
+#define COLOR_MATH1_GR_0       (30)//(RGB(0,255,0))
+#define COLOR_MATH1_GR_1       (31)//(RGB(0,255,0))
+#define COLOR_MATH1_GR_F       (32)//(RGB(0,255,0))
+/* math2 lines color */
+#define COLOR_MATH2_BG_0       (33)//(RGB(0,0,255))
+#define COLOR_MATH2_BG_1       (34)//(RGB(0,0,255))
+#define COLOR_MATH2_BG_F       (35)//(RGB(0,0,255))
+#define COLOR_MATH2_GR_0       (36)//(RGB(0,0,255))
+#define COLOR_MATH2_GR_1       (37)//(RGB(0,0,255))
+#define COLOR_MATH2_GR_F       (38)//(RGB(0,0,255))
+/* typdef chn line manage */
+typedef struct
+{
+	unsigned char BG_0;
+	unsigned char BG_1;
+	unsigned char BG_F;
+	unsigned char GR_0;
+	unsigned char GR_1;
+	unsigned char GR_F;
+}chn_manage_def;
 /* color table */
-#define COLOR_TABLE_L8        \
-{                             \
-RGTB(199, 195, 199),   /* 0 */\
-RGTB(7, 3, 7),         /* 1 */\
-RGTB(63, 75, 151),     /* 2 */\
-RGTB(183, 83, 7),      /* 3 */\
-RGTB(87,131,231),      /* 4 */\
-RGTB(255,255,255),     /* 5 */\
-RGTB(255,255,7),       /* 6 */\
-RGTB(7,227,231),       /* 7 */\
-RGTB(255,0,0),         /* 8 */\
+#define COLOR_TABLE_L8         \
+{                              \
+RGTB(199, 195, 199),   /* 0  */\
+RGTB(7, 3, 7),         /* 1  */\
+RGTB(63, 75, 151),     /* 2  */\
+RGTB(183, 83, 7),      /* 3  */\
+RGTB(87,131,231),      /* 4  */\
+RGTB(255,255,255),     /* 5  */\
+RGTB(255,255,7),       /* 6  */\
+RGTB(7,227,231),       /* 7  */\
+RGTB(255,0,0),         /* 8  */\
+RGTB(255,255,7),       /* 9  */\
+RGTB(255,255,7),       /* 10 */\
+RGTB(255,255,7),       /* 11 */\
+RGTB(255,255,7),       /* 12 */\
+RGTB(255,255,7),       /* 13 */\
+RGTB(255,255,7),       /* 14 */\
+RGTB(7,227,231),       /* 15 */\
+RGTB(7,227,231),       /* 16 */\
+RGTB(7,227,231),       /* 17 */\
+RGTB(7,227,231),       /* 18 */\
+RGTB(7,227,231),       /* 19 */\
+RGTB(7,227,231),       /* 20 */\
+RGTB(255,0,0),         /* 21 */\
+RGTB(255,0,0),         /* 22 */\
+RGTB(255,0,0),         /* 23 */\
+RGTB(255,0,0),         /* 24 */\
+RGTB(255,0,0),         /* 25 */\
+RGTB(255,0,0),         /* 26 */\
+RGTB(0,255,0),         /* 27 */\
+RGTB(0,255,0),         /* 28 */\
+RGTB(0,255,0),         /* 29 */\
+RGTB(0,255,0),         /* 30 */\
+RGTB(0,255,0),         /* 31 */\
+RGTB(0,255,0),         /* 32 */\
+RGTB(0,0,255),         /* 33 */\
+RGTB(0,255,0),         /* 34 */\
+RGTB(0,255,0),         /* 35 */\
+RGTB(0,255,0),         /* 36 */\
+RGTB(0,255,0),         /* 37 */\
+RGTB(0,255,0),         /* 38 */\
 }
 #else
 /* THREE color */

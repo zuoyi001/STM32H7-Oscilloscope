@@ -120,9 +120,15 @@ extern window_def win_menu;
 
 unsigned short osc_zm = 1;
 
+void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index);
+
 /* gui task */
 static void osc_thread(void)
 {
+	
+	
+	//osc_draw_lines(dev,0,0,750,400,0,0,0);
+	//osc_draw_lines(dev,0,0,750,400,1,0,0);
 	
 	unsigned short sta = osc_read_key_menu() ? 1 : 0;
 	
@@ -235,6 +241,156 @@ static void osc_thread(void)
 /* the follow is for test */
 #if 1
 
+const chn_manage_def chn_m[] = 
+{
+	{
+		.BG_0 = COLOR_CH1_BG_0,
+		.BG_1 = COLOR_CH1_BG_1,
+		.BG_F = COLOR_CH1_BG_F,
+		.GR_0 = COLOR_CH1_GR_0,
+		.GR_1 = COLOR_CH1_GR_1,
+		.GR_F = COLOR_CH1_GR_F,
+	},
+	{
+		.BG_0 = COLOR_CH1_BG_0,
+		.BG_1 = COLOR_CH2_BG_1,
+		.BG_F = COLOR_CH2_BG_F,
+		.GR_0 = COLOR_CH2_GR_0,
+		.GR_1 = COLOR_CH2_GR_1,
+		.GR_F = COLOR_CH2_GR_F,
+	},	
+	{
+		.BG_0 = COLOR_MATH0_BG_0,
+		.BG_1 = COLOR_MATH0_BG_1,
+		.BG_F = COLOR_MATH0_BG_F,
+		.GR_0 = COLOR_MATH0_GR_0,
+		.GR_1 = COLOR_MATH0_GR_1,
+		.GR_F = COLOR_MATH0_GR_F,
+	},
+	{
+		.BG_0 = COLOR_MATH1_BG_0,
+		.BG_1 = COLOR_MATH1_BG_1,
+		.BG_F = COLOR_MATH1_BG_F,
+		.GR_0 = COLOR_MATH1_GR_0,
+		.GR_1 = COLOR_MATH1_GR_1,
+		.GR_F = COLOR_MATH1_GR_F,
+	},	
+	{
+		.BG_0 = COLOR_MATH2_BG_0,
+		.BG_1 = COLOR_MATH2_BG_1,
+		.BG_F = COLOR_MATH2_BG_F,
+		.GR_0 = COLOR_MATH2_GR_0,
+		.GR_1 = COLOR_MATH2_GR_1,
+		.GR_F = COLOR_MATH2_GR_F,
+	},	
+};
+
+void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index)
+{
+ /* defines */
+ int xerr = 0 , yerr = 0 , delta_x , delta_y , distance; 
+ int incx,incy,uRow,uCol; 
+ /* dir */
+ delta_x = x2 - x1;
+ delta_y = y2 - y1; 
+ uRow = x1; 
+ uCol = y1; 
+ /* dir */
+ if( delta_x > 0 ) 
+ { 
+  incx = 1; 
+ }
+ else if( delta_x == 0 )
+ {
+  incx = 0;
+ }
+ else
+ {
+  incx = -1 ; 
+  delta_x = -delta_x;
+ }
+ /* dir y delta */
+ if( delta_y > 0 ) 
+ { 
+  incy = 1; 
+ }
+ else if( delta_y ==0 )
+ {
+  incy = 0;
+ }
+ else
+  {
+   incy = -1 ; 
+   delta_y = -delta_y;
+ }
+  /* distance */ 
+ if( delta_x > delta_y )
+ { 
+  distance = delta_x;
+ }
+ else 
+ {
+  distance = delta_y; 
+ }
+ /* get chn */
+ const chn_manage_def * chn_d = &chn_m[chn];
+  /* draw points */
+ for( int t = 0 ; t <= distance + 1 ; t++ ) 
+ {
+   /* draw point or clear point */	 
+	 if( mode == 0 ) /* draw */
+	 {
+		 /* get point */
+		 unsigned char piox = dev->read_point(uRow,uCol);
+		 /* chn */
+		 if( piox == COLOR_GRID_POINT ) // chn1
+		 {
+			 dev->set_noload_point(uRow,uCol,chn_d->GR_0);
+		 }
+		 else if( piox == COLOR_GRID_AREA_BG )
+		 {
+			 dev->set_noload_point(uRow,uCol,chn_d->BG_0);
+		 }
+		 else
+		 {
+			 
+		 }
+	 }
+	 else
+	 {
+		 /* clear */
+		 unsigned char piox = dev->read_point(uRow,uCol);
+		 /* chn */
+		 if( piox == chn_d->BG_0 ) // chn1
+		 {	
+			 dev->set_noload_point(uRow,uCol,COLOR_GRID_AREA_BG);
+		 }
+		 else if( piox == chn_d->GR_0 )			 
+		 {
+			 dev->set_noload_point(uRow,uCol,COLOR_GRID_POINT);
+		 }
+		 else
+		 {
+			 
+		 }
+	 }
+  /* inc */
+  xerr += delta_x ; 
+  yerr += delta_y ;
+    /* next line */  
+  if( xerr > distance ) 
+  { 
+   xerr -= distance; 
+   uRow += incx; 
+  } 
+  /* next */
+  if( yerr > distance ) 
+  { 
+   yerr -= distance; 
+   uCol += incy; 
+  } 
+ }
+}
 
 extern unsigned char gram[800*480*3];
 
