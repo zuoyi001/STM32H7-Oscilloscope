@@ -441,33 +441,51 @@ static void osc_create_TITLE(window_def * win)
 		}
 	}
 }
-/* create icon */
-static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigned short y,unsigned short chn)
+/* draw offset arrow */
+static void osc_draw_offset_arrow(gui_dev_def * dev,unsigned short pos_x,unsigned short pos_y,unsigned short chn)
 {
-	/* color tmp */
-	unsigned short * color;
-	/* switch chn */
-	if( chn == 1 )
-	{
-		color = (unsigned short *)CH1_ICON_M;
-	}
-	else
-	{
-		color = (unsigned short *)CH2_ICON_M;
-	}
-	/* get parent win pos */
-	unsigned short parent_x = parent_win->msg.x;
-	unsigned short parent_y = parent_win->msg.y;
-	/* widget pos */
-	unsigned short pos_x = x;
-	unsigned short pos_y = y;
-	/* create */
+	/* color table */
+	const unsigned char ch_common_table[16] = {0x01,0x07,0x0f,0x1f,0x1f,0x3f,0x3f,0x3f,0x3f,0x3f,0x3f,0x1f,0x1f,0x0f,0x07,0x01};
+	const unsigned char chn1_tab[10] = {0x18,0x38,0x78,0x18,0x18,0x18,0x18,0x18,0x18,0x00};
+	const unsigned char chn2_tab[10] = {0x78,0xFC,0x8C,0x0C,0x1C,0x38,0x70,0xE0,0xfC,0xFC};
+	/* chn */
+	unsigned short color = ( chn == 1 ) ? COLOR_CH1 : COLOR_CH2;
+	const unsigned char * chnn = ( chn == 1 ) ? chn1_tab : chn2_tab;
+	/*-------------*/
 	for( int i = 0 ; i < 16 ; i ++ )
 	{
 		for( int j = 0 ; j < 32 ; j ++ )
 		{
 #ifndef _VC_SIMULATOR_
-			parent_win->dev->set_noload_point(parent_x + pos_x + j , parent_y + pos_y + i , color[i*32+j]);
+			if( j < 8 )
+			{
+				if( ( ch_common_table[i] << j ) & 0x80 )
+				{
+					dev->set_noload_point( pos_x + j , pos_y + i , color);
+				}
+			}
+			else if( j >= 24 )
+			{
+       if( ( ch_common_table[i] >> (j-24) ) & 0x01 )
+			 {
+				 dev->set_noload_point( pos_x + j , pos_y + i , color);
+			 }
+			}
+		  else
+			{
+				dev->set_noload_point( pos_x + j , pos_y + i , color);
+			}			
+		  /* 1 or 2 */
+			if( i >= 3 && i < 13)
+			{
+	       if( j >= 13 && j < 21 )
+				 {
+					 if( (chnn[i-3] << (j-13)) & 0x80 )
+					 {
+						 dev->set_noload_point( pos_x + j , pos_y + i , COLOR_GRID_AREA_BG);
+					 }
+				 }					 
+			}
 #else
 			unsigned short tm = color[i*32+j];
 
@@ -475,6 +493,16 @@ static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigne
 #endif
 		}
 	}
+}
+/* create icon */
+static void osc_create_chn_icon(window_def * parent_win,unsigned short x,unsigned short y,unsigned short chn)
+{
+	/* widget pos */
+	unsigned short pos_x = x + parent_win->msg.x;
+	unsigned short pos_y = y + parent_win->msg.y;
+	/* create */
+  osc_draw_offset_arrow(parent_win->dev,pos_x,pos_y,chn);
+	/* end if */
 }
 /* create button */
 static void osc_create_button(struct widget * widget)
@@ -927,8 +955,8 @@ static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigne
 {
 	/* osc table */
 	const unsigned char arrow_table[12] = { 0xC0,0xE0,0xf0,0xF8,0xFC,0xfE,0xFE,0xFC,0xF8,0xf0,0xE0,0xC0};
-	const unsigned char chn1_tab[9] = {0x18,0x38,0x78,0x18,0x18,0x18,0x18,0x18,0x18};
-	const unsigned char chn2_tab[9] = {0x78,0xCC,0x84,0x04,0x0C,0x18,0x30,0x60,0xfE};
+	const unsigned char chn1_tab[10] = {0x18,0x38,0x78,0x18,0x18,0x18,0x18,0x18,0x18,0x00};
+	const unsigned char chn2_tab[10] = {0x78,0xFC,0x8C,0x0C,0x1C,0x38,0x70,0xE0,0xfC,0xFC};
 	/* chn */
 	unsigned short color = ( chn == 1 ) ? COLOR_CH1 : COLOR_CH2;
 	const unsigned char * chnn = ( chn == 1 ) ? chn1_tab : chn2_tab;
@@ -947,7 +975,7 @@ static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigne
 					/* arrow table */
 					if( (arrow_table[i] << (j-12)) & 0x80 )
 					{
-					dev->set_noload_point(pos_x + j , pos_y + i , color);
+						dev->set_noload_point(pos_x + j , pos_y + i , color);
 					}
 				}
 				else
@@ -955,7 +983,7 @@ static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigne
 					dev->set_noload_point(pos_x + j , pos_y + i , color);
 				}
 				/* chnn */
-				if( i >= 1 && i < 10 )
+				if( i >= 1 && i < 11 )
 				{
 					/* check */
 					if( j >= 5 && j < 13 )

@@ -68,7 +68,7 @@ int osc_create_ui(void)
 	/* create the group */
 	osc_calculate_sg_size(dev,win_group,sizeof(win_group) / sizeof(win_group[0]));	
 	/* create the menu win ui */
-  osc_calculate_menu_size(dev,&win_menu,GUI_HIDE);
+  osc_calculate_menu_size(dev,&win_menu,0);
 	/* btn */
   osc_calculate_btn_size(dev,&win_menu,btn,sizeof(btn) / sizeof(btn[0]));
 	/* voltage */
