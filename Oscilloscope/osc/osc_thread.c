@@ -26,10 +26,10 @@
 #include "hal_tim.h"
 #include "osc_api.h"
 #include "osc_cfg.h"
-
+#include "math.h"
 #include "string.h"
 #include "hal_exit.h"
-
+#include "osc_line.h"
 /* functions declare */
 static void osc_thread(void);
 static int osc_thead_init(void);
@@ -75,8 +75,11 @@ draw_area_def * msg_area;
 
  static unsigned int cnt_p = 0;
 	
-unsigned short line_show[5][800];
-unsigned short line_show2[5][800];
+unsigned short line_show[2][800];
+unsigned short line_show2[2][800];
+unsigned short line_show3[2][800];
+unsigned short line_show4[2][800];
+unsigned short line_show5[2][800];
 
 unsigned short line_zm[5];
 
@@ -101,6 +104,33 @@ static int osc_thead_init(void)
 	
 	/* for test */
 	osc_voltage_output(1870,2000,0,20);//1870,2000,0,270
+	
+//	double be = 0;
+//	unsigned short tri = 0;
+//	unsigned short retc = 0;
+//	
+//	for( int i = 0 ; i < 800 ; i ++ )
+//	{
+//		line_show[0][i] = (unsigned short)(150.0f * sin(be) + 150);
+//		line_show[1][i] = line_show[0][i];
+//		//line_show[1][i] = (unsigned short)(150.0f * cos(be) + 150 + 50);
+//		line_show[2][i] = (tri++) + 200;
+//		line_show[3][i] = retc ? 380 : 100;
+//		
+//		if( tri >= 150 )
+//		{
+//			tri = 0;
+//		}
+//		
+//		be += ((6.28) * 4 / 750);
+//		
+//		if( i % 100 == 0 )
+//		{
+//			retc ^= 1;
+//		}
+//	}
+	
+	
 	/* return as usual */
 	return FS_OK;
 }
@@ -120,15 +150,78 @@ extern window_def win_menu;
 
 unsigned short osc_zm = 1;
 
-void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index);
+//void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index);
+
+//void osc_create_lines(unsigned short * line_d,unsigned char mode,unsigned short index,unsigned char chn ,unsigned short zm);
+
 
 /* gui task */
 static void osc_thread(void)
 {
+	double be = 0;
+	static double dt = 0;
+	unsigned short tri = 0;
+	unsigned short retc = 0;
 	
+	for( int i = 0 ; i < 800 ; i ++ )
+	{
+		line_show[cnt_p%2][i] = (unsigned short)(150.0f * sin(be + dt) + 150);
+  	line_show2[cnt_p%2][i] = (unsigned short)(150.0f * cos(be + dt) + 150 + 50);
+		line_show3[cnt_p%2][i] = (tri++) + 200;
+		line_show4[cnt_p%2][i] = retc ? 380 : 100;
+		
+		if( tri >= 150 )
+		{
+			tri = 0;
+		}
+		
+		be += ((6.28) * 4 / 750);
+		
+		if( i % 100 == 0 )
+		{
+			retc ^= 1;
+		}
+	}	
+	
+	dt += 0.01;
 	
 	//osc_draw_lines(dev,0,0,750,400,0,0,0);
+	//osc_draw_lines(dev,0,0,750,400,0,0,1);
+	
 	//osc_draw_lines(dev,0,0,750,400,1,0,0);
+	
+	osc_create_lines(dev,line_show[cnt_p%2],0,cnt_p%2,0,1);
+	osc_create_lines(dev,line_show2[cnt_p%2],0,cnt_p%2,1,1);
+	osc_create_lines(dev,line_show3[cnt_p%2],0,cnt_p%2,2,1);
+	osc_create_lines(dev,line_show4[cnt_p%2],0,cnt_p%2,3,1);
+//	osc_create_lines(line_show[0],0,1,0,1);
+//	osc_create_lines(line_show[0],0,0,1,1);
+//	osc_create_lines(line_show[1],0,0,1,1);
+//	osc_create_lines(line_show[2],0,0,2,1);
+//	osc_create_lines(line_show[3],0,0,3,1);
+if( cnt_p >= 1  )
+{
+	if( cnt_p % 2 )
+	{
+		 osc_create_lines(dev,line_show[0],1,0,0,1);
+		 osc_create_lines(dev,line_show2[0],1,0,1,1);
+		osc_create_lines(dev,line_show3[0],1,0,2,1);
+		osc_create_lines(dev,line_show4[0],1,0,3,1);
+	}
+	else
+	{
+		 osc_create_lines(dev,line_show[1],1,1,0,1);
+		 osc_create_lines(dev,line_show2[1],1,1,1,1);
+		osc_create_lines(dev,line_show3[1],1,1,2,1);
+		osc_create_lines(dev,line_show4[1],1,1,3,1);
+	}
+}
+	
+//	osc_create_lines(line_show[1],0,0,1,1);
+//	osc_create_lines(line_show[2],0,0,2,1);
+//	osc_create_lines(line_show[3],0,0,3,1);
+	
+	cnt_p ++;
 	
 	unsigned short sta = osc_read_key_menu() ? 1 : 0;
 	
@@ -177,7 +270,7 @@ static void osc_thread(void)
 	/* get scan time */
 	osc_time_sw = osc_scan_thread();
 	/* nothing to do */
-	if( hal_read_gpio(FIFO_FULL0) != 0 )
+	if( 1)//hal_read_gpio(FIFO_FULL0) != 0 )
 	{
 		return; // not use to deal
 	}
@@ -241,156 +334,296 @@ static void osc_thread(void)
 /* the follow is for test */
 #if 1
 
-const chn_manage_def chn_m[] = 
-{
-	{
-		.BG_0 = COLOR_CH1_BG_0,
-		.BG_1 = COLOR_CH1_BG_1,
-		.BG_F = COLOR_CH1_BG_F,
-		.GR_0 = COLOR_CH1_GR_0,
-		.GR_1 = COLOR_CH1_GR_1,
-		.GR_F = COLOR_CH1_GR_F,
-	},
-	{
-		.BG_0 = COLOR_CH1_BG_0,
-		.BG_1 = COLOR_CH2_BG_1,
-		.BG_F = COLOR_CH2_BG_F,
-		.GR_0 = COLOR_CH2_GR_0,
-		.GR_1 = COLOR_CH2_GR_1,
-		.GR_F = COLOR_CH2_GR_F,
-	},	
-	{
-		.BG_0 = COLOR_MATH0_BG_0,
-		.BG_1 = COLOR_MATH0_BG_1,
-		.BG_F = COLOR_MATH0_BG_F,
-		.GR_0 = COLOR_MATH0_GR_0,
-		.GR_1 = COLOR_MATH0_GR_1,
-		.GR_F = COLOR_MATH0_GR_F,
-	},
-	{
-		.BG_0 = COLOR_MATH1_BG_0,
-		.BG_1 = COLOR_MATH1_BG_1,
-		.BG_F = COLOR_MATH1_BG_F,
-		.GR_0 = COLOR_MATH1_GR_0,
-		.GR_1 = COLOR_MATH1_GR_1,
-		.GR_F = COLOR_MATH1_GR_F,
-	},	
-	{
-		.BG_0 = COLOR_MATH2_BG_0,
-		.BG_1 = COLOR_MATH2_BG_1,
-		.BG_F = COLOR_MATH2_BG_F,
-		.GR_0 = COLOR_MATH2_GR_0,
-		.GR_1 = COLOR_MATH2_GR_1,
-		.GR_F = COLOR_MATH2_GR_F,
-	},	
-};
+//const chn_manage_def chn_m[] = 
+//{
+//	{
+//		.BG_0 = COLOR_CH1_BG_0,
+//		.BG_1 = COLOR_CH1_BG_1,
+//		.BG_F = COLOR_CH1_BG_F,
+//		.GR_0 = COLOR_CH1_GR_0,
+//		.GR_1 = COLOR_CH1_GR_1,
+//		.GR_F = COLOR_CH1_GR_F,
+//	},
+//	{
+//		.BG_0 = COLOR_CH2_BG_0,
+//		.BG_1 = COLOR_CH2_BG_1,
+//		.BG_F = COLOR_CH2_BG_F,
+//		.GR_0 = COLOR_CH2_GR_0,
+//		.GR_1 = COLOR_CH2_GR_1,
+//		.GR_F = COLOR_CH2_GR_F,
+//	},	
+//	{
+//		.BG_0 = COLOR_MATH0_BG_0,
+//		.BG_1 = COLOR_MATH0_BG_1,
+//		.BG_F = COLOR_MATH0_BG_F,
+//		.GR_0 = COLOR_MATH0_GR_0,
+//		.GR_1 = COLOR_MATH0_GR_1,
+//		.GR_F = COLOR_MATH0_GR_F,
+//	},
+//	{
+//		.BG_0 = COLOR_MATH1_BG_0,
+//		.BG_1 = COLOR_MATH1_BG_1,
+//		.BG_F = COLOR_MATH1_BG_F,
+//		.GR_0 = COLOR_MATH1_GR_0,
+//		.GR_1 = COLOR_MATH1_GR_1,
+//		.GR_F = COLOR_MATH1_GR_F,
+//	},	
+//	{
+//		.BG_0 = COLOR_MATH2_BG_0,
+//		.BG_1 = COLOR_MATH2_BG_1,
+//		.BG_F = COLOR_MATH2_BG_F,
+//		.GR_0 = COLOR_MATH2_GR_0,
+//		.GR_1 = COLOR_MATH2_GR_1,
+//		.GR_F = COLOR_MATH2_GR_F,
+//	},	
+//};
+//unsigned int pointcnt = 0;
+//unsigned int point_0 = 0,point_1 = 0;
 
-void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index)
-{
- /* defines */
- int xerr = 0 , yerr = 0 , delta_x , delta_y , distance; 
- int incx,incy,uRow,uCol; 
- /* dir */
- delta_x = x2 - x1;
- delta_y = y2 - y1; 
- uRow = x1; 
- uCol = y1; 
- /* dir */
- if( delta_x > 0 ) 
- { 
-  incx = 1; 
- }
- else if( delta_x == 0 )
- {
-  incx = 0;
- }
- else
- {
-  incx = -1 ; 
-  delta_x = -delta_x;
- }
- /* dir y delta */
- if( delta_y > 0 ) 
- { 
-  incy = 1; 
- }
- else if( delta_y ==0 )
- {
-  incy = 0;
- }
- else
-  {
-   incy = -1 ; 
-   delta_y = -delta_y;
- }
-  /* distance */ 
- if( delta_x > delta_y )
- { 
-  distance = delta_x;
- }
- else 
- {
-  distance = delta_y; 
- }
- /* get chn */
- const chn_manage_def * chn_d = &chn_m[chn];
-  /* draw points */
- for( int t = 0 ; t <= distance + 1 ; t++ ) 
- {
-   /* draw point or clear point */	 
-	 if( mode == 0 ) /* draw */
-	 {
-		 /* get point */
-		 unsigned char piox = dev->read_point(uRow,uCol);
-		 /* chn */
-		 if( piox == COLOR_GRID_POINT ) // chn1
-		 {
-			 dev->set_noload_point(uRow,uCol,chn_d->GR_0);
-		 }
-		 else if( piox == COLOR_GRID_AREA_BG )
-		 {
-			 dev->set_noload_point(uRow,uCol,chn_d->BG_0);
-		 }
-		 else
-		 {
-			 
-		 }
-	 }
-	 else
-	 {
-		 /* clear */
-		 unsigned char piox = dev->read_point(uRow,uCol);
-		 /* chn */
-		 if( piox == chn_d->BG_0 ) // chn1
-		 {	
-			 dev->set_noload_point(uRow,uCol,COLOR_GRID_AREA_BG);
-		 }
-		 else if( piox == chn_d->GR_0 )			 
-		 {
-			 dev->set_noload_point(uRow,uCol,COLOR_GRID_POINT);
-		 }
-		 else
-		 {
-			 
-		 }
-	 }
-  /* inc */
-  xerr += delta_x ; 
-  yerr += delta_y ;
-    /* next line */  
-  if( xerr > distance ) 
-  { 
-   xerr -= distance; 
-   uRow += incx; 
-  } 
-  /* next */
-  if( yerr > distance ) 
-  { 
-   yerr -= distance; 
-   uCol += incy; 
-  } 
- }
-}
+//void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index)
+//{
+// /* defines */
+// int xerr = 0 , yerr = 0 , delta_x , delta_y , distance; 
+// int incx,incy,uRow,uCol; 
+// /* dir */
+// delta_x = x2 - x1;
+// delta_y = y2 - y1; 
+// uRow = x1; 
+// uCol = y1; 
+// /* dir */
+// if( delta_x > 0 ) 
+// { 
+//  incx = 1; 
+// }
+// else if( delta_x == 0 )
+// {
+//  incx = 0;
+// }
+// else
+// {
+//  incx = -1 ; 
+//  delta_x = -delta_x;
+// }
+// /* dir y delta */
+// if( delta_y > 0 ) 
+// { 
+//  incy = 1; 
+// }
+// else if( delta_y ==0 )
+// {
+//  incy = 0;
+// }
+// else
+//  {
+//   incy = -1 ; 
+//   delta_y = -delta_y;
+// }
+//  /* distance */ 
+// if( delta_x > delta_y )
+// { 
+//  distance = delta_x;
+// }
+// else 
+// {
+//  distance = delta_y; 
+// }
+// /* get chn */
+// const chn_manage_def * chn_d = &chn_m[chn];
+//  /* draw points */
+// for( int t = 0 ; t <= distance + 1 ; t++ ) 
+// {
+//	 pointcnt++;
+//   /* draw point or clear point */	 
+//	 if( mode == 0 ) /* draw */
+//	 {
+//		 /* get point */
+//		 unsigned char piox = dev->read_point(uRow,uCol);
+//		 /* chn */
+//		 if( piox == COLOR_GRID_POINT ) // chn1
+//		 {
+//			 if( index == 0 )
+//			 {
+//			   dev->set_noload_point(uRow,uCol,chn_d->GR_0);
+//				 
+//				 point_0++;
+//			 }
+//			 else
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->GR_1);
+//				 point_1 ++;
+//			 }
+//		 }
+//		 else if( piox == COLOR_GRID_AREA_BG )
+//		 {
+//			 if( index == 0 )
+//			 {
+//			   dev->set_noload_point(uRow,uCol,chn_d->BG_0);
+//				 point_0 ++;
+//			 }
+//			 else
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->BG_1);
+//				 point_1 ++;
+//			 }
+//		 }
+//		 else if( piox == chn_d->GR_0 )
+//		 {
+//			 if( index == 1 )
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->GR_F);
+//				 point_1 ++;
+//			 }
+//		 }
+//		 else if( piox == chn_d->GR_1 )
+//		 {
+//			 if( index == 0 )
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->GR_F);
+//				 point_0 ++;
+//			 }			 
+//		 }
+//		 else if( piox == chn_d->BG_0 )
+//		 {
+//			 if( index == 1 )
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->BG_F);
+//				 point_1++;
+//			 }
+//		 }
+//		 else if( piox == chn_d->BG_1 )
+//		 {
+//			 if( index == 0 )
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->BG_F);
+//				 point_0 ++;
+//			 }			 
+//		 }		
+//     else
+//		 {
+//			 /* other point */
+//			 piox = 0;
+//		 }	
+
+//		 piox = dev->read_point(uRow,uCol);
+//		 
+//		 if( index == 0 )
+//		 {
+//       if( !(piox == chn_d->GR_0 || piox == chn_d->BG_0) )
+//			 {
+//				 piox = 0;
+//			 }
+//		 }
+//		 else
+//		 {
+//       if( !(piox == chn_d->GR_F || piox == chn_d->BG_F) )
+//			 {
+//				 piox = 0;
+//			 }			 
+//		 }
+//	 }
+//	 else
+//	 {
+//		 /* clear */
+//		 unsigned char piox = dev->read_point(uRow,uCol);
+//		 /* chn */
+//		 if( piox == chn_d->BG_0 ) // chn1
+//		 {	
+//			 if( index == 0 )
+//			 {
+//				dev->set_noload_point(uRow,uCol,COLOR_GRID_AREA_BG);
+//			 }
+//		 }
+//		 else if( piox == chn_d->BG_1 )			 
+//		 {
+//			 if( index == 1 )
+//			 {
+//			   dev->set_noload_point(uRow,uCol,COLOR_GRID_AREA_BG);
+//			 }
+//		 }		 
+//		 else if( piox == chn_d->GR_0 )			 
+//		 {
+//			 if( index == 0 )
+//			 {
+//			   dev->set_noload_point(uRow,uCol,COLOR_GRID_POINT);
+//			 }
+//		 }
+//		 else if( piox == chn_d->GR_1 )			 
+//		 {
+//			 if( index == 1 )
+//			 {
+//			   dev->set_noload_point(uRow,uCol,COLOR_GRID_POINT);
+//			 }
+//		 }		 
+//		 else if( piox == chn_d->GR_F )		
+//		 {
+//			 if( index == 0 )
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->GR_1);
+//			 }
+//			 else
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->GR_0);
+//			 }
+//		 }
+//		 else if( piox == chn_d->BG_F )		
+//		 {
+//			 if( index == 0 )
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->BG_1);
+//			 }
+//			 else
+//			 {
+//				 dev->set_noload_point(uRow,uCol,chn_d->BG_0);
+//			 }
+//		 }
+//		 else
+//		 {
+//			 /* other point */
+//			 piox = 0;
+//		 }
+//	 }
+//  /* inc */
+//  xerr += delta_x ; 
+//  yerr += delta_y ;
+//    /* next line */  
+//  if( xerr > distance ) 
+//  { 
+//   xerr -= distance; 
+//   uRow += incx; 
+//  } 
+//  /* next */
+//  if( yerr > distance ) 
+//  { 
+//   yerr -= distance; 
+//   uCol += incy; 
+//  } 
+// }
+//}
+
+//void osc_create_lines(unsigned short * line_d,unsigned char mode,unsigned short index,unsigned char chn ,unsigned short zm)
+//{
+//	int it = 0;
+//	
+//	if( zm == 3 )
+//	{
+//		it = 250;
+//	}
+//	else if(  zm == 5 )
+//	{
+//		it = 300;
+//	}
+//	else if(  zm == 15 )
+//	{
+//		it = 350;
+//	}
+//	
+//  for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
+//	{
+//		osc_draw_lines(dev,msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[it] , msg_area->start_pos_x + i + zm ,msg_area->start_pos_y + line_d[it+1],mode,chn,index);
+//		
+//		it ++;
+//	}
+//}
 
 extern unsigned char gram[800*480*3];
 
