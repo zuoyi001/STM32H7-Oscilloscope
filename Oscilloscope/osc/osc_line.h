@@ -18,11 +18,14 @@
   */
 /* USER CODE END Header */
 
-#ifndef __OSC_H__
-#define __OSC_H__
+#ifndef __OSC_LINE_H__
+#define __OSC_LINE_H__
 /* Includes ------------------------------------------------------------------*/
 #include "gui.h"
 /* function declare */
 void osc_create_lines(gui_dev_def * dev,unsigned short * line_d,unsigned char mode,unsigned short index,unsigned char chn ,unsigned short zm);
 
 #endif
+
+
+

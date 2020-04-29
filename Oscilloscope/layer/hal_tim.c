@@ -96,14 +96,14 @@ static void hal_test_init(void)
 	TIM_Handle_TIM9.Instance = TIM9; 
 	TIM_Handle_TIM9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1; 
 	TIM_Handle_TIM9.Init.CounterMode = TIM_COUNTERMODE_UP; 
-	TIM_Handle_TIM9.Init.Period = 999; 
+	TIM_Handle_TIM9.Init.Period = 99; 
 	TIM_Handle_TIM9.Init.Prescaler = 89; //1K
 	/* init */
 	HAL_TIM_PWM_Init(&TIM_Handle_TIM9);
    /* PWM init */
 	TIM_OC_Handle.OCMode = TIM_OCMODE_PWM1; 
 	TIM_OC_Handle.OCPolarity = TIM_OCPOLARITY_HIGH; 
-	TIM_OC_Handle.Pulse = 499;
+	TIM_OC_Handle.Pulse = 49;
 	/* CHANNEL init */
 	HAL_TIM_PWM_ConfigChannel(&TIM_Handle_TIM9, &TIM_OC_Handle, TIM_CHANNEL_1); 
   /* start */
