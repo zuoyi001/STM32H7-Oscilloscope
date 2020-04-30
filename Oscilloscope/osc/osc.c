@@ -1277,6 +1277,97 @@ void osc_calculate_title_string(window_def * pwin,widget_def *wd,int chn,char **
 		gui_widget_creater(&wd[i]);		
 	}
 }
+/* create the base voltage icon */
+static void osc_draw_trig_line(widget_def * wd)
+{
+	/* get area */
+	draw_area_def * area = get_draw_area_msg();
+	/* color table */
+	const unsigned char color_table_trig_lines[2][2] = 
+	{
+		{
+			COLOR_CH1_GR_TRIG,
+			COLOR_CH1_BG_TRIG,
+		},
+		{
+			COLOR_CH2_GR_TRIG,
+			COLOR_CH2_BG_TRIG,			
+		}
+	};
+	/* get color */
+  const unsigned char * chn = ( wd->msg.wflags & 0x8000 ) ? color_table_trig_lines[0] : color_table_trig_lines[1];
+	/* set point */
+	for( int i = area->start_pos_x ; i < area->stop_pos_x ; i += 3 )
+	{
+		/* get point */
+		unsigned char piox = wd->dev->read_point(i,wd->msg.y);
+		/* chn */
+		if( piox == COLOR_GRID_POINT ) // chn1
+		{
+			wd->dev->set_noload_point(i,wd->msg.y,chn[0]);
+		}
+		else if( piox == COLOR_GRID_AREA_BG )
+		{
+			wd->dev->set_noload_point(i,wd->msg.y,chn[1]);
+		}
+		else
+		{
+			/* draw no point */
+		}
+		/* set point */
+	}
+}
+/* create the trig lines */
+void osc_calculate_trig_line(window_def * pwin,widget_def *wd,int chn)
+{
+	/* get chn */
+	if( chn == 1 )
+	{
+	  wd->msg.wflags |= 0x8000;
+		wd->msg.y = 100; /* for test */
+	}
+	else
+	{
+		wd->msg.wflags &=~ 0x8000;
+		wd->msg.y = 0x16A + 6; /* for test */
+	}
+	/* set ch1 */
+	wd->msg.x = 0;
+	/* parent */
+	wd->dev = pwin->dev;
+	wd->parent = pwin;
+	wd->draw = osc_draw_trig_line;
+	/* other */
+	wd->peer_linker = 0;
+	/* create the wisget */
+	gui_widget_creater(wd);	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

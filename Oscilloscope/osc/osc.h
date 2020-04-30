@@ -91,6 +91,11 @@
 #define COLOR_MATH2_GR_0       (36)//(RGB(0,0,255))
 #define COLOR_MATH2_GR_1       (37)//(RGB(0,0,255))
 #define COLOR_MATH2_GR_F       (38)//(RGB(0,0,255))
+/* trig lines */
+#define COLOR_CH1_GR_TRIG      (39)//(RGB(7,227,231))
+#define COLOR_CH1_BG_TRIG      (40)//(RGB(7,227,231))
+#define COLOR_CH2_GR_TRIG      (41)//(RGB(255,255,7))
+#define COLOR_CH2_BG_TRIG      (42)//(RGB(255,255,7))
 /* typdef chn line manage */
 typedef struct
 {
@@ -143,6 +148,10 @@ RGTB(0,0,255),         /* 35 */\
 RGTB(0,0,255),         /* 36 */\
 RGTB(0,0,255),         /* 37 */\
 RGTB(0,0,255),         /* 38 */\
+RGTB(255,255,0),       /* 39 */\
+RGTB(255,255,0),       /* 40 */\
+RGTB(7,227,231),       /* 41 */\
+RGTB(7,227,231),       /* 42 */\
 }
 #else
 /* THREE color */
@@ -209,6 +218,7 @@ void osc_calculate_title_string(window_def * pwin,widget_def *wd,int chn,char **
 static void osc_create_TITLE(window_def * win);
 draw_area_def * get_draw_area_msg(void);
 static void osc_draw_trig_arrow(widget_def * wd);
+void osc_calculate_trig_line(window_def * pwin,widget_def *wd,int chn);
 
 #endif
 

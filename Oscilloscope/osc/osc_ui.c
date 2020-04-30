@@ -51,6 +51,8 @@ widget_def fast_tips[5];
 /* widget arrow */
 widget_def base_vol_arrow[2];
 widget_def trig_vol_arrow[2];
+/* trig lines */
+widget_def trig_lines[2];
 /* table */
 char * mert[6] = {"频率","1.02MHz","峰峰值","200mV","最大值","3.38V"};
 char * mert1[6] = {"频率","1.00KHz","正脉宽","180mV","平均值","1.68V"};
@@ -68,7 +70,7 @@ int osc_create_ui(void)
 	/* create the group */
 	osc_calculate_sg_size(dev,win_group,sizeof(win_group) / sizeof(win_group[0]));	
 	/* create the menu win ui */
-  osc_calculate_menu_size(dev,&win_menu,0);
+  osc_calculate_menu_size(dev,&win_menu,GUI_HIDE);
 	/* btn */
   osc_calculate_btn_size(dev,&win_menu,btn,sizeof(btn) / sizeof(btn[0]));
 	/* voltage */
@@ -90,6 +92,9 @@ int osc_create_ui(void)
 	/* */
 	osc_calculate_trig_arrow(&win_main,&trig_vol_arrow[0],1);
 	osc_calculate_trig_arrow(&win_main,&trig_vol_arrow[1],2);
+	/* lines */
+	osc_calculate_trig_line(&win_main,&trig_lines[0],1);
+	osc_calculate_trig_line(&win_main,&trig_lines[1],2);
 	/* return */
 	return FS_OK;
 }

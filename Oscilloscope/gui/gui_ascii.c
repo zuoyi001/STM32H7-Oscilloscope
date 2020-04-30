@@ -208,7 +208,6 @@ void gui_dynamic_string(struct widget * wid)
 	}
 	/* front color */
 	color = ( ret == FS_OK ) ? color_w : gui_color(color_w & 0xE000);
-	/* */
 	/* back color  */
 	backcolor = ( retb == FS_OK ) ? back_w : gui_color(back_w & 0xE000);
 	/* judge Is this a char or hz */
