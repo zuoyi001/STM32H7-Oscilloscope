@@ -177,6 +177,7 @@ void gui_dynamic_string(struct widget * wid)
 	unsigned short color_w,backcolor,back_w;
 	unsigned char show_m = 0;
 	int ret = FS_ERR;
+	int retb = FS_ERR;
 	/* check */
 	if(CHECK_REHIDE(wid->msg.wflags))
 	{
@@ -194,7 +195,13 @@ void gui_dynamic_string(struct widget * wid)
 		/* set backcolor */
 		if( CHECK_OVERM(wid->msg.wflags))
 		{
-			back_w = (wid->parent->msg.wflags & 0x00E0) << 8;
+			/* get inline */
+			retb = gui_wid_inline(wid,&back_w);
+			/* ok or not */
+			if( retb != FS_OK )
+			{
+				back_w = (wid->parent->msg.wflags & 0x00E0) << 8;
+			}
 			/* show back */
 			show_m = 1;
 		}
@@ -203,7 +210,7 @@ void gui_dynamic_string(struct widget * wid)
 	color = ( ret == FS_OK ) ? color_w : gui_color(color_w & 0xE000);
 	/* */
 	/* back color  */
-	backcolor = gui_color(back_w & 0xE000);
+	backcolor = ( retb == FS_OK ) ? back_w : gui_color(back_w & 0xE000);
 	/* judge Is this a char or hz */
 	while( *hzc != 0 )
 	{
