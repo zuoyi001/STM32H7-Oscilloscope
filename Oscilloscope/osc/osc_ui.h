@@ -38,7 +38,7 @@ void osc_ui_move_offset_arrow(unsigned char chn,unsigned short pos);
 void osc_calculate_trig_arrow(window_def * pwin,widget_def *wd,int chn);
 void osc_ui_move_trig_arrow(unsigned char chn,unsigned short pos);
 void osc_ui_vol_scale(unsigned char chn , char * str );
-
+void osc_ui_move_trig_lines(unsigned char chn,unsigned short posy);
 /* Private includes ----------------------------------------------------------*/
 
 #endif

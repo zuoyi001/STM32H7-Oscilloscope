@@ -1281,6 +1281,7 @@ void osc_calculate_title_string(window_def * pwin,widget_def *wd,int chn,char **
 static void osc_draw_trig_line(widget_def * wd)
 {
 	/* get area */
+	unsigned char rehide_flag = 0;
 	draw_area_def * area = get_draw_area_msg();
 	/* color table */
 	const unsigned char color_table_trig_lines[2][2] = 
@@ -1294,27 +1295,79 @@ static void osc_draw_trig_line(widget_def * wd)
 			COLOR_CH2_BG_TRIG,			
 		}
 	};
+	/* check rehide */
+	if( CHECK_REHIDE(wd->msg.wflags) || wd->msg.mark_flag == 2 )
+	{
+		/* set */
+		rehide_flag = 1;
+		/* set deft */
+		if( CHECK_REHIDE(wd->msg.wflags) )
+		{
+			wd->msg.mark_flag = 1;
+		}
+		/* clear */
+		CLEAR_REHIDE(wd->msg.wflags);		
+	}
+	else
+	{
+		wd->msg.mark_flag = 1;
+	}	
 	/* get color */
   const unsigned char * chn = ( wd->msg.wflags & 0x8000 ) ? color_table_trig_lines[0] : color_table_trig_lines[1];
-	/* set point */
-	for( int i = area->start_pos_x ; i < area->stop_pos_x ; i += 3 )
+	/* while */
+	while(wd->msg.mark_flag)
 	{
-		/* get point */
-		unsigned char piox = wd->dev->read_point(i,wd->msg.y);
-		/* chn */
-		if( piox == COLOR_GRID_POINT ) // chn1
-		{
-			wd->dev->set_noload_point(i,wd->msg.y,chn[0]);
-		}
-		else if( piox == COLOR_GRID_AREA_BG )
-		{
-			wd->dev->set_noload_point(i,wd->msg.y,chn[1]);
-		}
-		else
-		{
-			/* draw no point */
-		}
 		/* set point */
+		for( int i = area->start_pos_x ; i < area->stop_pos_x ; i +=2 )
+		{
+			/* get point */
+			unsigned char piox = wd->dev->read_point(i,wd->msg.y);
+			/* rehide */
+			if( rehide_flag == 0 )
+			{
+				/* chn */
+				if( piox == COLOR_GRID_POINT ) // chn1
+				{
+					wd->dev->set_noload_point(i,wd->msg.y,chn[0]);
+				}
+				else if( piox == COLOR_GRID_AREA_BG )
+				{
+					wd->dev->set_noload_point(i,wd->msg.y,chn[1]);
+				}
+				else
+				{
+					/* draw no point */
+				}
+			}
+			else
+			{
+				/* clear */
+				if( piox == chn[0] )
+				{
+					wd->dev->set_noload_point(i,wd->msg.y,COLOR_GRID_POINT);
+				}
+				else if( piox == chn[1] )
+				{
+					wd->dev->set_noload_point(i,wd->msg.y,COLOR_GRID_AREA_BG);
+				}
+				else
+				{
+					/* draw no point */
+				}			
+			}
+			/* set point */
+		}
+		/* fe */
+		wd->msg.mark_flag --;
+		/* check */
+		if( wd->msg.mark_flag )
+		{
+			/* repos */
+			wd->msg.y = wd->msg.my;
+			/* redraw */
+			rehide_flag = 0;
+			/* reduce */
+		}	
 	}
 }
 /* create the trig lines */

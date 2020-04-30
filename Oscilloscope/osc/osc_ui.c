@@ -135,7 +135,15 @@ void osc_ui_vol_scale(unsigned char chn , char * str )
 	  gui_set_wid_text(&voltage_ch[chn],str);
 	}
 }
-
+/* osc move trig lines */
+void osc_ui_move_trig_lines(unsigned char chn,unsigned short posy)
+{
+	/* limit */
+	if( chn < 2 )	
+	{
+		gui_move_wid(&trig_lines[chn],0,posy);
+	}
+}
 
 
 
