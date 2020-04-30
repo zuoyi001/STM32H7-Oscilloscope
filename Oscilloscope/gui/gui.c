@@ -375,8 +375,29 @@ int gui_move_wid(widget_def * wid,unsigned short px,unsigned short py)
   /* return OK */
 	return FS_OK;
 }
-
-
+/* gui get connect */
+int gui_wid_inline( widget_def * wid , unsigned short * upd)
+{
+	/* get parent window 's pointer */
+	for( widget_def * wd = wid->parent->wchild ; wd != 0 ; wd = wd->peer_linker)
+	{
+		/* check . skip current widget */
+		if( wd != wid )
+		{
+			/* check range */
+			if(( wid->msg.x >= wd->msg.x && wid->msg.x < (  wd->msg.x +  wd->msg.x_size ) ) && 
+				 ( wid->msg.y >= wd->msg.y && wid->msg.y < (  wd->msg.y +  wd->msg.y_size ) ))
+			{
+				/* set upd */
+				*upd = wd->msg.upd;
+				/* return FS_OK */
+				return FS_OK;
+			}
+		}
+	}
+	/* error */
+	return FS_ERR;
+}
 
 
 

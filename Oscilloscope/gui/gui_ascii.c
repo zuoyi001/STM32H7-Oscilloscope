@@ -176,10 +176,17 @@ void gui_dynamic_string(struct widget * wid)
 	/* set color */
 	unsigned short color_w,backcolor,back_w;
 	unsigned char show_m = 0;
+	int ret = FS_ERR;
 	/* check */
 	if(CHECK_REHIDE(wid->msg.wflags))
 	{
-		color_w = (wid->parent->msg.wflags & 0x00E0) << 8;
+		/* get inline */
+		ret = gui_wid_inline(wid,&color_w);
+		/* ok or not */
+		if( ret != FS_OK )
+		{
+			color_w = (wid->parent->msg.wflags & 0x00E0) << 8;
+		}
 	}
 	else
 	{
@@ -193,7 +200,7 @@ void gui_dynamic_string(struct widget * wid)
 		}
 	}
 	/* front color */
-	color = gui_color(color_w & 0xE000);
+	color = ( ret == FS_OK ) ? color_w : gui_color(color_w & 0xE000);
 	/* */
 	/* back color  */
 	backcolor = gui_color(back_w & 0xE000);

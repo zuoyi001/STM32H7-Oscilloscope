@@ -686,7 +686,8 @@ void osc_calculate_btn_size(gui_dev_def * dev,window_def * win,widget_def *wd,un
 		wd[i].msg.y_size = y_size_g;
 		wd[i].dev = dev;
 		wd[i].draw = osc_create_button;
-		wd[i].parent = win;	
+		wd[i].parent = win;
+		wd[i].msg.upd = COLOR_BUTTON;
 		/* create btn */
 		gui_widget_creater(&wd[i]);
 	}
@@ -883,17 +884,19 @@ void osc_calculate_menu(window_def * pwin,widget_def *wd,int num,char ** item)
 	/* setting */
   for( int i = 0 ; i < num ; i ++ )
 	{
-		/* char default is 24 size */
-		wd[i].msg.wflags |= 0x1000;
 		/* set system title */
 		if( i == 0 )
 		{
 			wd[i].msg.x = title_x;
 			/* vertical */
 			wd[i].msg.y = title_y;
+		  /* char default is 16 size */
+		  wd[i].msg.wflags &=~ 0x1000;			
 		}
 		else
 		{
+			/* char default is 24 size */
+			wd[i].msg.wflags |= 0x1000;
 			/* get len */
 			int enter_flag = 0;
 			int lenc = osc_hz_len(item[i],&enter_flag);
