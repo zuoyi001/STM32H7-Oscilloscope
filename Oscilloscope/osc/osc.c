@@ -1384,6 +1384,8 @@ void osc_calculate_trig_line(window_def * pwin,widget_def *wd,int chn)
 		wd->msg.wflags &=~ 0x8000;
 		wd->msg.y = 0x16A + 6; /* for test */
 	}
+	/* set default is hide */
+	SET_HIDE(wd->msg.wflags);
 	/* set ch1 */
 	wd->msg.x = 0;
 	/* parent */

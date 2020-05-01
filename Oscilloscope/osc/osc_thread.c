@@ -56,8 +56,8 @@ static int osc_thead_init(void)
   dev = get_gui_dev();
 	/* set init param */
 	osc_rot_set(OSC_TIME_ROT,7);
-	osc_rot_set(OSC_VOL_OFFSET_SCALE,20);
-	osc_rot_set(OSC_VOL_SCALE,20);
+	osc_rot_set(OSC_VOL_OFFSET_SCALE,200);
+	osc_rot_set(OSC_VOL_SCALE,7);
 	osc_rot_set(OSC_TRIG_SCALE,200);
 	/* for test */
 	osc_voltage_output(1870,2000,270,20);//1870,2000,0,270
