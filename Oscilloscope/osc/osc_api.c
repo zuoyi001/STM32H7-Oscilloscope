@@ -29,6 +29,9 @@
 #include "hal_iic.h"
 /* static temp cache */
 static unsigned char cache_fifo[4][ FIFO_DEEP * 2 ]  __attribute__((at(0x10000000)));
+/* dac */
+static unsigned short osc_dac_buffer[4];
+static unsigned short osc_chn_offset[2];
 /* Private includes ----------------------------------------------------------*/
 void osc_stop_adc_clock(void)
 {
@@ -259,7 +262,58 @@ static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsig
 /* osc output dac */
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d)
 {
+	/* save buffer */
+	osc_dac_buffer[0] = a;
+	osc_dac_buffer[1] = b;
+	osc_dac_buffer[2] = c;
+	osc_dac_buffer[3] = d;
+	/* update dac */
   dac_update(a,b,c,d);
+}
+/* dac event */
+static void osc_dac_update_buf(unsigned short * buf,unsigned short * offset)
+{
+	dac_update(buf[0],buf[1],buf[2] + offset[1],buf[3] + offset[0]);
+}
+/* set base dac */
+void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset_dac)
+{
+	/* chn */
+	if( chn == 0 )
+	{
+		/* set buffer */
+		osc_dac_buffer[0] = gain_dac;
+		osc_dac_buffer[3] = offset_dac;
+		/* update */
+		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);
+	}
+	else
+	{
+		/* set buffer */
+		osc_dac_buffer[1] = gain_dac;
+		osc_dac_buffer[2] = offset_dac;
+		/* update */
+		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);		
+	}
+}
+/* void osc_dac_offset */
+void osc_dac_offset(unsigned char chn,unsigned short offset_mv)
+{
+	/* chn */
+	if( chn == 0 )
+	{
+		/* set buffer */
+		osc_chn_offset[0] = offset_mv;
+		/* update */
+		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);
+	}
+	else
+	{
+		/* set buffer */
+		osc_chn_offset[1] = offset_mv;
+		/* update */
+		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);	
+	}	
 }
 /* fifo clock enable */
 void osc_fifo_clock(unsigned short sta)

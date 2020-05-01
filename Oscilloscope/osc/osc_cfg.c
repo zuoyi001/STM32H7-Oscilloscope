@@ -186,78 +186,78 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 0 */
 	{
 		.str = "5mV  ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 500,
+		.gain_offset = 25,
 		.gain_sel = 1,
 	},
 	/* 1 */
 	{
 		.str = "10mV ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 940,
+		.gain_offset = 25,
 		.gain_sel = 1,
 	},
 	/* 2 */
 	{
 		.str = "20mV ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 1330,
+		.gain_offset = 25,
 		.gain_sel = 1,
 	},
 	/* 3 */
 	{
 		.str = "50mV ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 1890,
+		.gain_offset = 25,
 		.gain_sel = 1,
 	},
 	/* 4 */
 	{
 		.str = "100mV",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 2300,
+		.gain_offset = 25,
 		.gain_sel = 1,
 	},
 	/* 5 */
 	{
 		.str = "200mV",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 2720,
+		.gain_offset = 25,
 		.gain_sel = 1,
 	},
 	/* 6 */
 	{
 		.str = "500mV",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 1430,
+		.gain_offset = 35,
 		.gain_sel = 0,
 	},
 	/* 7 */
 	{
 		.str = "1V   ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 1860,
+		.gain_offset = 25,
 		.gain_sel = 0,
 	},
 	/* 8 */
 	{
 		.str = "2V   ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 2300,
+		.gain_offset = 25,
 		.gain_sel = 0,
 	},
 	/* 9 */
 	{
 		.str = "5V   ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 2850,
+		.gain_offset = 25,
 		.gain_sel = 0,
 	},
 	/* 10 */
 	{
 		.str = "10V  ",
-		.gain_dac = 2000,
-		.gain_offset = 0,
+		.gain_dac = 4095,
+		.gain_offset = 25,
 		.gain_sel = 0,
 	},
 };
@@ -415,7 +415,7 @@ void osc_offset_scale_thread(unsigned char chn)
 			/* calbrate the trig_dac_part_offset */
 			trig_dac_part_offset = out_dac_mv;//unit is mv
 			/* out dac for test */
-			osc_voltage_output(1870,2000,270,out_dac_mv * 2 );
+			osc_dac_offset(chn,out_dac_mv * 2);
 			/* update dac trig */
 			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 		}
@@ -527,7 +527,13 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 	/* set time text */
 	if( osc_vs_t != last_vol_scale )
 	{
+		/* set string */
 		osc_ui_vol_scale(chn,osc_vol_offset_scale_ch1[osc_vs_t].str);
+		/* set gain ctrl */
+		osc_gain_ctrl(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
+		/* set dac */
+		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset);
+		/* end */
 	}
   /* clear flags */
 	last_vol_scale = osc_vs_t;

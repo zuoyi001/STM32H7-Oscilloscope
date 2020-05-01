@@ -35,6 +35,8 @@ void osc_fifo_clock(unsigned short sta);
 unsigned short osc_read_key_menu(void);
 int osc_read_rot_idle(unsigned index);
 void osc_gain_ctrl(unsigned char chn , unsigned char sta);
+void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset_dac);
+void osc_dac_offset(unsigned char chn,unsigned short offset_mv);
 
 #endif
 
