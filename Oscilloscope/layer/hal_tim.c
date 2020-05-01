@@ -29,6 +29,8 @@
 FOS_INODE_REGISTER("hal_gpio",hal_tim_init,0,0,14);
 /* static tim handle */
 static TIM_HandleTypeDef TIM_Handle; 
+static TIM_HandleTypeDef htim5;
+static void mx_time5_init(void);
 /* init base and open as default */
 static int hal_tim_init(void)
 {
@@ -63,6 +65,9 @@ static int hal_tim_init(void)
 	HAL_TIM_PWM_ConfigChannel(&TIM_Handle, &TIM_OC_Handle, TIM_CHANNEL_1); 
   /* start */
 	HAL_TIM_PWM_Start(&TIM_Handle, TIM_CHANNEL_1);
+	/* 32bit tim init */
+	mx_time5_init();
+	/*----------------*/
 #if DEBUG_PWM
   hal_test_init();
 #endif
@@ -96,20 +101,50 @@ static void hal_test_init(void)
 	TIM_Handle_TIM9.Instance = TIM9; 
 	TIM_Handle_TIM9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1; 
 	TIM_Handle_TIM9.Init.CounterMode = TIM_COUNTERMODE_UP; 
-	TIM_Handle_TIM9.Init.Period = 99; 
+	TIM_Handle_TIM9.Init.Period = 999; 
 	TIM_Handle_TIM9.Init.Prescaler = 89; //1K
 	/* init */
 	HAL_TIM_PWM_Init(&TIM_Handle_TIM9);
    /* PWM init */
 	TIM_OC_Handle.OCMode = TIM_OCMODE_PWM1; 
 	TIM_OC_Handle.OCPolarity = TIM_OCPOLARITY_HIGH; 
-	TIM_OC_Handle.Pulse = 49;
+	TIM_OC_Handle.Pulse = 499;
 	/* CHANNEL init */
 	HAL_TIM_PWM_ConfigChannel(&TIM_Handle_TIM9, &TIM_OC_Handle, TIM_CHANNEL_1); 
   /* start */
 	HAL_TIM_PWM_Start(&TIM_Handle_TIM9, TIM_CHANNEL_1);	
 }
 #endif
+static void mx_time5_init(void)
+{
+  /* USER CODE BEGIN TIM7_Init 0 */
+  __HAL_RCC_TIM5_CLK_ENABLE();
+  /* USER CODE END TIM7_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 90 - 1;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 0xFFFFFFFF;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+  HAL_TIM_Base_Start(&htim5);
+  /* USER CODE END TIM7_Init 2 */
+}
 /* void stop the pwm clock */
 void hal_pwm_stop(void)
 {
@@ -124,6 +159,11 @@ void hal_pwm_start(void)
 void hal_tim_psc(unsigned short psc)
 {
 	TIM1->PSC = psc - 1;
+}
+/* get sys time */
+unsigned int hal_sys_time_us(void)
+{
+	return TIM5->CNT;
 }
 
 

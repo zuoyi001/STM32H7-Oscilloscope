@@ -415,7 +415,7 @@ void osc_offset_scale_thread(unsigned char chn)
 			/* calbrate the trig_dac_part_offset */
 			trig_dac_part_offset = out_dac / 2;//unit is mv
 			/* out dac for test */
-			osc_voltage_output(1870,2000,0,out_dac);
+			osc_voltage_output(1870,2000,270,out_dac);
 			/* update dac trig */
 			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 		}

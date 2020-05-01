@@ -29,6 +29,7 @@ static void hal_test_init(void);
 void hal_pwm_stop(void);
 void hal_pwm_start(void);
 void hal_tim_psc(unsigned short psc);
+unsigned int hal_sys_time_us(void);
 
 #endif
 

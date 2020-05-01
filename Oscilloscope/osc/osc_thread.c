@@ -60,7 +60,7 @@ static int osc_thead_init(void)
 	osc_rot_set(OSC_VOL_SCALE,20);
 	osc_rot_set(OSC_TRIG_SCALE,200);
 	/* for test */
-	osc_voltage_output(1870,2000,0,20);//1870,2000,0,270
+	osc_voltage_output(1870,2000,270,20);//1870,2000,0,270
 	/* return as usual */
 	return FS_OK;
 }
