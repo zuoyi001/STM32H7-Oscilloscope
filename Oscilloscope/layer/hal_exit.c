@@ -22,6 +22,7 @@
 #include "main.h"
 #include "osc_api.h"
 #include "fos.h"
+#include "hal_tim.h"
 /* exit init */
 static int osc_exit_rot_init(void);
 static void exit_thread(void);
@@ -29,7 +30,7 @@ static void osc_rot_thread(unsigned char index);
 /* exit init  */
 FOS_INODE_REGISTER("exit_rot",osc_exit_rot_init,0,0,1);
 /*----------------------------------------------------------------------------*/
-FOS_TSK_REGISTER(exit_thread,PRIORITY_0,20); /* gui detecter task run as 100 ms*/
+FOS_TSK_REGISTER(exit_thread,PRIORITY_0,10); /* gui detecter task run as 100 ms*/
 /* static rot_flag */
 static unsigned char rot_flag[4];
 static signed short rot_updm[4];
@@ -66,19 +67,42 @@ static int osc_exit_rot_init(void)
 /* get chanbe */
 static void osc_rot_isr(unsigned char index,unsigned char up_dm)
 {
+	/* static last */
+	static unsigned int last_td = 0;
 	/* get clear */
 	if( rot_flag[index] == 0 )
 	{
 		/* set flag */
 		rot_flag[index] = 1;
-		/* def */
-		if( up_dm == 0 )
+		/* time ctrl */
+		if( index == 2 )
 		{
-			rot_updm[index] ++;
+			/* get timestmp */
+			unsigned int now = hal_sys_time_us();
+			/* filer */
+			unsigned int diff = ( now - last_td ) / 1000;
+			/* deg */
+			if( diff > 5 )
+			{
+				/* cal */
+				if( diff < 300 )
+				{
+					/* set zm */
+					signed short zm = 21 - (2.0f)*(float)diff / 30.0f;  
+					/* com */
+					rot_updm[index] += up_dm ? (-zm) : zm;
+				}
+				else
+				{
+					rot_updm[index] += up_dm ? (-1) : 1;
+				}
+				/* upd */
+				last_td = now;
+			}
 		}
 		else
 		{
-			rot_updm[index] --;
+			rot_updm[index] += up_dm ? (-1) : 1;
 		}
 	}
 }

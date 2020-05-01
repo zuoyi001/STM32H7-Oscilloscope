@@ -380,7 +380,7 @@ void osc_offset_scale_thread(unsigned char chn)
 	/* get draw area */
 	draw_area_def * area = get_draw_area_msg();
 	/* little */
-	unsigned short max_scale = area->num_vertical * area->little_grid;
+	unsigned short max_scale = area->total_pixel_v;
 	/* get data */
 	if( vol_offset_scale > max_scale )
 	{
@@ -389,10 +389,10 @@ void osc_offset_scale_thread(unsigned char chn)
 		/* set vol_offset_scale */
 		osc_rot_set(OSC_VOL_OFFSET_SCALE,vol_offset_scale);
 	}
-	else if( vol_offset_scale < 1 )
+	else if( vol_offset_scale < 6 )
 	{
 		/* set max offset */
-		vol_offset_scale = 1;
+		vol_offset_scale = 6;
 		/* set vol_offset_scale */
 		osc_rot_set(OSC_VOL_OFFSET_SCALE,vol_offset_scale);
 	}
@@ -404,18 +404,18 @@ void osc_offset_scale_thread(unsigned char chn)
 	if( lsat_vol != vol_offset_scale )
 	{
 		/* pos */
-		unsigned short new_pos = vol_offset_scale * area->pixel_vertiacl / area->little_grid  + area->start_pos_y - 6 ;
+		unsigned short new_pos = vol_offset_scale + area->start_pos_y - 6 ;
 		/* channel 1 */
 		osc_ui_move_offset_arrow(chn,new_pos );
-		/* */
+		/* calbrate the offset voltage */
+		short out_dac_mv = (float)( vol_offset_scale - max_scale / 2 ) * 512.0f / (float)(max_scale / 2);
+		/* calbrate the offset voltage */
 		if( vol_offset_scale >= max_scale / 2 )
 		{
-			/* calbrate the offset voltage */
-			unsigned short out_dac = ( vol_offset_scale -  max_scale / 2 ) * 51 + 20;
 			/* calbrate the trig_dac_part_offset */
-			trig_dac_part_offset = out_dac / 2;//unit is mv
+			trig_dac_part_offset = out_dac_mv;//unit is mv
 			/* out dac for test */
-			osc_voltage_output(1870,2000,270,out_dac);
+			osc_voltage_output(1870,2000,270,out_dac_mv * 2 );
 			/* update dac trig */
 			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 		}
@@ -429,41 +429,41 @@ void osc_trig_scale_thread(unsigned char chn)
 	/* last */
 	static signed short lsat_vol = 0xfff;
   /* void offset thread */
-	signed short vol_offset_scale = osc_rot_sta(OSC_TRIG_SCALE);
+	signed short vol_trig_scale = osc_rot_sta(OSC_TRIG_SCALE);
 	/* get draw area */
 	draw_area_def * area = get_draw_area_msg();
 	/* little */
 	unsigned short max_scale = area->total_pixel_v;
 	/* get data */
-	if( vol_offset_scale > max_scale )
+	if( vol_trig_scale > max_scale )
 	{
 		/* set max offset */
-		vol_offset_scale = max_scale;
-		/* set vol_offset_scale */
-		osc_rot_set(OSC_TRIG_SCALE,vol_offset_scale);
+		vol_trig_scale = max_scale;
+		/* set vol_trig_scale */
+		osc_rot_set(OSC_TRIG_SCALE,vol_trig_scale);
 	}
-	else if( vol_offset_scale < 1 )
+	else if( vol_trig_scale < 1 )
 	{
 		/* set max offset */
-		vol_offset_scale = 1;
-		/* set vol_offset_scale */
-		osc_rot_set(OSC_TRIG_SCALE,vol_offset_scale);
+		vol_trig_scale = 1;
+		/* set vol_trig_scale */
+		osc_rot_set(OSC_TRIG_SCALE,vol_trig_scale);
 	}
 	else
 	{
 		/* to do nothing */
 	}
 	/* change */
-	if( lsat_vol != vol_offset_scale )
+	if( lsat_vol != vol_trig_scale )
 	{
 		/* pos */
-		unsigned short new_pos = vol_offset_scale  + area->start_pos_y - 6 ;
+		unsigned short new_pos = vol_trig_scale  + area->start_pos_y - 6 ;
 		/* channel 1 */
 		osc_ui_move_trig_arrow(chn,new_pos );
 		/* calbrate the offset voltage */
-		signed  short out_dac = (float)( max_scale / 2 - vol_offset_scale ) * 512.0f / (float)(max_scale / 2);
+		signed  short out_dac = (float)( max_scale / 2 - vol_trig_scale ) * 512.0f / (float)(max_scale / 2);
 		/* only supply pos vol now */
-		if( vol_offset_scale <= max_scale / 2 )
+		if( vol_trig_scale <= max_scale / 2 )
 		{
 			/* calbrate trig_dac_part_rot */
 			trig_dac_part_rot = out_dac;
@@ -473,7 +473,7 @@ void osc_trig_scale_thread(unsigned char chn)
 		}
 	}
 	/* ipdate */
-	lsat_vol = vol_offset_scale;
+	lsat_vol = vol_trig_scale;
 }
 /* vol scale thread */
 const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
