@@ -380,8 +380,13 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Application/MDK-ARM</GroupName>
+          <GroupName>MDK-ARM</GroupName>
           <Files>
+            <File>
+              <FileName>system_stm32h7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/system_stm32h7xx.c</FilePath>
+            </File>
             <File>
               <FileName>startup_stm32h750xx.s</FileName>
               <FileType>2</FileType>
@@ -390,7 +395,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/User</GroupName>
+          <GroupName>User</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
@@ -410,7 +415,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Drivers/STM32H7xx_HAL_Driver</GroupName>
+          <GroupName>hallib</GroupName>
           <Files>
             <File>
               <FileName>stm32h7xx_hal_cortex.c</FileName>
@@ -501,16 +506,6 @@
               <FileName>stm32h7xx_hal_exti.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Drivers/CMSIS</GroupName>
-          <Files>
-            <File>
-              <FileName>system_stm32h7xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/system_stm32h7xx.c</FilePath>
             </File>
           </Files>
         </Group>
