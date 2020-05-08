@@ -21,22 +21,27 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "fos.h"
+
+#if 0
 /* declare */
 static void mx_time7_init(void);
 static void mx_time10_init(void);
 static void mx_time11_init(void);
 static void mx_time13_init(void);
 static void mx_time14_init(void);
+#endif
 static int thread_timer_init(void);
 static int thread_start_it(void);
 /* */
 FOS_INODE_REGISTER("thread",thread_timer_init,thread_start_it,0,15);
 /* Private variables ---------------------------------------------------------*/
+#if 0
 static TIM_HandleTypeDef htim7; 
 static TIM_HandleTypeDef htim10;
 static TIM_HandleTypeDef htim11;
 static TIM_HandleTypeDef htim13;
 static TIM_HandleTypeDef htim14;
+#endif
 /* thread timer init */
 static fos_tsk_def * fos_tsk_linker[6];
 static fos_tsk_def * fos_tsk_header[6];
@@ -69,12 +74,14 @@ static void fos_task_init(void)
 /* testk */
 static int thread_timer_init(void)
 {
+#if 0	
 	/* init time 7 to time 14 */
 	mx_time7_init();
 	mx_time10_init();
 	mx_time11_init();
 	mx_time13_init();
 	mx_time14_init();
+#endif	
 	/* task init */
 	fos_task_init();
 	/* return OK */
@@ -83,15 +90,18 @@ static int thread_timer_init(void)
 /* enable all thread */
 static int thread_start_it(void)
 {
+#if 0	
 	/* enable all it */
 	HAL_NVIC_EnableIRQ(TIM7_IRQn);
 	HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);  
 	HAL_NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn); 
 	HAL_NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);
 	HAL_NVIC_EnableIRQ(TIM8_TRG_COM_TIM14_IRQn);
+#endif	
 	/* return OK */
 	return FS_OK;
 }
+#if 0
 /* run task 0 */
 static void run_thead_priority_0(void)
 {
@@ -172,6 +182,7 @@ static void run_thead_priority_4(void)
 		}
 	} 
 }
+#endif
 /* run task 1 */
 void run_thead_priority_idle(void)
 {
@@ -188,6 +199,7 @@ void run_thead_priority_idle(void)
 		}
 	} 
 }
+#if 0
 /* task task */
 static void mx_time7_init(void)
 {
@@ -484,7 +496,7 @@ void TIM8_TRG_COM_TIM14_IRQHandler(void)
   run_thead_priority_4();
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 1 */
 }
-
+#endif
 
 
 

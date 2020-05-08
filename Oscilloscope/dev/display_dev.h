@@ -48,6 +48,8 @@ typedef struct
 	unsigned short PLLSAIN;
 	unsigned short PLLSAIR;
 	unsigned int PLLSAIDIVR;
+	/* pixel clock */
+	unsigned short pixel_clk;
 	/* end */
 }display_dev_def;
 /* display info */

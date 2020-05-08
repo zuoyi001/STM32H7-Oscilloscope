@@ -27,7 +27,7 @@
 #include "osc.h"
 /* Private includes ----------------------------------------------------------*/
 #if LCD_MODE_L8
-unsigned char gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
+unsigned char gram[800*480] __attribute__((at(0x24000000)));
 #else
 unsigned short gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
 #endif
@@ -50,6 +50,7 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 288,
 		.PLLSAIR = 4 , 
 		.PLLSAIDIVR = DIVR_8,
+		.pixel_clk = 9,
 	},
 	{
 		.dev_capital = "LCD\n800*480",
@@ -65,6 +66,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 396,
 		.PLLSAIR = 3 , 
 		.PLLSAIDIVR = DIVR_4,
+		/* pixel clock */
+		.pixel_clk = 33,
 	},
 	{
 		.dev_capital = "LCD\n1024*600",
@@ -80,6 +83,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 50 * 4,
 		.PLLSAIR = 2 , 
 		.PLLSAIDIVR = DIVR_2,
+		/* pixel clock */
+		.pixel_clk = 50,		
 	},
 	{
 		.dev_capital = "VGA\n1280*800",
@@ -95,6 +100,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 83 * 4,
 		.PLLSAIR = 2 , 
 		.PLLSAIDIVR = DIVR_2,
+		/* pixel clock */
+		.pixel_clk = 83,		
 	},
 	{
 		.dev_capital = "VGA\n1024*768",
@@ -110,6 +117,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 65 * 4,
 		.PLLSAIR = 2 , 
 		.PLLSAIDIVR = DIVR_2, /* 65MHZ @ 60HZ*/
+		/* pixel clock */
+		.pixel_clk = 65,		
 	},	
 	{
 		.dev_capital = "VGA\n800*600",
@@ -125,6 +134,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 40 * 4,
 		.PLLSAIR = 2 , 
 		.PLLSAIDIVR = DIVR_2,/* 40MHZ @ 60HZ */
+		/* pixel clock */
+		.pixel_clk = 40,		
 	},	
 	{
 		.dev_capital = "VGA\n640*480",
@@ -140,6 +151,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 25 * 4,
 		.PLLSAIR = 2 , 
 		.PLLSAIDIVR = DIVR_2,/* ~25M @ 60HZ */
+		/* pixel clock */
+		.pixel_clk = 25,		
 	},	
 #if 0
 	{
@@ -156,6 +169,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 0,
 		.PLLSAIR = 0 , 
 		.PLLSAIDIVR = DIVR_4,
+		/* pixel clock */
+		.pixel_clk = 33,	
 	},
 #endif	
 #if 0
@@ -173,6 +188,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 396,
 		.PLLSAIR = 3 , 
 		.PLLSAIDIVR = DIVR_4,
+		/* pixel clock */
+		.pixel_clk = 33,		
 	},
 #endif		
 #if 0	
@@ -190,6 +207,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN  =  0,
 		.PLLSAIR = 0 , 
 		.PLLSAIDIVR = DIVR_4,
+		/* pixel clock */
+		.pixel_clk = 33,		
 	},
 #endif		
 #if 0
@@ -207,6 +226,8 @@ const display_dev_def display_dev[7] =
 		.PLLSAIN = 0,
 		.PLLSAIR = 0 , 
 		.PLLSAIDIVR = DIVR_4,
+		/* pixel clock */
+		.pixel_clk = 33,		
 	},
 #endif	
 };
@@ -232,9 +253,6 @@ static int dev_init(void)
 		init_dev_flags = 1;
 		/* init ltdc init or other dev */
 		LTDC_Init(display_info.display_dev);
-		/* sram init */
-		sdram_init();
-		/* srame test that will add at next version */
 		/* init middle */
 		middle_layer_init(&display_info);
 		/* end of if */
@@ -252,9 +270,6 @@ display_info_def * get_display_dev_info(void)
 		init_dev_flags = 1;
 		/* init ltdc init or other dev */
 		LTDC_Init(display_info.display_dev);
-		/* sram init */
-		sdram_init();
-		/* srame test that will add at next version */
 		/* init middle */
 		middle_layer_init(&display_info);
 		/* end of if */
@@ -290,11 +305,11 @@ static void LTDC_MspInit(void)
 	/* Peripheral clock enable */
 	__HAL_RCC_LTDC_CLK_ENABLE();
 
-	__HAL_RCC_GPIOI_CLK_ENABLE();
-	__HAL_RCC_GPIOF_CLK_ENABLE();
-	__HAL_RCC_GPIOH_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOE_CLK_ENABLE();
 	/**LTDC GPIO Configuration    
 	PI9     ------> LTDC_VSYNC
 	PI10     ------> LTDC_HSYNC
@@ -317,54 +332,67 @@ static void LTDC_MspInit(void)
 	PI6     ------> LTDC_B6
 	PI7     ------> LTDC_B7 
 	*/
-	GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_0|GPIO_PIN_1 
-											|GPIO_PIN_2|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6 
-											|GPIO_PIN_7;
+	GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_6;
+											
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 	GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
-	HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = GPIO_PIN_10;
+	GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF9_LTDC;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+		
+	GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 	GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
-	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12 
-											 |GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+	GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_6|GPIO_PIN_7; 
+	
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 	GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
-	HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_11;
+	GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_10;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 	GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+	GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+	
 	/* USER CODE BEGIN LTDC_MspInit 1 */
 	/* USER SET LCD DISPLAY AND BL */
-  GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_10;
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 	
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 	/* Display on */
-	HAL_GPIO_WritePin(GPIOG,GPIO_PIN_9 | GPIO_PIN_10,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOD,GPIO_PIN_9,GPIO_PIN_SET);
 	
 	/*set up BL pin */
-	GPIO_InitStruct.Pin = GPIO_PIN_8 ;
+	GPIO_InitStruct.Pin = GPIO_PIN_6 ;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
 	/* SET back light aways on */
-  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);	
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6,GPIO_PIN_SET);	
 	/* USER CODE END LTDC_MspInit 1 */
 }
 /**
@@ -384,10 +412,15 @@ static void LTDC_Init(display_dev_def * info)
 
   /* USER CODE BEGIN LTDC_Init 1 */
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
-  PeriphClkInitStruct.PLLSAI.PLLSAIN = info->PLLSAIN;
-  PeriphClkInitStruct.PLLSAI.PLLSAIR = info->PLLSAIR;
-  PeriphClkInitStruct.PLLSAIDivR = info->PLLSAIDIVR;
-	/* set clock */
+  PeriphClkInitStruct.PLL3.PLL3M = 25;
+  PeriphClkInitStruct.PLL3.PLL3N = info->pixel_clk * 2;
+  PeriphClkInitStruct.PLL3.PLL3P = 2;
+  PeriphClkInitStruct.PLL3.PLL3Q = 2;
+  PeriphClkInitStruct.PLL3.PLL3R = 2;
+  PeriphClkInitStruct.PLL3.PLL3RGE = RCC_PLL3VCIRANGE_0;
+  PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
+  PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
+	/* init */
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();

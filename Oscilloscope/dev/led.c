@@ -23,10 +23,8 @@
 #include "main.h"
 #include "led.h"
 /* LED define */
-#define LED_RED_GPIO GPIOB
-#define LED_RED_GPIO_PIN GPIO_PIN_9
-#define LED_GREEN_GPIO GPIOH
-#define LED_GREEN_GPIO_PIN GPIO_PIN_5
+#define LED_RED_GPIO GPIOC
+#define LED_RED_GPIO_PIN GPIO_PIN_4
 /* register node */
 FOS_INODE_REGISTER("led",led_hardware_init,0,0,10);
 /* define task run as 500ms */
@@ -38,8 +36,7 @@ int led_hardware_init(void)
 		/* default dev */
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	/* enable clock */
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	__HAL_RCC_GPIOH_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
 	/* display */
   GPIO_InitStruct.Pin = LED_RED_GPIO_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -47,13 +44,8 @@ int led_hardware_init(void)
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 	/* init */
 	HAL_GPIO_Init(LED_RED_GPIO, &GPIO_InitStruct);	
-	/* ohers */
-	GPIO_InitStruct.Pin = LED_GREEN_GPIO_PIN;
-	/* init */
-	HAL_GPIO_Init(LED_GREEN_GPIO, &GPIO_InitStruct);	
 	/* led on */
 	HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_RESET);	
-	HAL_GPIO_WritePin(LED_GREEN_GPIO,LED_GREEN_GPIO_PIN,GPIO_PIN_RESET);
 	/* return */
 	return FS_OK;
 }
@@ -77,7 +69,7 @@ static void led_thread_300ms(void)
 			/* set flags */
 			flag_led = 0;
 			/* on the led */			
-			HAL_GPIO_WritePin(LED_GREEN_GPIO,LED_GREEN_GPIO_PIN,GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_RESET);
 		}
 	}
 	else
@@ -88,7 +80,7 @@ static void led_thread_300ms(void)
 			/* set flags */
 			flag_led = 1;
 			/* off the led */
-			HAL_GPIO_WritePin(LED_GREEN_GPIO,LED_GREEN_GPIO_PIN,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_SET);
 		}
 	}
 	/* clear */

@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>ltdc_test\</OutputDirectory>
-          <OutputName>ltdc_test</OutputName>
+          <OutputName>osc</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -210,7 +210,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>1</Im2Chk>
+            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H750xx,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\osc;..\Oscilloscope\dev;..\Oscilloscope\fos;..\Oscilloscope\dev;..\Oscilloscope\gui</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -372,7 +372,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>--keep __FS_*;--keep __FS_TSK_*</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -507,7 +507,61 @@
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32h7xx_hal_ltdc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_ltdc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32h7xx_hal_ltdc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_ltdc_ex.c</FilePath>
+            </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>layer</GroupName>
+        </Group>
+        <Group>
+          <GroupName>fos</GroupName>
+          <Files>
+            <File>
+              <FileName>fos.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fos.c</FilePath>
+            </File>
+            <File>
+              <FileName>fos_tsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\fos\fos_tsk.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>dev</GroupName>
+          <Files>
+            <File>
+              <FileName>display_dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\display_dev.c</FilePath>
+            </File>
+            <File>
+              <FileName>middle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\middle.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\led.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>osc</GroupName>
+        </Group>
+        <Group>
+          <GroupName>gui</GroupName>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>

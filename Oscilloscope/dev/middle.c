@@ -94,6 +94,7 @@ unsigned short get_point( unsigned short x , unsigned short y )
 /* middle fill a */
 void fill_rect(unsigned short psx,unsigned short psy,unsigned short pex,unsigned short pey,unsigned int color)
 { 
+#if !LCD_MODE_L8		
 	/* define some parm */
 	unsigned int timeout = 0; 
 	unsigned short offline;
@@ -128,10 +129,12 @@ void fill_rect(unsigned short psx,unsigned short psy,unsigned short pex,unsigned
 	} 
 	/* clear TC flag */
 	DMA2D->IFCR |= DMA2D_FLAG_TC ;
+#endif
 }
 /* fill color*/
 void fill_color(unsigned short psx,unsigned short psy,unsigned short pex,unsigned short pey,unsigned short * color)
 {
+#if !LCD_MODE_L8		
 	/* define some parm */
 	unsigned int timeout = 0; 
 	unsigned short offline;
@@ -167,6 +170,7 @@ void fill_color(unsigned short psx,unsigned short psy,unsigned short pex,unsigne
 	} 
 	/* clear TC flag */
 	DMA2D->IFCR |= DMA2D_FLAG_TC ;	
+#endif	
 }
 /* clear */
 void clear_display_dev(unsigned short color)
