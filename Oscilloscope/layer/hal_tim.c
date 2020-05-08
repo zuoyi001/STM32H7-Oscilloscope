@@ -24,7 +24,7 @@
 #include "fos.h"
 #include "string.h"
 /* enable or disable the test pwm */
-#define DEBUG_PWM   (1)
+#define DEBUG_PWM   (0)
 /* register a init inode */
 FOS_INODE_REGISTER("hal_gpio",hal_tim_init,0,0,14);
 /* static tim handle */
@@ -43,12 +43,12 @@ static int hal_tim_init(void)
 	/* clear data */
 	memset(&TIM_OC_Handle,0,sizeof(TIM_OC_Handle));
 	/* define a struction */
-	GPIO_Handle.Pin = GPIO_PIN_8;
+	GPIO_Handle.Pin = GPIO_PIN_9;
 	GPIO_Handle.Mode = GPIO_MODE_AF_PP;
 	GPIO_Handle.Pull = GPIO_PULLUP;
 	GPIO_Handle.Speed = GPIO_SPEED_HIGH;
 	GPIO_Handle.Alternate = GPIO_AF1_TIM1;
-	HAL_GPIO_Init(GPIOA, &GPIO_Handle);
+	HAL_GPIO_Init(GPIOE, &GPIO_Handle);
   /* time INIT */
 	TIM_Handle.Channel = HAL_TIM_ACTIVE_CHANNEL_1;
 	TIM_Handle.Instance = TIM1; 

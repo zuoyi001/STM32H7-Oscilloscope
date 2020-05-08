@@ -16,8 +16,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
-#include "stdafx.h"
 /* Includes ------------------------------------------------------------------*/
 #include "osc.h"
 #include "gui.h"
@@ -28,7 +26,7 @@
 #include "string.h"
 #include "hal_iic.h"
 /* static temp cache */
-static unsigned char cache_fifo[4][ FIFO_DEEP * 2 ]  __attribute__((at(0x10000000)));
+static unsigned char cache_fifo[4][ FIFO_DEEP * 2 ]  __attribute__((at(0x30000000)));
 /* dac */
 static unsigned short osc_dac_buffer[4];
 static unsigned short osc_chn_offset[2];

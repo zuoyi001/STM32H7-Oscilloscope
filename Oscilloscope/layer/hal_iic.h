@@ -19,15 +19,15 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#ifndef _MYIIC_H
-#define _MYIIC_H
+#ifndef __HAL_IIC_H__
+#define __HAL_IIC_H__
 
-#define SDA_IN()  {GPIOB->MODER&=~(3<<(11*2));GPIOB->MODER|=0<<11*2;}
-#define SDA_OUT() {GPIOB->MODER&=~(3<<(11*2));GPIOB->MODER|=1<<11*2;}
+#define SDA_IN()  {GPIOC->MODER&=~(3<<(14*2));GPIOC->MODER|=0<<14*2;}
+#define SDA_OUT() {GPIOC->MODER&=~(3<<(14*2));GPIOC->MODER|=1<<14*2;}
 
-#define IIC_SCL   PBout(10) //SCL
-#define IIC_SDA   PBout(11) //SDA
-#define READ_SDA  PBin(11)  //
+#define IIC_SCL(n)  (n?HAL_GPIO_WritePin(GPIOC,GPIO_PIN_15,GPIO_PIN_SET):HAL_GPIO_WritePin(GPIOC,GPIO_PIN_15,GPIO_PIN_RESET)) //SCL
+#define IIC_SDA(n)  (n?HAL_GPIO_WritePin(GPIOC,GPIO_PIN_14,GPIO_PIN_SET):HAL_GPIO_WritePin(GPIOC,GPIO_PIN_14,GPIO_PIN_RESET)) //SDA
+#define READ_SDA    HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_14)
 
 static void iic_init(void);             				 
 void IIC_Start(void);

@@ -30,11 +30,11 @@ DAC_HandleTypeDef DAC1_Handler;
 static int hal_dac_init(void)
 {
 	/* enable clock */
-	__HAL_RCC_DAC_CLK_ENABLE();
+	__HAL_RCC_DAC12_CLK_ENABLE();
 	/* init dac */
 	DAC_ChannelConfTypeDef DACCH1_Config;
 	/* struct */
-	DAC1_Handler.Instance = DAC;
+	DAC1_Handler.Instance = DAC1;
 	HAL_DAC_Init(&DAC1_Handler);
 	/* init */
 	DACCH1_Config.DAC_Trigger = DAC_TRIGGER_NONE;

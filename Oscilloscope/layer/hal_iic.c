@@ -46,46 +46,48 @@ static void iic_init(void)
 {
 	GPIO_InitTypeDef GPIO_Initure;
   /* clock */
-	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
   /* pin init */
-	GPIO_Initure.Pin = GPIO_PIN_10|GPIO_PIN_11;
+	GPIO_Initure.Pin = GPIO_PIN_14|GPIO_PIN_15;
 	GPIO_Initure.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_Initure.Pull = GPIO_PULLUP;
 	GPIO_Initure.Speed = GPIO_SPEED_FAST;
-	HAL_GPIO_Init(GPIOB,&GPIO_Initure);
+	HAL_GPIO_Init(GPIOC,&GPIO_Initure);
   /* set up */
-	IIC_SDA = 1;
-	IIC_SCL = 1;  
+	IIC_SDA(1);
+	IIC_SCL(1);  
 }
 /* iic start */
 void IIC_Start(void)
 {
 	SDA_OUT(); 
-	IIC_SDA = 1;	  	  
-	IIC_SCL = 1;
+	IIC_SDA(1);	  	  
+	IIC_SCL(1);
 	delay_us_ic(4);
- 	IIC_SDA = 0;
+ 	IIC_SDA(0);
 	delay_us_ic(4);
-	IIC_SCL = 0;
+	IIC_SCL(0);
 }	  
 /* iic stop */
 void IIC_Stop(void)
 {
 	SDA_OUT();
-	IIC_SCL = 0;
-	IIC_SDA = 0;
+	IIC_SCL(0);
+	IIC_SDA(0);
  	delay_us_ic(4);
-	IIC_SCL = 1; 
+	IIC_SCL(1); 
 	delay_us_ic(4);			
-	IIC_SDA = 1;		   	
+	IIC_SDA(1);		   	
 }
 /* iic wait ack */
 unsigned char IIC_Wait_Ack(void)
 {
 	unsigned char ucErrTime = 0;
 	SDA_IN();
-	IIC_SDA = 1;delay_us_ic(1);	   
-	IIC_SCL = 1;delay_us_ic(1);	 
+	IIC_SDA(1);
+	delay_us_ic(1);	   
+	IIC_SCL(1);
+	delay_us_ic(1);	 
 	while(READ_SDA)
 	{
 		ucErrTime++;
@@ -95,46 +97,46 @@ unsigned char IIC_Wait_Ack(void)
 			return 1;
 		}
 	}
-	IIC_SCL = 0;
+	IIC_SCL(0);
   /* return OK */	
 	return 0;  
 } 
 /* iic ack */
 void IIC_Ack(void)
 {
-	IIC_SCL = 0;
+	IIC_SCL(0);
 	SDA_OUT();
-	IIC_SDA = 0;
+	IIC_SDA(0);
 	delay_us_ic(2);
-	IIC_SCL = 1;
+	IIC_SCL(1);
 	delay_us_ic(2);
-	IIC_SCL = 0;
+	IIC_SCL(0);
 }
 /* NAVCK */		    
 void IIC_NAck(void)
 {
-	IIC_SCL = 0;
+	IIC_SCL(0);
 	SDA_OUT();
-	IIC_SDA = 1;
+	IIC_SDA(1);
 	delay_us_ic(2);
-	IIC_SCL = 1;
+	IIC_SCL(1);
 	delay_us_ic(2);
-	IIC_SCL = 0;
+	IIC_SCL(0);
 }					 				     
 /* send data */	  
 void IIC_Send_Byte(unsigned char txd)
 {                        
 	unsigned char t;   
 	SDA_OUT(); 	    
-	IIC_SCL = 0;
+	IIC_SCL(0);
 	for(t = 0;t<8;t++)
 	{              
-		IIC_SDA=(txd&0x80)>>7;
+		IIC_SDA((txd&0x80)>>7);
 		txd<<=1; 	  
 		delay_us_ic(2);
-		IIC_SCL = 1;
+		IIC_SCL(1);
 		delay_us_ic(2); 
-		IIC_SCL = 0;	
+		IIC_SCL(0);	
 		delay_us_ic(2);
 	}	 
 } 	    
@@ -145,9 +147,9 @@ unsigned char IIC_Read_Byte(unsigned char ack)
 	SDA_IN();
   for( i = 0;i<8;i++ )
 	{
-		IIC_SCL = 0; 
+		IIC_SCL(0); 
 		delay_us_ic(2);
-		IIC_SCL = 1;
+		IIC_SCL(1);
 		receive<<=1;
 		if(READ_SDA)receive++;   
 		delay_us_ic(1); 

@@ -356,6 +356,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 /* v */
 static int hal_gpio_init(void)
 {
+#if 0
 	/* gpio struction */
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 	
@@ -388,7 +389,7 @@ static int hal_gpio_init(void)
 		}
 		/* OK */
 	}
-	
+#endif
 	/* return OK */
 	return FS_OK;
 }

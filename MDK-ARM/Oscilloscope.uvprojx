@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H750xx,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\osc;..\Oscilloscope\dev;..\Oscilloscope\fos;..\Oscilloscope\dev;..\Oscilloscope\gui</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Oscilloscope\osc;..\Oscilloscope\dev;..\Oscilloscope\fos;..\Oscilloscope\dev;..\Oscilloscope\gui;..\Oscilloscope\layer;..\Oscilloscope\hzs</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -517,10 +517,47 @@
               <FileType>1</FileType>
               <FilePath>..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_ltdc_ex.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32h7xx_hal_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32h7xx_hal_dac_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dac_ex.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>layer</GroupName>
+          <Files>
+            <File>
+              <FileName>hal_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_exit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_exit.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_iic.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\layer\hal_tim.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>fos</GroupName>
@@ -559,9 +596,58 @@
         </Group>
         <Group>
           <GroupName>osc</GroupName>
+          <Files>
+            <File>
+              <FileName>osc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_api.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_api.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_cfg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_cfg.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_line.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_line.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_ui.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_thread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_thread.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>gui</GroupName>
+          <Files>
+            <File>
+              <FileName>gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_ascii.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui_ascii.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\gui\gui_dev.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
