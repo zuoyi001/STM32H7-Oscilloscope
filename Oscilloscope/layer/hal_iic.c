@@ -23,13 +23,12 @@
 #include "hal_gpio.h"
 #include "fos.h"
 #include "hal_iic.h"
-#include "hal_sys.h"
 /* register a init inode */
 FOS_INODE_REGISTER("hal_iic",hal_iic_init,0,0,13);
-
 /* hal iic init */
 static int hal_iic_init(void)
 {
+	/* init iic hardware */
 	iic_init();
 	/* return OK */
 	return FS_OK;
@@ -37,8 +36,9 @@ static int hal_iic_init(void)
 /* delay for iic */
 static void delay_us_ic(unsigned int t)
 {
-	t *= 100;
-	
+	/* set a simple delay for iic bus */
+	t *= 200;
+	/* wait */
 	while(t--);
 }
 /* iic init */
@@ -83,6 +83,7 @@ void IIC_Stop(void)
 unsigned char IIC_Wait_Ack(void)
 {
 	unsigned char ucErrTime = 0;
+	/* set gpio in */
 	SDA_IN();
 	IIC_SDA(1);
 	delay_us_ic(1);	   
