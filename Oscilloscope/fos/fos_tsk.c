@@ -29,7 +29,7 @@ static void mx_time16_init(void);
 static void mx_time17_init(void);
 static int thread_timer_init(void);
 static int thread_start_it(void);
-/* */
+/* init */
 FOS_INODE_REGISTER("thread",thread_timer_init,thread_start_it,0,15);
 /* Private variables ---------------------------------------------------------*/
 static TIM_HandleTypeDef htim7; 
@@ -85,10 +85,10 @@ static int thread_start_it(void)
 {
 	/* enable all it */
 	HAL_NVIC_EnableIRQ(TIM7_IRQn);
-	HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);  
-	HAL_NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn); 
-	HAL_NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);
-	HAL_NVIC_EnableIRQ(TIM8_TRG_COM_TIM14_IRQn);	
+	HAL_NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);  
+	HAL_NVIC_EnableIRQ(TIM8_TRG_COM_TIM14_IRQn); 
+	HAL_NVIC_EnableIRQ(TIM16_IRQn);
+	HAL_NVIC_EnableIRQ(TIM17_IRQn);	
 	/* return OK */
 	return FS_OK;
 }
