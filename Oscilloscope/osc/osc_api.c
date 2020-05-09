@@ -83,7 +83,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 		/* delay some time for read */
 		delay_us_fifo(1);
 		/* read data */
-		unsigned char temp = hal_read_gpio(FIFO_DATA) >> 6;
+		unsigned char temp = hal_read_gpio(FIFO_DATA);
 		/* transfer */
 		bit_q[7] = ( temp & ( 1 << 3 )) >> 3;
 		bit_q[6] = ( temp & ( 1 << 7 )) >> 7;
@@ -119,7 +119,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 		hal_write_gpio(DIO_R1,0);
 		/* delay some time for read */
 		delay_us_fifo(1);
-		unsigned char temp =  hal_read_gpio(FIFO_DATA) >> 6;
+		unsigned char temp =  hal_read_gpio(FIFO_DATA);
 		/* transfer to corret firmat */
 		cache_fifo[0][i*2+nsc] = ((temp & 0xf0) >> 4 ) | ((temp & 0x0f) << 4 );
     /* read data  */
@@ -139,7 +139,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 		/* delay some time for read */
 		delay_us_fifo(1);
 		/* read data */
-		unsigned char temp =  hal_read_gpio(FIFO_DATA) >> 6;
+		unsigned char temp =  hal_read_gpio(FIFO_DATA);
 		/* transfer to corret firmat */
 		/* set */
 		cache_fifo[1][i*2+sct] = (( temp & 0xF ) << 4 ) | ( temp >> 4 );
@@ -160,7 +160,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 		/* delay some time for read */
 		delay_us_fifo(1);
 		/* read data */
-		unsigned char temp =  hal_read_gpio(FIFO_DATA) >> 6;
+		unsigned char temp =  hal_read_gpio(FIFO_DATA);
 		/* transfer to corret firmat */
 		bit_q[7] = ( temp & ( 1 << 3 )) >> 3;
 		bit_q[6] = ( temp & ( 1 << 7 )) >> 7;
