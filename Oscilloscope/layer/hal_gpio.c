@@ -30,8 +30,8 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 	/* 0 */
 	{
 		.capital = "FIFO Data from D0 to D7 ",
-		.GPIO_GROUP = GPIOC,
-		.GPIO_PIN = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13,
+		.GPIO_GROUP = GPIOE,
+		.GPIO_PIN = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7,
 		.GPIO_MODE = GPIO_MODE_INPUT,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
@@ -39,324 +39,269 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 	/* 1 */
 	{
 		.capital = "FIFO FULL 0 ",
-		.GPIO_GROUP = GPIOF,
-		.GPIO_PIN = GPIO_PIN_9,
+		.GPIO_GROUP = GPIOB,
+		.GPIO_PIN = GPIO_PIN_3,
 		.GPIO_MODE = GPIO_MODE_INPUT,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},
 	/* 2 */
 	{
-		.capital = "FIFO FULL 1 ",
-		.GPIO_GROUP = GPIOA,
-		.GPIO_PIN = GPIO_PIN_0,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 3 */
-	{
 		.capital = "FIFO FULL 2 ",
-		.GPIO_GROUP = GPIOH,
-		.GPIO_PIN = GPIO_PIN_8,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 4 */
-	{
-		.capital = "FIFO FULL 3 ",
 		.GPIO_GROUP = GPIOB,
-		.GPIO_PIN = GPIO_PIN_12,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 5 */
-	{
-		.capital = "KEY RUN/STOP",
-		.GPIO_GROUP = GPIOF,
-		.GPIO_PIN = GPIO_PIN_7,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 6 */
-	{
-		.capital = "KEY AUTO",
-		.GPIO_GROUP = GPIOA,
-		.GPIO_PIN = GPIO_PIN_2,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 7 */
-	{
-		.capital = "KEY MEASURE",
-		.GPIO_GROUP = GPIOH,
-		.GPIO_PIN = GPIO_PIN_2,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 8 */
-	{
-		.capital = "KEY SINGLE",
-		.GPIO_GROUP = GPIOH,
-		.GPIO_PIN = GPIO_PIN_3,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},		
-	/* 9 */
-	{
-		.capital = "KEY MENU",
-		.GPIO_GROUP = GPIOH,
 		.GPIO_PIN = GPIO_PIN_4,
 		.GPIO_MODE = GPIO_MODE_INPUT,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 10 */
+	},	
+	/* 3 */
 	{
-		.capital = "KEY DC/AC",
-		.GPIO_GROUP = GPIOE,
+		.capital = "KEY_IN_ADDR_A",
+		.GPIO_GROUP = GPIOB,
+		.GPIO_PIN = GPIO_PIN_7,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 4 */
+	{
+		.capital = "KEY_IN_ADDR_B",
+		.GPIO_GROUP = GPIOB,
+		.GPIO_PIN = GPIO_PIN_5,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 5 */
+	{
+		.capital = "KEY_IN_ADDR_C",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_3,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 6 */
+	{
+		.capital = "COM IN 1",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_1,
+		.GPIO_MODE = GPIO_MODE_INPUT,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},		
+	/* 7 */
+	{
+		.capital = "COM IN 2",
+		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_6,
 		.GPIO_MODE = GPIO_MODE_INPUT,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},		
-	/* 11 */
-	{
-		.capital = "KEY CHNN",
-		.GPIO_GROUP = GPIOE,
-		.GPIO_PIN = GPIO_PIN_5,
-		.GPIO_MODE = GPIO_MODE_AF_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},
-	/* 12 */
+	/* 8 */
 	{
-		.capital = "KEY SWI",
-		.GPIO_GROUP = GPIOE,
-		.GPIO_PIN = GPIO_PIN_4,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 13 */
-	{
-		.capital = "KEY CAL",
-		.GPIO_GROUP = GPIOE,
-		.GPIO_PIN = GPIO_PIN_3,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 14 */
-	{
-		.capital = "KEY MATH",
-		.GPIO_GROUP = GPIOE,
+		.capital = "CLOCK STA",/* match old bottom board */
+		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_2,
 		.GPIO_MODE = GPIO_MODE_INPUT,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},
+	/* 9 */
+	{
+		.capital = "FIFO RESET",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_5,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},	
+	/* 10 */
+	{
+		.capital = "DIO-TR",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_13,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},
+	/* 11 */
+	{
+		.capital = "DIO-R0",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_8,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},	
+	/* 12 */
+	{
+		.capital = "DIO-R1",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_9,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},	
+	/* 13 */
+	{
+		.capital = "DIO-R2",
+		.GPIO_GROUP = GPIOD,
+		.GPIO_PIN = GPIO_PIN_12,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},	
+	/* 14 */
+	{
+		.capital = "DIO-R3",
+		.GPIO_GROUP = GPIOD,
+		.GPIO_PIN = GPIO_PIN_13,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},	
 	/* 15 */
 	{
-		.capital = "CLOCK STA",
-		.GPIO_GROUP = GPIOC,
-		.GPIO_PIN = GPIO_PIN_1,
-		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 16 */
-	{
-		.capital = "FIFO RESET",
-		.GPIO_GROUP = GPIOB,
-		.GPIO_PIN = GPIO_PIN_1,
-		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 17 */
-	{
-		.capital = "DIO-TR",
+		.capital = "CPC",
 		.GPIO_GROUP = GPIOA,
 		.GPIO_PIN = GPIO_PIN_7,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},
-	/* 18 */
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},		
+	/* 16 */
 	{
-		.capital = "DIO-R0",
-		.GPIO_GROUP = GPIOI,
-		.GPIO_PIN = GPIO_PIN_11,
+		.capital = "CH1_DC/AC",
+		.GPIO_GROUP = GPIOB,
+		.GPIO_PIN = GPIO_PIN_14,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 19 */
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},
+	/* 17 */
 	{
-		.capital = "DIO-R1",
-		.GPIO_GROUP = GPIOI,
+		.capital = "CH2_DC/AC",
+		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_8,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 20 */
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},
+	/* 18 */
 	{
-		.capital = "DIO-R2",
+		.capital = "CH1_GAIN/CTRL",
 		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_15,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
-	/* 21 */
-	{
-		.capital = "DIO-R3",
-		.GPIO_GROUP = GPIOG,
-		.GPIO_PIN = GPIO_PIN_3,
-		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
-	},	
-	/* 22 */
-	{
-		.capital = "CPC",
-		.GPIO_GROUP = GPIOB,
-		.GPIO_PIN = GPIO_PIN_0,
-		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},		
-	/* 23 */
-	{
-		.capital = "CH1_DC/AC",
-		.GPIO_GROUP = GPIOB,
-		.GPIO_PIN = GPIO_PIN_4,
-		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},
-	/* 24 */
-	{
-		.capital = "CH2_DC/AC",
-		.GPIO_GROUP = GPIOI,
-		.GPIO_PIN = GPIO_PIN_3,
-		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},
-	/* 25 */
+	/* 19 */
 	{
 		.capital = "CH2 GAIN/CTRL",
-		.GPIO_GROUP = GPIOA,
-		.GPIO_PIN = GPIO_PIN_3,
+		.GPIO_GROUP = GPIOD,
+		.GPIO_PIN = GPIO_PIN_11,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},
-	/* 26 */
-	{
-		.capital = "CH1_GAIN/CTRL",
-		.GPIO_GROUP = GPIOB,
-		.GPIO_PIN = GPIO_PIN_5,
-		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},
-	/* 27 */
+	/* 20 */
 	{
 		.capital = "FIFO Data D8 ",
-		.GPIO_GROUP = GPIOC,
-		.GPIO_PIN = GPIO_PIN_5,
+		.GPIO_GROUP = GPIOE,
+		.GPIO_PIN = GPIO_PIN_8,
 		.GPIO_MODE = GPIO_MODE_INPUT,
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},	
-	/* 28.EXIT for ROT */
+	/* 21.EXIT for ROT */
 	{
 		.capital = "ROT7",
-		.GPIO_GROUP = GPIOA,
-		.GPIO_PIN = GPIO_PIN_1,
-		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_PULLDOWN,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},
-	/* 29.EXIT for ROT */
-	{
-		.capital = "ROT6",
-		.GPIO_GROUP = GPIOF,
-		.GPIO_PIN = GPIO_PIN_6,
-		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_PULLDOWN,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},	
-	/* 30.EXIT for ROT */
-	{
-		.capital = "ROT3",
 		.GPIO_GROUP = GPIOD,
-		.GPIO_PIN = GPIO_PIN_2,
-		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_PULLDOWN,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},	
-	/* 31.EXIT for ROT */
-	{
-		.capital = "ROT2",
-		.GPIO_GROUP = GPIOA,
 		.GPIO_PIN = GPIO_PIN_15,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},	
-	/* 32.EXIT for ROT */
+	},
+	/* 22.EXIT for ROT */
 	{
-		.capital = "ROT1",
-		.GPIO_GROUP = GPIOB,
+		.capital = "ROT6",
+		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_14,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
-	/* 33.EXIT for ROT */
+	/* 23.EXIT for ROT */
 	{
-		.capital = "ROT0",
+		.capital = "ROT3",
 		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_13,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
-	/* 34.EXIT for ROT */
+	/* 24.EXIT for ROT */
 	{
-		.capital = "ROT4",
-		.GPIO_GROUP = GPIOA,
-		.GPIO_PIN = GPIO_PIN_4,
+		.capital = "ROT2",
+		.GPIO_GROUP = GPIOB,
+		.GPIO_PIN = GPIO_PIN_12,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
-	/* 35.EXIT for ROT */
+	/* 25.EXIT for ROT */
+	{
+		.capital = "ROT1",
+		.GPIO_GROUP = GPIOD,
+		.GPIO_PIN = GPIO_PIN_5,
+		.GPIO_MODE = GPIO_MODE_IT_RISING,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 26.EXIT for ROT */
+	{
+		.capital = "ROT0",
+		.GPIO_GROUP = GPIOD,
+		.GPIO_PIN = GPIO_PIN_1,
+		.GPIO_MODE = GPIO_MODE_IT_RISING,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 27.EXIT for ROT */
+	{
+		.capital = "ROT4",
+		.GPIO_GROUP = GPIOA,
+		.GPIO_PIN = GPIO_PIN_8,
+		.GPIO_MODE = GPIO_MODE_IT_RISING,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 28.EXIT for ROT */
 	{
 		.capital = "ROT5",
+		.GPIO_GROUP = GPIOE,
+		.GPIO_PIN = GPIO_PIN_10,
+		.GPIO_MODE = GPIO_MODE_IT_RISING,
+		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},
+	/* 29.analog for DAC */
+	{
+		.capital = "DAC_CH2",
 		.GPIO_GROUP = GPIOA,
 		.GPIO_PIN = GPIO_PIN_5,
 		.GPIO_MODE = GPIO_MODE_ANALOG,
 		.GPIO_PULL = GPIO_NOPULL,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},
+	},	
 };
 
 /* v */
 static int hal_gpio_init(void)
 {
-#if 0
 	/* gpio struction */
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 	
@@ -389,7 +334,6 @@ static int hal_gpio_init(void)
 		}
 		/* OK */
 	}
-#endif
 	/* return OK */
 	return FS_OK;
 }

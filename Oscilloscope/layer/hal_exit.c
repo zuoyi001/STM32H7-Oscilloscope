@@ -48,13 +48,7 @@ static int osc_exit_rot_init(void)
 {
 	/* exit the it */
 	HAL_NVIC_SetPriority(EXTI1_IRQn,0,0);       
-	HAL_NVIC_EnableIRQ(EXTI1_IRQn);            
-  /* exit the it */
-	HAL_NVIC_SetPriority(EXTI2_IRQn,0,0);       
-	HAL_NVIC_EnableIRQ(EXTI2_IRQn); 
-  /* exit the it */
-	HAL_NVIC_SetPriority(EXTI4_IRQn,0,0);       
-	HAL_NVIC_EnableIRQ(EXTI4_IRQn); 
+	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 	/* exit the it */
 	HAL_NVIC_SetPriority(EXTI9_5_IRQn,0,0);       
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn); 
@@ -135,35 +129,35 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	/* get IO */
 	switch(GPIO_Pin)
 	{
-		case GPIO_PIN_1:
+		case GPIO_PIN_15:
 			/* rot0 */
 		  osc_rot_isr(0,0);
 			break;
-		case GPIO_PIN_2:
+		case GPIO_PIN_13:
 			/* rot1 */
 		  osc_rot_isr(1,0);			
 			break;
-		case GPIO_PIN_4:
+		case GPIO_PIN_10:
 			/* rot3 */
 		  osc_rot_isr(3,1);			
 			break;
-		case GPIO_PIN_5:
+		case GPIO_PIN_8:
 			/* rot3 */
 		  osc_rot_isr(3,0);			
 			break;
-		case GPIO_PIN_6:
+		case GPIO_PIN_14:
 			/* rot0 */
 		  osc_rot_isr(0,1);			
 			break;
-		case GPIO_PIN_13:
+		case GPIO_PIN_5:
 			/* rot2 */
 		  osc_rot_isr(2,0);			
 			break;
-		case GPIO_PIN_14:
+		case GPIO_PIN_1:
 			/* rot2 */
 		  osc_rot_isr(2,1);			
 			break;
-		case GPIO_PIN_15:
+		case GPIO_PIN_12:
 			/* rot1 */
 		  osc_rot_isr(1,1);			
 			break;		
@@ -178,24 +172,16 @@ void EXTI1_IRQHandler(void)
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
 }
 /* exit isr */
-void EXTI2_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
-}
-/* exit isr */
-void EXTI4_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-}
-/* exit isr */
 void EXTI9_5_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 }
 /* exit isr */
 void EXTI15_10_IRQHandler(void)
 {
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
