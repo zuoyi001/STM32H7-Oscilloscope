@@ -60,8 +60,8 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_7,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},	
 	/* 4 */
 	{
@@ -69,7 +69,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_5,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 5 */
@@ -78,7 +78,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOC,
 		.GPIO_PIN = GPIO_PIN_3,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
-		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 6 */
@@ -96,7 +96,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_6,
 		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_PULL = GPIO_NOPULL,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},
 	/* 8 */
@@ -240,7 +240,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_13,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 24.EXIT for ROT */
@@ -249,7 +249,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_12,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 25.EXIT for ROT */
@@ -258,7 +258,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_5,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 26.EXIT for ROT */
@@ -267,7 +267,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_1,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 27.EXIT for ROT */
@@ -276,7 +276,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOA,
 		.GPIO_PIN = GPIO_PIN_8,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},	
 	/* 28.EXIT for ROT */
@@ -285,18 +285,18 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOE,
 		.GPIO_PIN = GPIO_PIN_10,
 		.GPIO_MODE = GPIO_MODE_IT_RISING,
-		.GPIO_PULL = GPIO_NOPULL,
+		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},
 	/* 29.analog for DAC */
-	{
-		.capital = "DAC_CH2",
-		.GPIO_GROUP = GPIOA,
-		.GPIO_PIN = GPIO_PIN_5,
-		.GPIO_MODE = GPIO_MODE_ANALOG,
-		.GPIO_PULL = GPIO_NOPULL,
-		.GPIO_DEFAULT = GPIO_PIN_RESET,
-	},	
+//	{
+//		.capital = "DAC_CH2",
+//		.GPIO_GROUP = GPIOA,
+//		.GPIO_PIN = GPIO_PIN_5,
+//		.GPIO_MODE = GPIO_MODE_ANALOG,
+//		.GPIO_PULL = GPIO_NOPULL,
+//		.GPIO_DEFAULT = GPIO_PIN_RESET,
+//	},	
 };
 
 /* v */
@@ -327,7 +327,7 @@ static int hal_gpio_init(void)
 		/* init gpio */
 		HAL_GPIO_Init((GPIO_TypeDef *)gpio_config_table[i].GPIO_GROUP , &GPIO_InitStruct);
 		/* AF ? */
-		if( gpio_config_table[i].GPIO_MODE != GPIO_MODE_AF_PP )
+		if( gpio_config_table[i].GPIO_MODE != GPIO_MODE_AF_PP )//&& gpio_config_table[i].GPIO_MODE != GPIO_MODE_INPUT )
 		{
 			/* default status */
 			HAL_GPIO_WritePin((GPIO_TypeDef *)gpio_config_table[i].GPIO_GROUP, gpio_config_table[i].GPIO_PIN, (GPIO_PinState)gpio_config_table[i].GPIO_DEFAULT);

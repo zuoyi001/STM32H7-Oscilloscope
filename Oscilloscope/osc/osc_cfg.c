@@ -531,6 +531,7 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 		osc_ui_vol_scale(chn,osc_vol_offset_scale_ch1[osc_vs_t].str);
 		/* set gain ctrl */
 		osc_gain_ctrl(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
+    osc_gain_ctrl(1,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
 		/* set dac */
 		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset);
 		/* end */
