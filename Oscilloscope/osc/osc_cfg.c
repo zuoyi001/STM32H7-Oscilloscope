@@ -456,6 +456,8 @@ void osc_trig_scale_thread(unsigned char chn)
 		unsigned short new_pos = vol_trig_scale  + area->start_pos_y - 6 ;
 		/* channel 1 */
 		osc_ui_move_trig_arrow(chn,new_pos );
+		/* mode trig lines */
+		osc_ui_move_trig_lines(chn,new_pos + 6);
 		/* calbrate the offset voltage */
 		signed  short out_dac = (float)( max_scale / 2 - vol_trig_scale ) * 512.0f / (float)(max_scale / 2);
 		/* calbrate trig_dac_part_rot */

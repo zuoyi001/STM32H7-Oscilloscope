@@ -142,7 +142,23 @@ void osc_ui_move_trig_lines(unsigned char chn,unsigned short posy)
 		gui_move_wid(&trig_lines[chn],0,posy);
 	}
 }
-
+/* void osc show hide trig lies */
+void osc_ui_trig_lines_show(unsigned char chn,unsigned char mode)
+{
+	/* limit */
+	if( chn < 2 )	
+	{
+		/* mode */
+		if( mode == 0 )
+		{
+			gui_hide_widget(&trig_lines[chn]);
+		}
+		else
+		{
+			gui_show_widget(&trig_lines[chn]);
+		}
+	}	
+}
 
 
 
