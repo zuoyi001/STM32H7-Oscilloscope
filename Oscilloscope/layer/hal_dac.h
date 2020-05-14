@@ -23,7 +23,7 @@
 /* Includes ------------------------------------------------------------------*/
 
 static int hal_dac_init(void);
-void osc_set_dac(unsigned short mv);
+void osc_set_dac(signed short mv);
 
 #endif
 

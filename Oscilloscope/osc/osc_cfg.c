@@ -27,8 +27,8 @@
 #include "osc_api.h"
 #include "hal_dac.h"
 /* out dac part */
-static unsigned short trig_dac_part_offset = 0;
-static unsigned short trig_dac_part_rot = 0;
+static signed short trig_dac_part_offset = 0;
+static signed short trig_dac_part_rot = 0;
 /* Private includes ----------------------------------------------------------*/
 const osc_time_def osc_tim[] = 
 {
@@ -409,16 +409,12 @@ void osc_offset_scale_thread(unsigned char chn)
 		osc_ui_move_offset_arrow(chn,new_pos );
 		/* calbrate the offset voltage */
 		short out_dac_mv = (float)( vol_offset_scale - max_scale / 2 ) * 512.0f / (float)(max_scale / 2);
-		/* calbrate the offset voltage */
-		if( vol_offset_scale >= max_scale / 2 )
-		{
-			/* calbrate the trig_dac_part_offset */
-			trig_dac_part_offset = out_dac_mv;//unit is mv
-			/* out dac for test */
-			osc_dac_offset(chn,out_dac_mv * 2);
-			/* update dac trig */
-			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
-		}
+		/* calbrate the trig_dac_part_offset */
+		trig_dac_part_offset = out_dac_mv;//unit is mv
+		/* out dac for test */
+		osc_dac_offset(chn,out_dac_mv);
+		/* update dac trig */
+		osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 	}
 	/* ipdate */
 	lsat_vol = vol_offset_scale;
@@ -462,15 +458,11 @@ void osc_trig_scale_thread(unsigned char chn)
 		osc_ui_move_trig_arrow(chn,new_pos );
 		/* calbrate the offset voltage */
 		signed  short out_dac = (float)( max_scale / 2 - vol_trig_scale ) * 512.0f / (float)(max_scale / 2);
-		/* only supply pos vol now */
-		if( vol_trig_scale <= max_scale / 2 )
-		{
-			/* calbrate trig_dac_part_rot */
-			trig_dac_part_rot = out_dac;
-			/* calbrate the offset voltage */
-			osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
-			/* out dac for test */
-		}
+		/* calbrate trig_dac_part_rot */
+		trig_dac_part_rot = out_dac;
+		/* calbrate the offset voltage */
+		osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
+		/* out dac for test */
 	}
 	/* ipdate */
 	lsat_vol = vol_trig_scale;
@@ -533,7 +525,7 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 		osc_gain_ctrl(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
     osc_gain_ctrl(1,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
 		/* set dac */
-		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset);
+		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,0);//osc_vol_offset_scale_ch1[osc_vs_t].gain_offset);
 		/* end */
 	}
   /* clear flags */

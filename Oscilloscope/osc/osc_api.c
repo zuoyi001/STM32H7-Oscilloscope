@@ -271,17 +271,17 @@ void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsig
 /* dac event */
 static void osc_dac_update_buf(unsigned short * buf,unsigned short * offset)
 {
-	dac_update(buf[0],buf[1],buf[2] + offset[1],buf[3] + offset[0]);
+	dac_update(buf[0],buf[1],buf[2] + offset[0],buf[3] + offset[1]);
 }
 /* set base dac */
-void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset_dac)
+void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset_dac_mv)
 {
 	/* chn */
 	if( chn == 0 )
 	{
 		/* set buffer */
 		osc_dac_buffer[0] = gain_dac;
-		osc_dac_buffer[3] = offset_dac;
+		osc_dac_buffer[2] = offset_dac_mv * 2;
 		/* update */
 		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);
 	}
@@ -289,26 +289,26 @@ void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset
 	{
 		/* set buffer */
 		osc_dac_buffer[1] = gain_dac;
-		osc_dac_buffer[2] = offset_dac;
+		osc_dac_buffer[3] = offset_dac_mv * 2;
 		/* update */
 		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);		
 	}
 }
 /* void osc_dac_offset */
-void osc_dac_offset(unsigned char chn,unsigned short offset_mv)
+void osc_dac_offset(unsigned char chn,signed short offset_mv)
 {
 	/* chn */
 	if( chn == 0 )
 	{
 		/* set buffer */
-		osc_chn_offset[0] = offset_mv;
+		osc_chn_offset[0] = offset_mv + 2500 ;
 		/* update */
 		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);
 	}
 	else
 	{
 		/* set buffer */
-		osc_chn_offset[1] = offset_mv;
+		osc_chn_offset[1] = offset_mv + 2500 ;
 		/* update */
 		osc_dac_update_buf(osc_dac_buffer,osc_chn_offset);	
 	}	

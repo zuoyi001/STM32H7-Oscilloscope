@@ -288,15 +288,6 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},
-	/* 29.analog for DAC */
-//	{
-//		.capital = "DAC_CH2",
-//		.GPIO_GROUP = GPIOA,
-//		.GPIO_PIN = GPIO_PIN_5,
-//		.GPIO_MODE = GPIO_MODE_ANALOG,
-//		.GPIO_PULL = GPIO_NOPULL,
-//		.GPIO_DEFAULT = GPIO_PIN_RESET,
-//	},	
 };
 
 /* v */
