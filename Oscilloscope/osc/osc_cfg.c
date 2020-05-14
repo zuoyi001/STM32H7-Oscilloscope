@@ -29,6 +29,10 @@
 /* out dac part */
 static signed short trig_dac_part_offset = 0;
 static signed short trig_dac_part_rot = 0;
+/* hold time */
+static unsigned short trig_lines_hold_time_s = 0;
+/* create cfg task gui detecter task run as 100 ms */
+FOS_TSK_REGISTER(osc_cfg_task,PRIORITY_4,1000);
 /* Private includes ----------------------------------------------------------*/
 const osc_time_def osc_tim[] = 
 {
@@ -261,6 +265,22 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 		.gain_sel = 0,
 	},
 };
+/* */
+static void osc_cfg_task(void)
+{
+	/* create */
+	if( trig_lines_hold_time_s == 0 )
+	{
+		/* hide two lines */
+		osc_ui_trig_lines_show(0,0);
+		osc_ui_trig_lines_show(1,0);
+		/* end */
+	}
+	else
+	{
+		trig_lines_hold_time_s --;
+	}
+}
 /* set scan clock */
 const osc_time_def * osc_scan_time(unsigned int index)
 {
@@ -456,6 +476,10 @@ void osc_trig_scale_thread(unsigned char chn)
 		unsigned short new_pos = vol_trig_scale  + area->start_pos_y - 6 ;
 		/* channel 1 */
 		osc_ui_move_trig_arrow(chn,new_pos );
+		/* show lines */
+		osc_ui_trig_lines_show(chn,1);
+		/* set lines hold time */
+		trig_lines_hold_time_s = 5;
 		/* mode trig lines */
 		osc_ui_move_trig_lines(chn,new_pos + 6);
 		/* calbrate the offset voltage */

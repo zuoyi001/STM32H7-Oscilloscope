@@ -66,7 +66,7 @@ const osc_time_def * osc_scan_thread(void);
 void osc_offset_scale_thread(unsigned char chn);
 void osc_trig_scale_thread(unsigned char chn);
 const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn);
-
+static void osc_cfg_task(void);
 #endif
 
 
