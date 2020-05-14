@@ -38,7 +38,7 @@ static int hal_dac_init(void)
 	HAL_DAC_Init(&DAC1_Handler);
 	/* init */
 	DACCH1_Config.DAC_Trigger = DAC_TRIGGER_NONE;
-	DACCH1_Config.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
+	DACCH1_Config.DAC_OutputBuffer = DAC_OUTPUTBUFFER_DISABLE;
 	HAL_DAC_ConfigChannel(&DAC1_Handler,&DACCH1_Config,DAC_CHANNEL_2);
   /* start DAC */
 	HAL_DAC_Start(&DAC1_Handler,DAC_CHANNEL_2);
@@ -54,7 +54,7 @@ void osc_set_dac(signed short mv)
 	 /* channel */
 	 unsigned short vo = ( mv + 10 + 2500 ) / 2;
 	 /* transfer data */
-	 unsigned short out = (unsigned short )((float)(vo+35) / 2500.0f * 4095.0f);
+	 unsigned short out = (unsigned short )((float)(vo+60) / 2500.0f * 4095.0f);
 	 /* out data */
    HAL_DAC_SetValue(&DAC1_Handler,DAC_CHANNEL_2,DAC_ALIGN_12B_R,out);
 }
