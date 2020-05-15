@@ -160,7 +160,7 @@ static void key_auto_callback(void)
 				/* show text */
 				osc_ui_set_one_menu_text(2,(menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0]);
 				/* set couple mode ch1 */
-				
+				osc_coupling_setting(0,menu_link[2]&0x0f);
 				/*-----------------*/
 			}
 			else
@@ -177,7 +177,7 @@ static void key_auto_callback(void)
 				/* show text */
 				osc_ui_set_one_menu_text(2,(menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0]);
 				/* set couple mode ch2 */
-				
+				osc_coupling_setting(1,menu_link[2] & 0xf0);
 				/*-----------------*/				
 			}
 		}

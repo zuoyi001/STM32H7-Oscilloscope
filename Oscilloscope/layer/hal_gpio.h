@@ -45,6 +45,9 @@
 #define DIO_ROT_TRIG_DM     (26)
 #define DIO_ROT_HORI_UP     (27)
 #define DIO_ROT_HORI_DM     (28)
+/* coupling setting */
+#define DIO_CH1_DCAC        (16)
+#define DIO_CH2_DCAC        (17)
 /* GAIN trl */
 #define DIO_CH1_GAIN_CTRL   (18)
 #define DIO_CH2_GAIN_CTRL   (19)

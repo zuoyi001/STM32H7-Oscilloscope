@@ -378,7 +378,19 @@ int osc_read_com2(void)
 {
 	return hal_read_gpio(DIO_CD4051_COM2) ? 1 : 0;
 }
-
+/* void dcac coupling */
+void osc_coupling_setting(unsigned char chn,unsigned char dcac)
+{
+	/* chn */
+	if( chn == 0 )
+	{
+		hal_write_gpio(DIO_CH1_DCAC,dcac);
+	}
+	else
+	{
+		hal_write_gpio(DIO_CH2_DCAC,dcac);
+	}
+}
 
 
 
