@@ -109,7 +109,7 @@ void osc_ui_tips_str(char * str)
 /* move arrow */
 void osc_ui_move_offset_arrow(unsigned char chn,unsigned short pos)
 {
-		/* limit */
+	/* limit */
 	if( chn < 2 )
 	{
 		gui_move_wid(&base_vol_arrow[chn] ,base_vol_arrow[chn].msg.x , pos);
@@ -123,6 +123,34 @@ void osc_ui_move_trig_arrow(unsigned char chn,unsigned short pos)
 	{
 		gui_move_wid(&trig_vol_arrow[chn] ,trig_vol_arrow[chn].msg.x , pos);
 	}
+}
+/* move trig arrow */
+void osc_ui_trig_arrow_show(unsigned char chn,unsigned char mode)
+{
+	/* limit */
+	if( chn < 2 )
+	{
+		/* show or hide */
+		if( mode )
+		{
+			gui_show_widget(&trig_vol_arrow[chn]);
+		}
+		else
+		{
+			gui_hide_widget(&trig_vol_arrow[chn]);
+		}
+	}
+}
+/* check trig arrow hide */
+int osc_ui_trig_arrow_sta(unsigned char chn)
+{
+	/* limit */
+	if( chn < 2 )
+	{
+		return CHECK_HIDE(trig_vol_arrow[chn].msg.wflags) ? 0 : 1;
+	}	
+	/* return error */
+	return FS_ERR;
 }
 /* change */
 void osc_ui_vol_scale(unsigned char chn , char * str )
@@ -199,9 +227,25 @@ void osc_ui_measure_data(unsigned char chn,unsigned char item,char * capital)
 	}		
 	/* end of func */
 }
-
-
-
+/* int osc menu sta .show or hide */
+int osc_ui_menu_sta(void)
+{
+	/* sta win_menu */
+	return CHECK_HIDE(win_menu.msg.wflags) ? 1 : 0;
+}
+/* set menu sta */
+void osc_ui_menu_show(unsigned char mode)
+{
+	/* show or hide */
+	if( mode )
+	{
+		gui_show_win(&win_menu);
+	}
+	else
+	{
+		gui_hide_win(&win_menu);
+	}
+}
 
 
 

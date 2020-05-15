@@ -362,6 +362,26 @@ void osc_gain_ctrl(unsigned char chn , unsigned char sta)
 		hal_write_gpio(DIO_CH2_GAIN_CTRL,sta);
 	}
 }
+/* osc set key addr */
+void osc_set_key_addr(unsigned char addr_cnt)
+{
+	/* addr A */
+	hal_write_gpio(DIO_CD4051_ADDR_A,addr_cnt & 0x01);
+	/* ADDR B */
+	hal_write_gpio(DIO_CD4051_ADDR_B,addr_cnt & 0x02);
+	/* ADDR C */
+	hal_write_gpio(DIO_CD4051_ADDR_C,addr_cnt & 0x04);
+	/* endif */
+}
+/* osc read com2 sta */
+int osc_read_com2(void)
+{
+	return hal_read_gpio(DIO_CD4051_COM2) ? 1 : 0;
+}
+
+
+
+
 
 
 

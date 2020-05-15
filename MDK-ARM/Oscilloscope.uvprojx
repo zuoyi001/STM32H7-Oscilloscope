@@ -627,6 +627,16 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\osc\osc_thread.c</FilePath>
             </File>
+            <File>
+              <FileName>osc_measure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_measure.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_menu.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

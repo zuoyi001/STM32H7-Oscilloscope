@@ -37,6 +37,8 @@ int osc_read_rot_idle(unsigned index);
 void osc_gain_ctrl(unsigned char chn , unsigned char sta);
 void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset_dac);
 void osc_dac_offset(unsigned char chn,signed short offset_mv);
+void osc_set_key_addr(unsigned char addr_cnt);
+int osc_read_com2(void);
 
 #endif
 

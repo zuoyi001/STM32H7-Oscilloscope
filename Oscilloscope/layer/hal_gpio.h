@@ -48,6 +48,13 @@
 /* GAIN trl */
 #define DIO_CH1_GAIN_CTRL   (18)
 #define DIO_CH2_GAIN_CTRL   (19)
+/* CD4051 ADDR */
+#define DIO_CD4051_ADDR_A   (3)
+#define DIO_CD4051_ADDR_B   (4)
+#define DIO_CD4051_ADDR_C   (5)
+/* COM data 2 */
+#define DIO_CD4051_COM2     (7)
+/* */
 /* typedef gpio config table */
 
 typedef struct{
