@@ -41,7 +41,7 @@ widget_def time_ch[2];
 widget_def measure_ch1[6];
 widget_def measure_ch2[6];
 /* menu text */
-widget_def menu_text[7];
+widget_def menu_text[6];
 /* tips */
 widget_def tips_text;
 /* fast tips */
@@ -54,7 +54,7 @@ widget_def trig_lines[2];
 /* table */
 char * mert[6] = {"频率","1.0M","峰峰值","200mV","最大值","3.38V"};
 char * mert1[6] = {"频率","1.0K","正脉宽","180mV","平均值","1.68V"};
-char * menu_table[7] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","探头比例\n x1","关闭通道","隐藏菜单","最大值"};
+char * menu_table[6] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","触发菜单","关闭通道","隐藏菜单"};
 char * mert43[5] = {"CH1:DC","CH2:AC","Auto","TRIG:CH1","TIME:10us"};
 /* gui dev */
 static gui_dev_def * dev;
@@ -246,8 +246,32 @@ void osc_ui_menu_show(unsigned char mode)
 		gui_hide_win(&win_menu);
 	}
 }
-
-
+/* void osc ui set menu text */
+void osc_ui_set_menu_text_group(const char ** text,unsigned int len)
+{
+	/* check len */
+	if( len != sizeof(menu_table) / sizeof(menu_table[0]) )
+	{
+		return;/* cannot supply this format */
+	}
+	/* set */
+	for( int i = 0 ; i < len ; i ++ )
+	{
+		gui_set_wid_text(&menu_text[i],(char *)text[i]);
+	}
+}
+/* void osc set one text */
+void osc_ui_set_one_menu_text(unsigned char item,const char * text)
+{
+	/* check len */
+	if( item >= sizeof(menu_table) / sizeof(menu_table[0]) )
+	{
+		return;/* cannot supply this format */
+	}	
+	/* set */
+	gui_set_wid_text(&menu_text[item],(char *)text);
+	/* end of func */
+}
 
 
 

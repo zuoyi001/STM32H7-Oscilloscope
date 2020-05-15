@@ -46,6 +46,8 @@ int osc_ui_menu_sta(void);
 void osc_ui_menu_show(unsigned char mode);
 void osc_ui_trig_arrow_show(unsigned char chn,unsigned char mode);
 int osc_ui_trig_arrow_sta(unsigned char chn);
+void osc_ui_set_menu_text_group(const char ** text,unsigned int len);
+void osc_ui_set_one_menu_text(unsigned char item,const char * text);
 /* Private includes ----------------------------------------------------------*/
 
 #endif

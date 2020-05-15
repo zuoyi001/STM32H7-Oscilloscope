@@ -23,4 +23,5 @@ tex4 = GBK2312_ASSETS_HZ16("扫描时间已到达最大值");
 tex4 = GBK2312_ASSETS_HZ16("隐藏菜单");
 tex4 = GBK2312_ASSETS_HZ16("探头比例");
 tex4 = GBK2312_ASSETS_HZ16("占空比");
-
+tex4 = GBK2312_ASSETS_HZ16("开启");
+tex4 = GBK2312_ASSETS_HZ16("触发");
