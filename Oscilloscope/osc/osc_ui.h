@@ -40,6 +40,8 @@ void osc_ui_move_trig_arrow(unsigned char chn,unsigned short pos);
 void osc_ui_vol_scale(unsigned char chn , char * str );
 void osc_ui_move_trig_lines(unsigned char chn,unsigned short posy);
 void osc_ui_trig_lines_show(unsigned char chn,unsigned char mode);
+void osc_ui_measure_capital(unsigned char chn,unsigned char item,const char * capital);
+void osc_ui_measure_data(unsigned char chn,unsigned char item,char * capital);
 /* Private includes ----------------------------------------------------------*/
 
 #endif

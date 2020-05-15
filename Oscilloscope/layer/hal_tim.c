@@ -30,7 +30,9 @@ FOS_INODE_REGISTER("hal_gpio",hal_tim_init,0,0,14);
 /* static tim handle */
 static TIM_HandleTypeDef TIM_Handle; 
 static TIM_HandleTypeDef htim5;
+static TIM_HandleTypeDef htim2;
 static void mx_time5_init(void);
+static void hal_tim2_cap_init(void);
 /* init base and open as default */
 static int hal_tim_init(void)
 {
@@ -67,6 +69,8 @@ static int hal_tim_init(void)
 	HAL_TIM_PWM_Start(&TIM_Handle, TIM_CHANNEL_1);
 	/* 32bit tim init */
 	mx_time5_init();
+	/* tim2 */
+	hal_tim2_cap_init();
 	/*----------------*/
 #if DEBUG_PWM
   hal_test_init();
@@ -127,7 +131,7 @@ static void mx_time5_init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 90 - 1;
+  htim5.Init.Prescaler = 180 - 1;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim5.Init.Period = 0xFFFFFFFF;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -144,6 +148,64 @@ static void mx_time5_init(void)
   /* USER CODE BEGIN TIM7_Init 2 */
   HAL_TIM_Base_Start(&htim5);
   /* USER CODE END TIM7_Init 2 */
+}
+/* TIM2 CAP */
+static void hal_tim2_cap_init(void)
+{
+	/* USER CODE BEGIN TIM2_MspInit 0 */
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	/* USER CODE END TIM2_MspInit 0 */
+	/* Peripheral clock enable */
+	__HAL_RCC_TIM2_CLK_ENABLE();
+  /* Peripheral clock enable */
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	/**TIM2 GPIO Configuration    
+	PA0     ------> TIM2_ETR 
+	*/
+	GPIO_InitStruct.Pin = GPIO_PIN_0;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);	
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 0xFFFFFFFF;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_ETRMODE2;
+  sClockSourceConfig.ClockPolarity = TIM_CLOCKPOLARITY_NONINVERTED;
+  sClockSourceConfig.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
+  sClockSourceConfig.ClockFilter = 0;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+  HAL_TIM_Base_Start(&htim2);
+  /* USER CODE END TIM2_Init 2 */	
 }
 /* void stop the pwm clock */
 void hal_pwm_stop(void)
