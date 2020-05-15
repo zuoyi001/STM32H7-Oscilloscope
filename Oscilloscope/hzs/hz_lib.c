@@ -1,6 +1,7 @@
 
 
 tex4 = GBK2312_ASSETS_HZ16("频率");
+tex4 = GBK2312_ASSETS_HZ16("周期");
 tex4 = GBK2312_ASSETS_HZ16("峰值");
 tex4 = GBK2312_ASSETS_HZ16("平均值");
 tex4 = GBK2312_ASSETS_HZ16("正脉宽");
@@ -21,4 +22,5 @@ tex4 = GBK2312_ASSETS_HZ16("切换");
 tex4 = GBK2312_ASSETS_HZ16("扫描时间已到达最大值");
 tex4 = GBK2312_ASSETS_HZ16("隐藏菜单");
 tex4 = GBK2312_ASSETS_HZ16("探头比例");
+tex4 = GBK2312_ASSETS_HZ16("占空比");
 

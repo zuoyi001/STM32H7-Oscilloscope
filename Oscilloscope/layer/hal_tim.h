@@ -30,6 +30,10 @@ void hal_pwm_stop(void);
 void hal_pwm_start(void);
 void hal_tim_psc(unsigned short psc);
 unsigned int hal_sys_time_us(void);
+unsigned int hal_tim2_cnt(void);
+unsigned int hal_tim3_cnt(void);
+static void hal_tim3_cap_init(void);
+static void hal_tim2_cap_init(void);
 
 #endif
 

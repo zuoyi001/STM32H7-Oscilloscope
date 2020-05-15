@@ -52,8 +52,8 @@ widget_def trig_vol_arrow[2];
 /* trig lines */
 widget_def trig_lines[2];
 /* table */
-char * mert[6] = {"频率","1.0MHz","峰峰值","200mV","最大值","3.38V"};
-char * mert1[6] = {"频率","1.0KHz","正脉宽","180mV","平均值","1.68V"};
+char * mert[6] = {"频率","1.0M","峰峰值","200mV","最大值","3.38V"};
+char * mert1[6] = {"频率","1.0K","正脉宽","180mV","平均值","1.68V"};
 char * menu_table[7] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","探头比例\n x1","关闭通道","隐藏菜单","最大值"};
 char * mert43[5] = {"CH1:DC","CH2:AC","Auto","TRIG:CH1","TIME:10us"};
 /* gui dev */
