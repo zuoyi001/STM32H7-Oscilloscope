@@ -491,7 +491,7 @@ void osc_trig_scale_thread(unsigned char chn)
 		/* show lines */
 		osc_ui_trig_lines_show(chn,1);
 		/* set lines hold time */
-		trig_lines_hold_time_s = 5;
+		trig_lines_hold_time_s = 3;
 		/* mode trig lines */
 		osc_ui_move_trig_lines(chn,new_pos + 6);
 		/* calbrate the offset voltage */
