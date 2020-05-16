@@ -21,6 +21,31 @@
 #ifndef __OSC_MENU_H__
 #define __OSC_MENU_H__
 /* Includes ------------------------------------------------------------------*/
+/* typedef global settings */
+typedef struct
+{
+	/* trig type */
+	unsigned char trig_type;//falling or rising edge
+	/* trig mode */
+	unsigned char trig_mode;// normal . auto . single . smart
+	/* trig source */
+	unsigned char trig_source;// ch1 or ch2
+	/* trig vol ch1 ch2 */
+	unsigned short trig_vol_level_ch[2];
+	/* vol scale ch1 and ch2 */
+	unsigned short vol_scale_ch[2];
+	/* vol offset sacle , ch1 ch2*/
+	unsigned short vol_offset_scale[2];
+	/* run mode */
+	unsigned short run_mode ; // run . stop . single
+	/* coupling */
+	unsigned short coupling_type[2] ; // 0 is dc 1 is ac
+	/* ch enable */
+	unsigned char chn_enable[2] ;//0 is open.1 is close
+	/* chn focus */
+	unsigned char chn_focus;
+	/*-----------*/
+}osc_run_msg_def;
 /* function */
 static void osc_menu_thread(void);
 static int osc_menu_heep(void);

@@ -21,6 +21,7 @@
 #include "osc_ui.h"
 #include "osc_menu.h"
 #include "osc_api.h"
+#include "string.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,10);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
@@ -37,8 +38,9 @@ const char * fast_tips_ch2[2] = {"CH2:DC","CH2:AC"};
 const char * trig_type_chn[4] = {"触发方式\nAuto  ","触发方式\nNormal","触发方式\nSmart ","触发方式\nsingle"};
 const char * trig_fast[4] = {"Auto  ","Normal","Smart ","single"};
 const char * trig_edge[2] = {"触发边沿\n 上升 ","触发边沿\n 下降 "};
+const char * trig_source[2] = {"TRIG:CH1","TRIG:CH2"};
 /* static link */
-static unsigned char menu_link[6];
+static osc_run_msg_def osc_run_msg __attribute__((at(0x24000000 + 800 * 600 + 64)));;
 /* static key sta */
 static unsigned char com2_sta[8];
 static unsigned int cd_cnt = 0;
@@ -57,39 +59,25 @@ static int osc_menu_heep(void)
 	com_callbacks[5] = key_single_callback;
 	com_callbacks[6] = key_measure_callback;
 	com_callbacks[7] = key_runstop_callback;
-	/* set default cfg */
-	menu_link[0] = 0;
-	menu_link[1] = 0;
-	menu_link[2] = 0;
-	menu_link[3] = 0;
-	menu_link[4] = 0;
-	menu_link[5] = 0;
+	/* init */
+	memset(&osc_run_msg,0,sizeof(osc_run_msg));
 	/* return */
 	return FS_OK;
 }
 /* config */
 static int osc_menu_init(void)
 {
-	/* set fast tips */
-	if( menu_link[2] & 0x0f )
-	{
-	  osc_ui_set_chn_text(0,fast_tips_ch1[1]);
-	}
-	else
-	{
-		osc_ui_set_chn_text(0,fast_tips_ch1[0]);
-	}
+	/* set fast tips ch1 */
+	osc_ui_set_chn_text(0,osc_run_msg.coupling_type[0] ? fast_tips_ch1[1] : fast_tips_ch1[0]);
 	/* ch2 */
-	if( menu_link[2] & 0xf0 )
-	{
-	  osc_ui_set_chn_text(1,fast_tips_ch2[1]);
-	}
-	else
-	{
-		osc_ui_set_chn_text(1,fast_tips_ch2[0]);
-	}
+	osc_ui_set_chn_text(1,osc_run_msg.coupling_type[1] ? fast_tips_ch2[1] : fast_tips_ch2[0]);
+	/* init */
+	osc_ui_set_csh_show(0,!osc_run_msg.chn_enable[0]);
+	osc_ui_set_csh_show(1,!osc_run_msg.chn_enable[1]);
 	/* set fast tips */
-	osc_ui_set_trig_text(trig_fast[menu_link[3] % 4]);
+	osc_ui_set_trig_text(trig_fast[osc_run_msg.trig_mode % 4]);
+	/* set trig souce */
+	osc_ui_set_trig_src(trig_source[osc_run_msg.chn_focus % 2]);
 	/* return */
 	return FS_OK;
 }
@@ -175,20 +163,16 @@ static void key_runstop_callback(void)
 		if( 1 ) // chn menu
 		{
 			/* set xor */
-			menu_link[1] ^= 1;
+			osc_run_msg.chn_focus ^= 1;
 			/* set chn  */
-			osc_ui_set_one_menu_text(1,menu_link[1] ? menu_chn[1] : menu_chn[0]);
+			osc_ui_set_one_menu_text(1,osc_run_msg.chn_focus ? menu_chn[1] : menu_chn[0]);
 			/* set coupling */
-			if( menu_link[1] == 0 )
-			{
-				osc_ui_set_one_menu_text(2,(menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0]);
-				osc_ui_set_one_menu_text(5,(menu_link[4]&0x0f) ? menu_open_chn[1] : menu_open_chn[0]);
-			}
-			else
-			{
-				osc_ui_set_one_menu_text(2,(menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0]);
-				osc_ui_set_one_menu_text(5,(menu_link[4]&0xf0) ? menu_open_chn[1] : menu_open_chn[0]);
-			}
+			unsigned char foc = osc_run_msg.chn_focus ? 1 : 0;
+			/* set */
+			osc_ui_set_one_menu_text(2,(osc_run_msg.coupling_type[foc]) ? menu_coupling[1] : menu_coupling[0]);
+			osc_ui_set_one_menu_text(5,(osc_run_msg.chn_enable[foc]) ? menu_open_chn[1] : menu_open_chn[0]);
+			/* set trig source */
+			osc_ui_set_trig_src(trig_source[foc]);
 		}
 	}
 	else
@@ -207,40 +191,26 @@ static void key_auto_callback(void)
 		if( 1 ) // chn menu
 		{
 			/* chn 1 */
-			if( menu_link[1] == 0 )
+			if( osc_run_msg.chn_focus == 0 )
 			{
 				/* check mode */
-				if( menu_link[2] & 0x0f )
-				{
-					menu_link[2] &=~ 0x0f;
-				}
-				else
-				{
-					menu_link[2] |= 0x0f;
-				}
+				osc_run_msg.coupling_type[0] ^= 1;
 				/* show text */
-				osc_ui_set_one_menu_text(2,(menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0]);
-				osc_ui_set_chn_text(0,(menu_link[2]&0x0f) ? fast_tips_ch1[1] : fast_tips_ch1[0] );
+				osc_ui_set_one_menu_text(2,(osc_run_msg.coupling_type[0]) ? menu_coupling[1] : menu_coupling[0]);
+				osc_ui_set_chn_text(0,(osc_run_msg.coupling_type[0]) ? fast_tips_ch1[1] : fast_tips_ch1[0] );
 				/* set couple mode ch1 */
-				osc_coupling_setting(0,menu_link[2]&0x0f);
+				osc_coupling_setting(0,osc_run_msg.coupling_type[0]);
 				/*-----------------*/
 			}
 			else
 			{
-	      /* check ch2 */
-				if( menu_link[2] & 0xf0 )
-				{
-					menu_link[2] &=~ 0xf0;
-				}
-				else
-				{
-					menu_link[2] |= 0xf0;
-				}
+				/* check mode ch2 */
+				osc_run_msg.coupling_type[1] ^= 1;
 				/* show text */
-				osc_ui_set_one_menu_text(2,(menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0]);
-				osc_ui_set_chn_text(1,(menu_link[2]&0xf0) ? fast_tips_ch2[1] : fast_tips_ch2[0] );
+				osc_ui_set_one_menu_text(2,(osc_run_msg.coupling_type[1]) ? menu_coupling[1] : menu_coupling[0]);
+				osc_ui_set_chn_text(1,(osc_run_msg.coupling_type[1]) ? fast_tips_ch2[1] : fast_tips_ch2[0] );
 				/* set couple mode ch2 */
-				osc_coupling_setting(1,menu_link[2] & 0xf0);
+				osc_coupling_setting(1,osc_run_msg.coupling_type[1]);
 				/*-----------------*/				
 			}
 		}
@@ -261,16 +231,16 @@ static void key_measure_callback(void)
 		if( 1 ) // chn menu
 		{
 			/* nest link */
-			menu_link[3] ++ ;
+			osc_run_msg.trig_mode ++;
 			/* limit */
-			if( menu_link[3] >= 4 )
+			if( osc_run_msg.trig_mode >= 4 )
 			{
-				menu_link[3] = 0;
+				osc_run_msg.trig_mode = 0;
 			}
 			/* set text */
-			osc_ui_set_one_menu_text(3,trig_type_chn[menu_link[3]]);
+			osc_ui_set_one_menu_text(3,trig_type_chn[osc_run_msg.trig_mode]);
 			/* set fast tips */
-			osc_ui_set_trig_text(trig_fast[menu_link[3]]);
+			osc_ui_set_trig_text(trig_fast[osc_run_msg.trig_mode]);
 		}
 	}
 	else
@@ -289,14 +259,14 @@ static void key_single_callback(void)
 		if( 1 ) // chn menu
 		{
 			/* nest link */
-			menu_link[4] ++ ;
+			osc_run_msg.trig_type ++;
 			/* limit */
-			if( menu_link[4] >= 2 )
+			if( osc_run_msg.trig_type >= 2 )
 			{
-				menu_link[4] = 0;
+				osc_run_msg.trig_type = 0;
 			}
 			/* set text */
-			osc_ui_set_one_menu_text(4,trig_edge[menu_link[4]]);
+			osc_ui_set_one_menu_text(4,trig_edge[osc_run_msg.trig_type]);
 		}
 	}
 	else
@@ -338,41 +308,14 @@ static void key_menu_callback(void)
 		/* mode */
 		if( 1 ) // chn menu
 		{
-			/* chn 1 */
-			if( menu_link[1] == 0 )
-			{
-				/* check open */
-				if( menu_link[4] & 0x0f )
-				{
-					menu_link[4] &=~ 0x0f;
-				}
-				else
-				{
-					menu_link[4] |= 0x0f;
-				}
-				/* change data */
-				osc_ui_set_one_menu_text(5,(menu_link[4]&0x0f) ? menu_open_chn[1] : menu_open_chn[0]);
-				/* show or hide fast tips */
-				osc_ui_set_csh_show(0,!(menu_link[4]&0x0f));
-				/*------------------------*/
-			}
-			else
-			{
-				/* check open */
-				if( menu_link[4] & 0xf0 )
-				{
-					menu_link[4] &=~ 0xf0;
-				}
-				else
-				{
-					menu_link[4] |= 0xf0;
-				}
-				/* change data */
-				osc_ui_set_one_menu_text(5,(menu_link[4]&0xf0) ? menu_open_chn[1] : menu_open_chn[0]);	
-				/* show or hide fast tips */
-				osc_ui_set_csh_show(1,!(menu_link[4]&0xf0));
-				/*------------------------*/				
-			}
+			/* chn 12 */
+			/* check open */
+			osc_run_msg.chn_enable[osc_run_msg.chn_focus] ^= 1;
+			/* change data */
+			osc_ui_set_one_menu_text(5,(osc_run_msg.chn_enable[osc_run_msg.chn_focus]) ? menu_open_chn[1] : menu_open_chn[0]);
+			/* show or hide fast tips */
+			osc_ui_set_csh_show(osc_run_msg.chn_focus,!osc_run_msg.chn_enable[osc_run_msg.chn_focus]);
+			/*------------------------*/
 		}		
 	}
 }
@@ -380,20 +323,20 @@ static void key_menu_callback(void)
 static void menu_update(void)
 {
 	/* menu 1 */
-	menu_default_table[1] = menu_link[1] ? menu_chn[1] : menu_chn[0];
+	menu_default_table[1] = osc_run_msg.chn_focus ? menu_chn[1] : menu_chn[0];
 	/* two chn two coupling */
-	if( menu_link[1] == 0 )
+	if( osc_run_msg.chn_focus == 0 )
 	{
-		menu_default_table[2] = (menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0];
-		menu_default_table[5] = (menu_link[4]&0x0f) ? menu_open_chn[1] : menu_open_chn[0];
+		menu_default_table[2] = (osc_run_msg.coupling_type[0]) ? menu_coupling[1] : menu_coupling[0];
+		menu_default_table[5] = (osc_run_msg.chn_enable[0]) ? menu_open_chn[1] : menu_open_chn[0];
 	}
 	else
 	{
-		menu_default_table[2] = (menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0];
-		menu_default_table[5] = (menu_link[4]&0xf0) ? menu_open_chn[1] : menu_open_chn[0];
+		menu_default_table[2] = (osc_run_msg.coupling_type[1]) ? menu_coupling[1] : menu_coupling[0];
+		menu_default_table[5] = (osc_run_msg.chn_enable[1]) ? menu_open_chn[1] : menu_open_chn[0];
 	}
 	/* set update */
-	menu_default_table[3] = trig_type_chn[menu_link[3] % 4];
+	menu_default_table[3] = trig_type_chn[osc_run_msg.trig_mode % 4];
 	/* set osc menu group */
 	osc_ui_set_menu_text_group(menu_default_table,6);	
 	/* end */

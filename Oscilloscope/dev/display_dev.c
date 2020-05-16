@@ -27,7 +27,7 @@
 #include "osc.h"
 /* Private includes ----------------------------------------------------------*/
 #if LCD_MODE_L8
-unsigned char gram[800*480] __attribute__((at(0x24000000)));
+unsigned char gram[800*600] __attribute__((at(0x24000000)));
 #else
 unsigned short gram[800*480*3] __attribute__((at(Bank5_SDRAM_ADDR)));
 #endif

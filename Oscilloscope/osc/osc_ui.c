@@ -309,7 +309,12 @@ void osc_ui_set_trig_text(const char * text)
 	/* select chn */
 	gui_set_wid_text(&fast_tips[2],( char * )text);
 }
-
+/* set trig trig source text */
+void osc_ui_set_trig_src(const char * text)
+{
+	/* select chn */
+	gui_set_wid_text(&fast_tips[3],( char * )text);
+}
 
 
 
