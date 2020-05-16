@@ -165,7 +165,7 @@ unsigned char IIC_Read_Byte(unsigned char ack)
 /* dac create th */
 void dac_update(unsigned short volA,unsigned short B,unsigned short C,unsigned short D)
 {
-	unsigned short outA = volA,outB = volA,outC = C,outD = C;
+	unsigned short outA = volA,outB = B,outC = C,outD = D;
 	
 	IIC_Start();
 	

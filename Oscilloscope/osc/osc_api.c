@@ -28,8 +28,8 @@
 /* static temp cache */
 static unsigned char cache_fifo[4][ FIFO_DEEP * 2 ]  __attribute__((at(0x30000000)));
 /* dac */
-static unsigned short osc_dac_buffer[4];
-static unsigned short osc_chn_offset[2];
+static signed short osc_dac_buffer[4];
+static signed short osc_chn_offset[2];
 /* Private includes ----------------------------------------------------------*/
 void osc_stop_adc_clock(void)
 {
@@ -269,12 +269,12 @@ void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsig
   dac_update(a,b,c,d);
 }
 /* dac event */
-static void osc_dac_update_buf(unsigned short * buf,unsigned short * offset)
+static void osc_dac_update_buf(signed short * buf,signed short * offset)
 {
 	dac_update(buf[0],buf[1],buf[2] + offset[0],buf[3] + offset[1]);
 }
 /* set base dac */
-void osc_vol_dac(unsigned char chn,unsigned short gain_dac,unsigned short offset_dac_mv)
+void osc_vol_dac(unsigned char chn,unsigned short gain_dac,signed short offset_dac_mv)
 {
 	/* chn */
 	if( chn == 0 )

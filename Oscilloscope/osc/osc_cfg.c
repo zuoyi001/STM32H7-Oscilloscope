@@ -191,77 +191,88 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "5mV  ",
 		.gain_dac = 500,
-		.gain_offset = 25,
+		.gain_offset_ch[0] = -150,
+		.gain_offset_ch[1] = -150,
 		.gain_sel = 1,
 	},
 	/* 1 */
 	{
 		.str = "10mV ",
-		.gain_dac = 940,
-		.gain_offset = 25,
+		.gain_dac = 920,
+		.gain_offset_ch[0] = -72,
+		.gain_offset_ch[1] = -77,
 		.gain_sel = 1,
 	},
 	/* 2 */
 	{
 		.str = "20mV ",
-		.gain_dac = 1330,
-		.gain_offset = 25,
+		.gain_dac = 1300,
+		.gain_offset_ch[0] = -30,
+		.gain_offset_ch[1] = -40,
 		.gain_sel = 1,
 	},
 	/* 3 */
 	{
 		.str = "50mV ",
-		.gain_dac = 1890,
-		.gain_offset = 25,
+		.gain_dac = 1850,
+		.gain_offset_ch[0] = -10,
+		.gain_offset_ch[1] = -20,
 		.gain_sel = 1,
 	},
 	/* 4 */
 	{
 		.str = "100mV",
-		.gain_dac = 2300,
-		.gain_offset = 25,
+		.gain_dac = 2270,
+		.gain_offset_ch[0] = 0,
+		.gain_offset_ch[1] = -13,
 		.gain_sel = 1,
 	},
 	/* 5 */
 	{
 		.str = "200mV",
 		.gain_dac = 2720,
-		.gain_offset = 25,
+		.gain_offset_ch[0] = 8,
+		.gain_offset_ch[1] = -5,
 		.gain_sel = 1,
 	},
 	/* 6 */
 	{
 		.str = "500mV",
-		.gain_dac = 1430,
-		.gain_offset = 35,
+		.gain_dac = 1460,
+		.gain_offset_ch[0] = -28,
+		.gain_offset_ch[1] = -38,
 		.gain_sel = 0,
 	},
 	/* 7 */
 	{
 		.str = "1V   ",
 		.gain_dac = 1860,
-		.gain_offset = 25,
+		.gain_offset_ch[0] = -10,
+		.gain_offset_ch[1] = -22,
 		.gain_sel = 0,
 	},
 	/* 8 */
 	{
 		.str = "2V   ",
 		.gain_dac = 2300,
-		.gain_offset = 25,
+		.gain_offset_ch[0] = 0,
+		.gain_offset_ch[1] = -12,
 		.gain_sel = 0,
 	},
 	/* 9 */
 	{
 		.str = "5V   ",
 		.gain_dac = 2850,
-		.gain_offset = 25,
+		.gain_offset_ch[0] = 5,
+		.gain_offset_ch[1] = -10,
 		.gain_sel = 0,
 	},
 	/* 10 */
 	{
 		.str = "10V  ",
 		.gain_dac = 4095,
-		.gain_offset = 25,
+		.gain_offset_ch[0] = 5,
+		.gain_offset_ch[1] = -10,
 		.gain_sel = 0,
 	},
 };
@@ -433,6 +444,7 @@ void osc_offset_scale_thread(unsigned char chn)
 		trig_dac_part_offset = out_dac_mv;//unit is mv
 		/* out dac for test */
 		osc_dac_offset(chn,out_dac_mv);
+		osc_dac_offset(1,out_dac_mv);
 		/* update dac trig */
 		osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 	}
@@ -547,11 +559,13 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 	{
 		/* set string */
 		osc_ui_vol_scale(chn,osc_vol_offset_scale_ch1[osc_vs_t].str);
+		osc_ui_vol_scale(1,osc_vol_offset_scale_ch1[osc_vs_t].str);
 		/* set gain ctrl */
 		osc_gain_ctrl(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
     osc_gain_ctrl(1,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
 		/* set dac */
-		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,0);//osc_vol_offset_scale_ch1[osc_vs_t].gain_offset);
+		osc_vol_dac(0,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[0]);
+		osc_vol_dac(1,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[1]);
 		/* end */
 	}
   /* clear flags */

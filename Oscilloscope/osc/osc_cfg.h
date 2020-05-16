@@ -56,8 +56,8 @@ typedef struct
 	char * str;
 	/* gain dac */
 	unsigned short gain_dac;
-	/* gain_offset */
-	unsigned short gain_offset;
+	/* gain_offset ch1*/
+	signed short gain_offset_ch[2];
 	/* gain_sel */
 	unsigned short gain_sel;
 }osc_vol_scale_def;

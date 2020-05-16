@@ -185,7 +185,7 @@ static int freq_measure_ch(unsigned char chn , char * buf)
 			sprintf(buf,"%3.1fMHz",freq / 1000000.0f);
 		}
 	}
-	else if( freq > 1000 )
+	else if( freq >= 1000 )
 	{
 		/* gewei */
 		if( freq < 10000 )
