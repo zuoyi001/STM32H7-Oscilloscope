@@ -221,22 +221,17 @@ void osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,i
 		if( trig_source_p[i] == t0 && trig_source_p[i+1] == t1 )
 		{
 			/* set a sample filter */
-			if( trig_source_p[i-5] == t0 && 
-					trig_source_p[i-4] == t0 && 
-					trig_source_p[i-3] == t0 && 
+			if( 
 					trig_source_p[i-2] == t0 && 
 					trig_source_p[i-1] == t0 && 
 					trig_source_p[i+2] == t1 &&
-					trig_source_p[i+3] == t1 &&
-					trig_source_p[i+4] == t1 &&
-					trig_source_p[i+5] == t1 &&
-					trig_source_p[i+6] == t1 )
-				  {
-						/* ok we find the pos*/
-						trig_pos = i - area->total_pixel_h / 2 + 5;
-						/* break ,and copy data */
-						break;
-					}
+					trig_source_p[i+3] == t1 )
+				{
+					/* ok we find the pos*/
+					trig_pos = i - area->total_pixel_h / 2 + 5;
+					/* break ,and copy data */
+					break;
+				}
 			/*----------------------*/
 		}
 	}

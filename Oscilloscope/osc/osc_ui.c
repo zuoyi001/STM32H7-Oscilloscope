@@ -55,7 +55,7 @@ widget_def trig_lines[2];
 char * mert[6] = {"频率","1.0M","峰峰值","200mV","最大值","3.38V"};
 char * mert1[6] = {"频率","1.0K","正脉宽","180mV","平均值","1.68V"};
 char * menu_table[6] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","触发菜单","关闭通道","隐藏菜单"};
-char * mert43[5] = {"CH1:DC","CH2:AC","Auto","TRIG:CH1","TIME:10us"};
+char * mert43[5] = {"CH1:DC","CH2:AC","Auto","TRIG:CH1","TIME:0s"};
 /* gui dev */
 static gui_dev_def * dev;
 /* osc create ui */

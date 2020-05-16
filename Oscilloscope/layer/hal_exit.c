@@ -69,7 +69,7 @@ static void osc_rot_isr(unsigned char index,unsigned char up_dm)
 		/* set flag */
 		rot_flag[index] = 1;
 		/* time ctrl */
-		if( index == 2 || index == 3 )
+		if( index == 2 )
 		{
 			/* get timestmp */
 			unsigned int now = hal_sys_time_us();
