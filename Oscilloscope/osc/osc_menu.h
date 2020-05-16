@@ -32,6 +32,8 @@ static void key_single_callback(void);
 static void key_menu_callback(void);
 static void check_COM2_event(unsigned char * sta_buf,unsigned int len);
 static void menu_update(void);
+static void menu_hide_auto(void);
+static void osc_menu_hide_thread(void);
 
 #endif
 

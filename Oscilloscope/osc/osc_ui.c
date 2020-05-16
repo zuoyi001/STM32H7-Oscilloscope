@@ -54,7 +54,7 @@ widget_def trig_lines[2];
 /* table */
 char * mert[6] = {"频率","1.0M","峰峰值","200mV","最大值","3.38V"};
 char * mert1[6] = {"频率","1.0K","正脉宽","180mV","平均值","1.68V"};
-char * menu_table[6] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","触发菜单","关闭通道","隐藏菜单"};
+char * menu_table[6] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","触发方式\n 自动","触发边沿\n上升","关闭通道"};
 char * mert43[5] = {"CH1:DC","CH2:AC","Auto","TRIG:CH1","TIME:0s"};
 /* gui dev */
 static gui_dev_def * dev;
@@ -272,7 +272,43 @@ void osc_ui_set_one_menu_text(unsigned char item,const char * text)
 	gui_set_wid_text(&menu_text[item],(char *)text);
 	/* end of func */
 }
-
+/* void osc ui get fast tips text */
+void osc_ui_set_chn_text(unsigned char chn,const char * text)
+{
+	/* select chn */
+	if( chn == 0 )
+	{
+		gui_set_wid_text(&fast_tips[0],( char * )text);
+	}
+	else
+	{
+		gui_set_wid_text(&fast_tips[1],( char * )text);
+	}
+}
+/* set osc ui fast coupling show or hide */
+void osc_ui_set_csh_show(unsigned char chn,unsigned char mode)
+{
+	if( chn >= 2 )
+	{
+		return;
+	}
+	/* show or hide */
+	if( mode == 0 )
+	{
+		gui_hide_widget(&fast_tips[chn]);
+	}
+	else
+	{
+		gui_show_widget(&fast_tips[chn]);
+	}
+}
+/* set trig text */
+/* void osc ui get fast tips text */
+void osc_ui_set_trig_text(const char * text)
+{
+	/* select chn */
+	gui_set_wid_text(&fast_tips[2],( char * )text);
+}
 
 
 

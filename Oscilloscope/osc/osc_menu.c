@@ -24,17 +24,28 @@
 /* Private includes ----------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,10);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
+/* create cfg task gui detecter task run as 100 ms */
+FOS_TSK_REGISTER(osc_menu_hide_thread,PRIORITY_4,1000);
 /* const char menu */
-const char * menu_default_table[6] = {"系统菜单","通道选择\n CH2","耦合方式\n AC","触发菜单","关闭通道","隐藏菜单"};
+const char * menu_default_table[6] = {"系统菜单","通道选择\n CH2","耦合方式\n AC","触发方式\nAuto","触发边沿\n 上升 ","关闭通道",};
 /* chn select */
-static const char * menu_chn[2] = {"通道选择\n CH1","通道选择\n CH2"};
-static const char * menu_coupling[2] = {"耦合方式\n DC","耦合方式\n AC"};
-static const char * menu_open_chn[2] = {"关闭通道","开启通道"};
+const char * menu_chn[2] = {"通道选择\n CH1","通道选择\n CH2"};
+const char * menu_coupling[2] = {"耦合方式\n DC","耦合方式\n AC"};
+const char * menu_open_chn[2] = {"关闭通道","开启通道"};
+const char * fast_tips_ch1[2] = {"CH1:DC","CH1:AC"};
+const char * fast_tips_ch2[2] = {"CH2:DC","CH2:AC"};
+const char * trig_type_chn[4] = {"触发方式\nAuto  ","触发方式\nNormal","触发方式\nSmart ","触发方式\nsingle"};
+const char * trig_fast[4] = {"Auto  ","Normal","Smart ","single"};
+const char * trig_edge[2] = {"触发边沿\n 上升 ","触发边沿\n 下降 "};
 /* static link */
 static unsigned char menu_link[6];
 /* static key sta */
 static unsigned char com2_sta[8];
 static unsigned int cd_cnt = 0;
+static int trig_ch1_sta;
+static int trig_ch2_sta;
+/* menu show or hide */
+static unsigned char menu_hold_time_s = 0;
 /* function */
 static void (*com_callbacks[8])(void);
 /* heap init */
@@ -46,12 +57,40 @@ static int osc_menu_heep(void)
 	com_callbacks[5] = key_single_callback;
 	com_callbacks[6] = key_measure_callback;
 	com_callbacks[7] = key_runstop_callback;
+	/* set default cfg */
+	menu_link[0] = 0;
+	menu_link[1] = 0;
+	menu_link[2] = 0;
+	menu_link[3] = 0;
+	menu_link[4] = 0;
+	menu_link[5] = 0;
 	/* return */
 	return FS_OK;
 }
 /* config */
 static int osc_menu_init(void)
 {
+	/* set fast tips */
+	if( menu_link[2] & 0x0f )
+	{
+	  osc_ui_set_chn_text(0,fast_tips_ch1[1]);
+	}
+	else
+	{
+		osc_ui_set_chn_text(0,fast_tips_ch1[0]);
+	}
+	/* ch2 */
+	if( menu_link[2] & 0xf0 )
+	{
+	  osc_ui_set_chn_text(1,fast_tips_ch2[1]);
+	}
+	else
+	{
+		osc_ui_set_chn_text(1,fast_tips_ch2[0]);
+	}
+	/* set fast tips */
+	osc_ui_set_trig_text(trig_fast[menu_link[3] % 4]);
+	/* return */
 	return FS_OK;
 }
 /* thread */
@@ -70,6 +109,23 @@ static void osc_menu_thread(void)
 		check_COM2_event(com2_sta,8);
 		/* clear */
 		cd_cnt = 0;
+	}
+}
+/* menu show */
+static void osc_menu_hide_thread(void)
+{
+	/* check menu sta */
+	if( osc_ui_menu_sta() == 0)
+	{
+		/* showen */
+		if( menu_hold_time_s == 0 )
+		{
+			menu_hide_auto();
+		}
+		else
+		{
+			menu_hold_time_s --;
+		}
 	}
 }
 /* check key envent */
@@ -93,6 +149,9 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 				{
 					/* run callback functions */
 					com_callbacks[i]();
+					/* set hold time */
+					menu_hold_time_s = 5;
+					/* -------------- */
 				}
 				/* -------------- */
 			}
@@ -123,10 +182,12 @@ static void key_runstop_callback(void)
 			if( menu_link[1] == 0 )
 			{
 				osc_ui_set_one_menu_text(2,(menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0]);
+				osc_ui_set_one_menu_text(5,(menu_link[4]&0x0f) ? menu_open_chn[1] : menu_open_chn[0]);
 			}
 			else
 			{
 				osc_ui_set_one_menu_text(2,(menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0]);
+				osc_ui_set_one_menu_text(5,(menu_link[4]&0xf0) ? menu_open_chn[1] : menu_open_chn[0]);
 			}
 		}
 	}
@@ -159,6 +220,7 @@ static void key_auto_callback(void)
 				}
 				/* show text */
 				osc_ui_set_one_menu_text(2,(menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0]);
+				osc_ui_set_chn_text(0,(menu_link[2]&0x0f) ? fast_tips_ch1[1] : fast_tips_ch1[0] );
 				/* set couple mode ch1 */
 				osc_coupling_setting(0,menu_link[2]&0x0f);
 				/*-----------------*/
@@ -176,6 +238,7 @@ static void key_auto_callback(void)
 				}
 				/* show text */
 				osc_ui_set_one_menu_text(2,(menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0]);
+				osc_ui_set_chn_text(1,(menu_link[2]&0xf0) ? fast_tips_ch2[1] : fast_tips_ch2[0] );
 				/* set couple mode ch2 */
 				osc_coupling_setting(1,menu_link[2] & 0xf0);
 				/*-----------------*/				
@@ -190,20 +253,71 @@ static void key_auto_callback(void)
 /* runstop */
 static void key_measure_callback(void)
 {
-	
+	int menu_sta = osc_ui_menu_sta();
+	/* show or hide */
+	if( !menu_sta )
+	{
+		/* mode */
+		if( 1 ) // chn menu
+		{
+			/* nest link */
+			menu_link[3] ++ ;
+			/* limit */
+			if( menu_link[3] >= 4 )
+			{
+				menu_link[3] = 0;
+			}
+			/* set text */
+			osc_ui_set_one_menu_text(3,trig_type_chn[menu_link[3]]);
+			/* set fast tips */
+			osc_ui_set_trig_text(trig_fast[menu_link[3]]);
+		}
+	}
+	else
+	{
+		/* open measure menu */
+	}		
 }
 /* runstop */
 static void key_single_callback(void)
 {
-	
+	int menu_sta = osc_ui_menu_sta();
+	/* show or hide */
+	if( !menu_sta )
+	{
+		/* mode */
+		if( 1 ) // chn menu
+		{
+			/* nest link */
+			menu_link[4] ++ ;
+			/* limit */
+			if( menu_link[4] >= 2 )
+			{
+				menu_link[4] = 0;
+			}
+			/* set text */
+			osc_ui_set_one_menu_text(4,trig_edge[menu_link[4]]);
+		}
+	}
+	else
+	{
+		/* single */
+	}		
+}
+/* static hide menu */
+static void menu_hide_auto(void)
+{
+	/* hide win */
+	osc_ui_menu_show(0);
+	/* show trig windows */
+	osc_ui_trig_arrow_show(0,trig_ch1_sta);
+	osc_ui_trig_arrow_show(1,trig_ch2_sta);
+	/* end of */	
 }
 /* key callback */
 static void key_menu_callback(void)
 {
 	int menu_sta = osc_ui_menu_sta();
-	/* trig arrow sta */
-	static int trig_ch1_sta;
-	static int trig_ch2_sta;
 	/* show or hide */
 	if( menu_sta )
 	{
@@ -221,12 +335,45 @@ static void key_menu_callback(void)
 	}
 	else
 	{
-		/* hide win */
-		osc_ui_menu_show(0);
-		/* show trig windows */
-		osc_ui_trig_arrow_show(0,trig_ch1_sta);
-		osc_ui_trig_arrow_show(1,trig_ch2_sta);
-		/* end of */		
+		/* mode */
+		if( 1 ) // chn menu
+		{
+			/* chn 1 */
+			if( menu_link[1] == 0 )
+			{
+				/* check open */
+				if( menu_link[4] & 0x0f )
+				{
+					menu_link[4] &=~ 0x0f;
+				}
+				else
+				{
+					menu_link[4] |= 0x0f;
+				}
+				/* change data */
+				osc_ui_set_one_menu_text(5,(menu_link[4]&0x0f) ? menu_open_chn[1] : menu_open_chn[0]);
+				/* show or hide fast tips */
+				osc_ui_set_csh_show(0,!(menu_link[4]&0x0f));
+				/*------------------------*/
+			}
+			else
+			{
+				/* check open */
+				if( menu_link[4] & 0xf0 )
+				{
+					menu_link[4] &=~ 0xf0;
+				}
+				else
+				{
+					menu_link[4] |= 0xf0;
+				}
+				/* change data */
+				osc_ui_set_one_menu_text(5,(menu_link[4]&0xf0) ? menu_open_chn[1] : menu_open_chn[0]);	
+				/* show or hide fast tips */
+				osc_ui_set_csh_show(1,!(menu_link[4]&0xf0));
+				/*------------------------*/				
+			}
+		}		
 	}
 }
 /* menu_update */
@@ -238,14 +385,15 @@ static void menu_update(void)
 	if( menu_link[1] == 0 )
 	{
 		menu_default_table[2] = (menu_link[2]&0x0f) ? menu_coupling[1] : menu_coupling[0];
+		menu_default_table[5] = (menu_link[4]&0x0f) ? menu_open_chn[1] : menu_open_chn[0];
 	}
 	else
 	{
 		menu_default_table[2] = (menu_link[2]&0xf0) ? menu_coupling[1] : menu_coupling[0];
+		menu_default_table[5] = (menu_link[4]&0xf0) ? menu_open_chn[1] : menu_open_chn[0];
 	}
-	/* open or not */
-	menu_default_table[4] = menu_link[4] ? menu_open_chn[1] : menu_open_chn[0];
 	/* set update */
+	menu_default_table[3] = trig_type_chn[menu_link[3] % 4];
 	/* set osc menu group */
 	osc_ui_set_menu_text_group(menu_default_table,6);	
 	/* end */

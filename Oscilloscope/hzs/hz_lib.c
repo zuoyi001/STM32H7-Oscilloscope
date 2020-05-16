@@ -25,3 +25,10 @@ tex4 = GBK2312_ASSETS_HZ16("探头比例");
 tex4 = GBK2312_ASSETS_HZ16("占空比");
 tex4 = GBK2312_ASSETS_HZ16("开启");
 tex4 = GBK2312_ASSETS_HZ16("触发");
+tex4 = GBK2312_ASSETS_HZ16("自动");
+tex4 = GBK2312_ASSETS_HZ16("正常");
+tex4 = GBK2312_ASSETS_HZ16("单次");
+tex4 = GBK2312_ASSETS_HZ16("智能源");
+tex4 = GBK2312_ASSETS_HZ16("边沿上升下降");
+
+
