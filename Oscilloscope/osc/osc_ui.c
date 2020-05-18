@@ -115,6 +115,23 @@ void osc_ui_move_offset_arrow(unsigned char chn,unsigned short pos)
 		gui_move_wid(&base_vol_arrow[chn] ,base_vol_arrow[chn].msg.x , pos);
 	}
 }
+/* show and hide arrow */
+void osc_ui_show_offset_arrow(unsigned char chn , unsigned char mode)
+{
+	/* limit */
+	if( chn < 2 )
+	{
+		/* show or hide */
+		if( mode )
+		{
+			gui_show_widget(&base_vol_arrow[chn]);
+		}
+		else
+		{
+			gui_hide_widget(&base_vol_arrow[chn]);
+		}		
+	}		
+}
 /* move trig arrow */
 void osc_ui_move_trig_arrow(unsigned char chn,unsigned short pos)
 {

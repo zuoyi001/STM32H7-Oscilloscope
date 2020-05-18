@@ -52,6 +52,7 @@ void osc_ui_set_chn_text(unsigned char chn,const char * text);
 void osc_ui_set_csh_show(unsigned char chn,unsigned char mode);
 void osc_ui_set_trig_text(const char * text);
 void osc_ui_set_trig_src(const char * text);
+void osc_ui_show_offset_arrow(unsigned char chn , unsigned char mode);
 /* Private includes ----------------------------------------------------------*/
 
 #endif

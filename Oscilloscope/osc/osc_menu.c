@@ -412,6 +412,8 @@ static void key_menu_Longfress_callback(void)
 			osc_ui_set_csh_show(osc_run_msg.chn_focus,!osc_run_msg.chn_enable[osc_run_msg.chn_focus]);
 			/* clear all lines */
 			osc_clear_all_lines();
+			/* show or hide base arrow */
+			osc_ui_show_offset_arrow(osc_run_msg.chn_focus,!osc_run_msg.chn_enable[osc_run_msg.chn_focus]);
 			/* end of */
 		}		
   }
