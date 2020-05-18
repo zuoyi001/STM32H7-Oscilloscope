@@ -74,6 +74,7 @@ osc_run_msg_def * get_run_msg(void);
 void osc_clear_all_lines(void);
 static void osc_signle_mode(void);
 void osc_single_thread(void);
+static void key_menu_Longfress_callback(void);
 
 #endif
 

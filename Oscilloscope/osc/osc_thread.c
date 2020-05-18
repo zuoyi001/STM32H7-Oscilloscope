@@ -107,9 +107,18 @@ static void osc_thread(void)
 	{
 		/* get zoom buffer */
 		line_zoom[cnt_p%2] = osc_time_sw->osc_zoom_factor;
-		/* show line ch1 */
-		osc_create_lines(dev,line_buffer_ch1[cnt_p%2],0,cnt_p%2,0,line_zoom[cnt_p%2]);
-		osc_create_lines(dev,line_buffer_ch2[cnt_p%2],0,cnt_p%2,1,line_zoom[cnt_p%2]);
+		/* ch1 enable */
+		if( runmsg->chn_enable[0] == 0 ) // enable
+		{
+			/* show line ch1 */
+			osc_create_lines(dev,line_buffer_ch1[cnt_p%2],0,cnt_p%2,0,line_zoom[cnt_p%2]);
+		}
+		/* ch2 enable */
+		if( runmsg->chn_enable[1] == 0 ) // enable
+		{		
+			/* show line ch2 */
+		  osc_create_lines(dev,line_buffer_ch2[cnt_p%2],0,cnt_p%2,1,line_zoom[cnt_p%2]);
+		}
 		/* clear the ch lines */
 		if( cnt_p >= 1  )
 		{
@@ -118,13 +127,29 @@ static void osc_thread(void)
 			/* select one group */
 			if( cnt_p % 2 )
 			{
-				osc_create_lines(dev,line_buffer_ch1[0],1,0,0,line_zoom[0]);
-				osc_create_lines(dev,line_buffer_ch2[0],1,0,1,line_zoom[0]);
+				/* ch1 enable */
+				if( runmsg->chn_enable[0] == 0 ) // enable
+				{				
+					osc_create_lines(dev,line_buffer_ch1[0],1,0,0,line_zoom[0]);
+				}
+				/* ch2 enable */
+				if( runmsg->chn_enable[1] == 0 ) // enable
+				{			
+					osc_create_lines(dev,line_buffer_ch2[0],1,0,1,line_zoom[0]);
+				}
 			}
 			else
 			{
-				osc_create_lines(dev,line_buffer_ch1[1],1,1,0,line_zoom[1]);
-				osc_create_lines(dev,line_buffer_ch2[1],1,1,1,line_zoom[1]);
+				/* ch1 enable */
+				if( runmsg->chn_enable[0] == 0 ) // enable
+				{								
+					osc_create_lines(dev,line_buffer_ch1[1],1,1,0,line_zoom[1]);
+				}
+				/* ch2 enable */
+				if( runmsg->chn_enable[1] == 0 ) // enable
+				{					
+					osc_create_lines(dev,line_buffer_ch2[1],1,1,1,line_zoom[1]);
+				}
 			}
 		}
 		/* trig check */

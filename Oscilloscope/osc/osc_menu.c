@@ -22,6 +22,7 @@
 #include "osc_menu.h"
 #include "osc_api.h"
 #include "string.h"
+#include "hal_tim.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,10);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
@@ -48,8 +49,10 @@ static int trig_ch1_sta;
 static int trig_ch2_sta;
 /* menu show or hide */
 static unsigned char menu_hold_time_s = 0;
+/* LONG press cnt */
+#define LONG_PRESS_LIMIT (12)
 /* function */
-static void (*com_callbacks[8])(void);
+static void (*com_callbacks[9])(void);
 /* heap init */
 static int osc_menu_heep(void)
 {
@@ -59,6 +62,7 @@ static int osc_menu_heep(void)
 	com_callbacks[5] = key_single_callback;
 	com_callbacks[6] = key_measure_callback;
 	com_callbacks[7] = key_runstop_callback;
+	com_callbacks[8] = key_menu_Longfress_callback;
 	/* init */
 	memset(&osc_run_msg,0,sizeof(osc_run_msg));
 	/* return */
@@ -121,6 +125,8 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 {
 	/* key flags */
 	static unsigned char key_flags[8];
+	static unsigned int longfress_cnt = 0;
+	static unsigned char once_time = 0;
 	/* flags */
 	for( int i = 0 ; i < len ; i ++ )
 	{
@@ -132,15 +138,22 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 			{
 				/* clear */
 				key_flags[i] = 0;
-				/* send key event */
-				if( com_callbacks[i] != 0 )
+				/* long fress */
+				if( i != 2 || longfress_cnt < LONG_PRESS_LIMIT )
 				{
-					/* run callback functions */
-					com_callbacks[i]();
-					/* set hold time */
-					menu_hold_time_s = 50;
-					/* -------------- */
-				}
+					/* send key event */
+					if( com_callbacks[i] != 0 )
+					{
+						/* run callback functions */
+						com_callbacks[i]();
+						/* set hold time */
+						menu_hold_time_s = 50;
+						/* -------------- */
+					}
+			  }
+				/* clear */
+				longfress_cnt = 0;
+				once_time = 0;
 				/* -------------- */
 			}
 		}
@@ -149,6 +162,23 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 			/* match low level */
 			key_flags[i] = 1;
 			/* match low level */
+			if( i == 2 )
+			{
+				/* get time */
+				longfress_cnt ++;
+				/* 1S */
+				if( longfress_cnt >= LONG_PRESS_LIMIT && once_time == 0)
+				{
+					/* clear */
+					once_time = 1;
+					/* do the callback  */
+					if( com_callbacks[8] )
+					{
+						com_callbacks[8]();
+					}
+					/* ---------------- */
+				}
+			}
 		}
   }
 }
@@ -360,6 +390,16 @@ static void key_menu_callback(void)
 	}
 	else
 	{
+		menu_hide_auto();
+	}
+}
+/* menu long fress */
+static void key_menu_Longfress_callback(void)
+{
+	int menu_sta = osc_ui_menu_sta();
+	/* show or hide */
+	if( !menu_sta )
+	{		
 		/* mode */
 		if( 1 ) // chn menu
 		{
@@ -370,9 +410,11 @@ static void key_menu_callback(void)
 			osc_ui_set_one_menu_text(5,(osc_run_msg.chn_enable[osc_run_msg.chn_focus]) ? menu_open_chn[1] : menu_open_chn[0]);
 			/* show or hide fast tips */
 			osc_ui_set_csh_show(osc_run_msg.chn_focus,!osc_run_msg.chn_enable[osc_run_msg.chn_focus]);
-			/*------------------------*/
+			/* clear all lines */
+			osc_clear_all_lines();
+			/* end of */
 		}		
-	}
+  }
 }
 /* menu_update */
 static void menu_update(void)
