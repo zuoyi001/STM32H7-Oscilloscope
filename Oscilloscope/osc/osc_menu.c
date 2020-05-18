@@ -173,11 +173,23 @@ static void key_runstop_callback(void)
 			osc_ui_set_one_menu_text(5,(osc_run_msg.chn_enable[foc]) ? menu_open_chn[1] : menu_open_chn[0]);
 			/* set trig source */
 			osc_ui_set_trig_src(trig_source[foc]);
+			/* set trig source */
+			osc_run_msg.trig_source = foc;
 		}
 	}
 	else
 	{
 		/* stop or run */
+		if( osc_run_msg.run_mode == FUN_COUNTINUE )
+		{
+			osc_run_msg.run_mode = RUN_STOP_MODE;
+		}
+		else
+		{
+			osc_run_msg.run_mode = FUN_COUNTINUE;
+			/* set trig text */
+			osc_ui_set_trig_text(trig_fast[osc_run_msg.trig_mode % 4]);
+		}
 	}
 }
 /* runstop */
@@ -272,6 +284,15 @@ static void key_single_callback(void)
 	else
 	{
 		/* single */
+		if( osc_run_msg.run_mode == FUN_COUNTINUE )
+		{
+			/* set text */
+		  osc_ui_set_trig_text("single");
+			/* clear all lines */
+			osc_clear_all_lines();
+			/* osc_run_msg.run_mode */
+			osc_run_msg.trig_mode = RUN_TRIG_SINGLE;
+		}
 	}		
 }
 /* static hide menu */
@@ -341,9 +362,12 @@ static void menu_update(void)
 	osc_ui_set_menu_text_group(menu_default_table,6);	
 	/* end */
 }
-
-
-
+/* return ksc msg */
+osc_run_msg_def * get_run_msg(void)
+{
+  return &osc_run_msg;
+}
+ 
 
 
 

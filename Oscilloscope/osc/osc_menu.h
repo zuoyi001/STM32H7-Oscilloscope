@@ -21,13 +21,20 @@
 #ifndef __OSC_MENU_H__
 #define __OSC_MENU_H__
 /* Includes ------------------------------------------------------------------*/
+#define RUN_TRIG_AUTO    (0)
+#define RUN_TRIG_NORMAL  (1)
+#define RUN_TRIG_SMART   (2)
+#define RUN_TRIG_SINGLE  (3)
+/* run mode */
+#define FUN_COUNTINUE    (0)
+#define RUN_STOP_MODE    (1)
 /* typedef global settings */
 typedef struct
 {
 	/* trig type */
 	unsigned char trig_type;//falling or rising edge
 	/* trig mode */
-	unsigned char trig_mode;// normal . auto . single . smart
+	unsigned char trig_mode;// auto . normal . smart . single
 	/* trig source */
 	unsigned char trig_source;// ch1 or ch2
 	/* trig vol ch1 ch2 */
@@ -59,6 +66,8 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len);
 static void menu_update(void);
 static void menu_hide_auto(void);
 static void osc_menu_hide_thread(void);
+osc_run_msg_def * get_run_msg(void);
+void osc_clear_all_lines(void);
 
 #endif
 

@@ -188,8 +188,10 @@ void osc_read_fifo_data(unsigned char clock_sta)
 	}
 }
 /* wave data select */
-void osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag)
-{
+int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag)
+{ 
+	/* ret tes */
+	int ret = FS_ERR;
 	/* get draw area */
 	draw_area_def * area = get_draw_area_msg();	
 	/* trig flag */
@@ -229,6 +231,8 @@ void osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,i
 				{
 					/* ok we find the pos*/
 					trig_pos = i - area->total_pixel_h / 2 + 5;
+					/* set ok */
+					ret = FS_OK;
 					/* break ,and copy data */
 					break;
 				}
@@ -238,6 +242,7 @@ void osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,i
 	/* copy data */
 	osc_create_analog_data((signed char *)&cache_fifo[0][trig_pos],(signed char *)&cache_fifo[1][trig_pos],ch1_m,ch2_m);
 	/* end */
+	return ret;
 }
 /* create analog data to display dev */
 static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m )
