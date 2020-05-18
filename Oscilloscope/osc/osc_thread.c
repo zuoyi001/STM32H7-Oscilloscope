@@ -84,6 +84,8 @@ static void osc_thread(void)
 	osc_vol_scale_thread(0);
 	/* get scan time */
 	osc_time_sw = osc_scan_thread();
+	/* single thread */
+	osc_single_thread();
 	/* nothing to do */
 	if( hal_read_gpio(FIFO_FULL0) != 0 )
 	{
@@ -124,14 +126,6 @@ static void osc_thread(void)
 				osc_create_lines(dev,line_buffer_ch1[1],1,1,0,line_zoom[1]);
 				osc_create_lines(dev,line_buffer_ch2[1],1,1,1,line_zoom[1]);
 			}
-		}	
-		/* stop or single */
-		if( runmsg->run_mode == RUN_STOP_MODE )
-		{
-			/* set stop */
-			osc_ui_set_trig_text("stop  ");
-			/* stop here */
-			while(runmsg->run_mode);
 		}
 		/* trig check */
 		if( runmsg->trig_mode == RUN_TRIG_SINGLE )
@@ -139,14 +133,23 @@ static void osc_thread(void)
 			/* get trig res */
 			if( ret == FS_OK )
 			{
-				/* set mode */
-				runmsg->trig_mode = RUN_TRIG_AUTO;
 				/* set stop */
 				osc_ui_set_trig_text("stop  ");
+				/* revert trig mode */
+				runmsg->trig_mode = runmsg->backup_trig_mode;					
 				/* stop here */
-				while(runmsg->run_mode);		
+				while(runmsg->run_mode);			
+				/* end of single */
 			}
 		}
+		/* stop or single */
+		if( runmsg->run_mode == RUN_STOP_MODE )
+		{
+			/* set stop */
+			osc_ui_set_trig_text("stop  ");
+			/* stop here */
+			while(runmsg->run_mode);
+		}		
 		/* incremer */
 		cnt_p++;
   }

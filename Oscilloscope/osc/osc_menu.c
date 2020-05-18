@@ -138,7 +138,7 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 					/* run callback functions */
 					com_callbacks[i]();
 					/* set hold time */
-					menu_hold_time_s = 5;
+					menu_hold_time_s = 50;
 					/* -------------- */
 				}
 				/* -------------- */
@@ -245,7 +245,7 @@ static void key_measure_callback(void)
 			/* nest link */
 			osc_run_msg.trig_mode ++;
 			/* limit */
-			if( osc_run_msg.trig_mode >= 4 )
+			if( osc_run_msg.trig_mode >= 3 )
 			{
 				osc_run_msg.trig_mode = 0;
 			}
@@ -284,16 +284,50 @@ static void key_single_callback(void)
 	else
 	{
 		/* single */
-		if( osc_run_msg.run_mode == FUN_COUNTINUE )
+		osc_signle_mode();
+		/* end of */
+	}		
+}
+/* static set single mode */
+static void osc_signle_mode(void)
+{
+	/* single */
+	if( osc_run_msg.run_mode == FUN_COUNTINUE )
+	{
+		/* set text */
+		osc_ui_set_trig_text("single");
+		/* set flags */
+		osc_run_msg.user0 = RUN_TRIG_SINGLE;
+	}	
+}
+/* single thread */
+void osc_single_thread(void)
+{
+	/* once flags */
+	static unsigned once_flag = 0;
+	/* get flags */
+	if( osc_run_msg.user0 == RUN_TRIG_SINGLE )
+	{
+		/* run once */
+		if( once_flag == 1 )
 		{
-			/* set text */
-		  osc_ui_set_trig_text("single");
+			/* clear */
+			once_flag = 0;
+			osc_run_msg.user0 = 0xff;
 			/* clear all lines */
 			osc_clear_all_lines();
+			/* set back trig mode */
+			osc_run_msg.backup_trig_mode = osc_run_msg.trig_mode;			
 			/* osc_run_msg.run_mode */
 			osc_run_msg.trig_mode = RUN_TRIG_SINGLE;
-		}
-	}		
+			/* set run mode to stop */
+			osc_run_msg.run_mode = RUN_STOP_MODE;
+		}			
+	}
+	else
+	{
+		once_flag = 1;
+	}
 }
 /* static hide menu */
 static void menu_hide_auto(void)

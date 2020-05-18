@@ -51,6 +51,10 @@ typedef struct
 	unsigned char chn_enable[2] ;//0 is open.1 is close
 	/* chn focus */
 	unsigned char chn_focus;
+	/* backup trig mode  */
+	unsigned char backup_trig_mode;
+	/* user 0 */
+	unsigned char user0;
 	/*-----------*/
 }osc_run_msg_def;
 /* function */
@@ -68,6 +72,8 @@ static void menu_hide_auto(void);
 static void osc_menu_hide_thread(void);
 osc_run_msg_def * get_run_msg(void);
 void osc_clear_all_lines(void);
+static void osc_signle_mode(void);
+void osc_single_thread(void);
 
 #endif
 

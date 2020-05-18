@@ -29,7 +29,7 @@ static unsigned int GUI_EVENT = 0;
 /* init a */
 FOS_INODE_REGISTER("gui",gui_dev_init,gui_static_creater,0,0);
 /*----------------------------------------------------------------------------*/
-FOS_TSK_REGISTER(gui_thread,PRIORITY_4,100); /* gui detecter task run as 100 ms*/
+FOS_TSK_REGISTER(gui_thread,PRIORITY_4,10); /* gui detecter task run as 100 ms*/
 /* gui task */
 static void gui_thread(void)
 {
@@ -40,9 +40,9 @@ static void gui_thread(void)
 		/* show data */
 		ret = gui_static_creater();
 		/* if */
-		if( ret == 0 )
+		if( ret != 0 )
 		{
-			GUI_EVENT = 0;
+			GUI_EVENT -= ret;
 		}
 	}
 }
