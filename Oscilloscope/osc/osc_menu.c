@@ -22,7 +22,8 @@
 #include "osc_menu.h"
 #include "osc_api.h"
 #include "string.h"
-#include "hal_tim.h"
+#include "hal_exit.h"
+#include "osc_cfg.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,10);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
@@ -63,8 +64,6 @@ static int osc_menu_heep(void)
 	com_callbacks[6] = key_measure_callback;
 	com_callbacks[7] = key_runstop_callback;
 	com_callbacks[8] = key_menu_Longfress_callback;
-	/* init */
-	memset(&osc_run_msg,0,sizeof(osc_run_msg));
 	/* return */
 	return FS_OK;
 }
@@ -205,6 +204,10 @@ static void key_runstop_callback(void)
 			osc_ui_set_trig_src(trig_source[foc]);
 			/* set trig source */
 			osc_run_msg.trig_source = foc;
+			/* update the pridata */
+			osc_rot_set(OSC_VOL_OFFSET_SCALE,osc_run_msg.vol_offset_scale[foc]);
+			osc_rot_set(OSC_VOL_SCALE,osc_run_msg.vol_scale_ch[foc]);
+			osc_rot_set(OSC_TRIG_SCALE,osc_run_msg.trig_vol_level_ch[foc]);			
 		}
 	}
 	else

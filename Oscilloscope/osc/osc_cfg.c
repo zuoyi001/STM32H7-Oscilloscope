@@ -406,6 +406,7 @@ void osc_offset_scale_thread(unsigned char chn)
 {
 	/* last */
 	static signed short lsat_vol = 0xfff;
+	static unsigned char last_chn = 0xff;
   /* void offset thread */
 	signed short vol_offset_scale = osc_rot_sta(OSC_VOL_OFFSET_SCALE);
 	/* get draw area */
@@ -432,7 +433,7 @@ void osc_offset_scale_thread(unsigned char chn)
 		/* to do nothing */
 	}
 	/* change */
-	if( lsat_vol != vol_offset_scale )
+	if( lsat_vol != vol_offset_scale || last_chn != chn )
 	{
 		/* pos */
 		unsigned short new_pos = vol_offset_scale + area->start_pos_y - 6 ;
@@ -444,18 +445,19 @@ void osc_offset_scale_thread(unsigned char chn)
 		trig_dac_part_offset = out_dac_mv;//unit is mv
 		/* out dac for test */
 		osc_dac_offset(chn,out_dac_mv);
-		osc_dac_offset(1,out_dac_mv);
 		/* update dac trig */
 		osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
 	}
 	/* ipdate */
 	lsat_vol = vol_offset_scale;
+	last_chn = chn;
 }
 /* voltage thread */
 void osc_trig_scale_thread(unsigned char chn)
 {
 	/* last */
 	static signed short lsat_vol = 0xfff;
+	static unsigned char last_chn = 0xff;
   /* void offset thread */
 	signed short vol_trig_scale = osc_rot_sta(OSC_TRIG_SCALE);
 	/* get draw area */
@@ -482,7 +484,7 @@ void osc_trig_scale_thread(unsigned char chn)
 		/* to do nothing */
 	}
 	/* change */
-	if( lsat_vol != vol_trig_scale )
+	if( lsat_vol != vol_trig_scale || last_chn != chn )
 	{
 		/* pos */
 		unsigned short new_pos = vol_trig_scale  + area->start_pos_y - 6 ;
@@ -504,6 +506,7 @@ void osc_trig_scale_thread(unsigned char chn)
 	}
 	/* ipdate */
 	lsat_vol = vol_trig_scale;
+	last_chn = chn;
 }
 /* vol scale thread */
 const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
@@ -511,6 +514,7 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 	/* defines */
 	static signed short last_vol_scale = 0xff;
 	static unsigned char ste = 0;	
+	static unsigned char last_chn = 0xff;
 	/* get rotation data */
 	signed short osc_vs_t = osc_rot_sta(OSC_VOL_SCALE);
 	/* get leng */
@@ -555,21 +559,19 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 		}
 	}
 	/* set time text */
-	if( osc_vs_t != last_vol_scale )
+	if( osc_vs_t != last_vol_scale || last_chn != chn )
 	{
 		/* set string */
 		osc_ui_vol_scale(chn,osc_vol_offset_scale_ch1[osc_vs_t].str);
-		osc_ui_vol_scale(1,osc_vol_offset_scale_ch1[osc_vs_t].str);
 		/* set gain ctrl */
 		osc_gain_ctrl(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
-    osc_gain_ctrl(1,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
 		/* set dac */
-		osc_vol_dac(0,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[0]);
-		osc_vol_dac(1,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[1]);
+		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[chn]);
 		/* end */
 	}
   /* clear flags */
 	last_vol_scale = osc_vs_t;
+	last_chn = chn;
 	/* return OK */
 	return &osc_vol_offset_scale_ch1[osc_vs_t];
 }

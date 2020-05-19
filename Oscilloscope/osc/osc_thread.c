@@ -56,15 +56,48 @@ static int osc_thead_init(void)
 {
 	/* gui dev get */
   dev = get_gui_dev();
-	/* set init param */
-	osc_rot_set(OSC_TIME_ROT,2);
-	osc_rot_set(OSC_VOL_OFFSET_SCALE,200);
-	osc_rot_set(OSC_VOL_SCALE,8);
-	osc_rot_set(OSC_TRIG_SCALE,200);
-	/* for test */
-	osc_voltage_output(1870,2000,270,20);//1870,2000,0,270
 	/* get run msg for osc */
 	runmsg = get_run_msg();
+	/* get draw area */
+	draw_area_def * area = get_draw_area_msg();	
+  /* read from eeprom or clean */
+  if( 0 )
+	{
+		
+	}	
+  else
+	{
+		/* init */
+		memset(runmsg,0,sizeof(osc_run_msg_def));		
+		/* set default vol offset */
+		runmsg->vol_offset_scale[0] = area->total_pixel_v / 2;//middle
+		runmsg->vol_offset_scale[1] = area->total_pixel_v / 2;//middle
+		/* set vol scale */
+		runmsg->vol_scale_ch[0] = 8;//2V div
+		runmsg->vol_scale_ch[1] = 8;//2V div
+		/* set trig scale */
+		runmsg->trig_vol_level_ch[0] = area->total_pixel_v / 2;//middle
+		runmsg->trig_vol_level_ch[1] = area->total_pixel_v / 2;//middle
+		/* end */
+	}		
+	/* set init param */
+	osc_rot_set(OSC_TIME_ROT,5);//default is 5us
+	/* set ch1 */
+	osc_rot_set(OSC_VOL_OFFSET_SCALE,runmsg->vol_offset_scale[0]);
+	osc_rot_set(OSC_VOL_SCALE,runmsg->vol_scale_ch[0]);
+	osc_rot_set(OSC_TRIG_SCALE,runmsg->trig_vol_level_ch[0]);
+	/* update ch1 */
+  osc_offset_scale_thread(0);
+	osc_trig_scale_thread(0);
+	osc_vol_scale_thread(0);	
+	/* set ch2 */
+	osc_rot_set(OSC_VOL_OFFSET_SCALE,runmsg->vol_offset_scale[1]);
+	osc_rot_set(OSC_VOL_SCALE,runmsg->vol_scale_ch[1]);
+	osc_rot_set(OSC_TRIG_SCALE,runmsg->trig_vol_level_ch[1]);
+	/* update ch2 */
+	osc_offset_scale_thread(1);
+	osc_trig_scale_thread(1);
+	osc_vol_scale_thread(1);
 	/* return as usual */
 	return FS_OK;
 }
@@ -78,10 +111,16 @@ static void delay_us_yo(unsigned int t)
 /* gui task */
 static void osc_thread(void)
 {
+	/* get focus */
+	unsigned char foc = runmsg->chn_focus ? 1 : 0;
 	/* thread */
-  osc_offset_scale_thread(0);
-	osc_trig_scale_thread(0);
-	osc_vol_scale_thread(0);
+  osc_offset_scale_thread(foc);
+	osc_trig_scale_thread(foc);
+	osc_vol_scale_thread(foc);
+	/* get rot */
+	runmsg->vol_offset_scale[foc] = osc_rot_sta(OSC_VOL_OFFSET_SCALE);
+	runmsg->vol_scale_ch[foc] = osc_rot_sta(OSC_VOL_SCALE);
+	runmsg->trig_vol_level_ch[foc] = osc_rot_sta(OSC_TRIG_SCALE);
 	/* get scan time */
 	osc_time_sw = osc_scan_thread();
 	/* single thread */

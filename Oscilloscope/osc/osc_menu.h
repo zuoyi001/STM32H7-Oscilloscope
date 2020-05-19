@@ -31,6 +31,8 @@
 /* typedef global settings */
 typedef struct
 {
+	/* check head */
+	unsigned short head;
 	/* trig type */
 	unsigned char trig_type;//falling or rising edge
 	/* trig mode */
@@ -55,6 +57,8 @@ typedef struct
 	unsigned char backup_trig_mode;
 	/* user 0 */
 	unsigned char user0;
+	/* check head */
+	unsigned short tail;	
 	/*-----------*/
 }osc_run_msg_def;
 /* function */
