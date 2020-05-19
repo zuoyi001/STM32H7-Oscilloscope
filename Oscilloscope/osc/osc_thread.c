@@ -79,7 +79,13 @@ static int osc_thead_init(void)
 		runmsg->trig_vol_level_ch[0] = area->total_pixel_v / 2;//middle
 		runmsg->trig_vol_level_ch[1] = area->total_pixel_v / 2;//middle
 		/* end */
-	}		
+	}
+	/* set trig arrow data */
+	osc_ui_trig_arrow_show(0,!runmsg->trig_source);
+	osc_ui_trig_arrow_show(1,runmsg->trig_source);
+	/* set base voltage */
+	osc_ui_show_offset_arrow(0,!runmsg->chn_enable[0]);//show hide ch1 vol arrow
+	osc_ui_show_offset_arrow(1,runmsg->chn_enable[1]);//show hide ch2 vol arrow
 	/* set init param */
 	osc_rot_set(OSC_TIME_ROT,5);//default is 5us
 	/* set ch1 */

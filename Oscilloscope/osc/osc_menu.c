@@ -46,8 +46,6 @@ static osc_run_msg_def osc_run_msg __attribute__((at(0x24000000 + 800 * 600 + 64
 /* static key sta */
 static unsigned char com2_sta[8];
 static unsigned int cd_cnt = 0;
-static int trig_ch1_sta;
-static int trig_ch2_sta;
 /* menu show or hide */
 static unsigned char menu_hold_time_s = 0;
 /* LONG press cnt */
@@ -367,9 +365,9 @@ static void menu_hide_auto(void)
 {
 	/* hide win */
 	osc_ui_menu_show(0);
-	/* show trig windows */
-	osc_ui_trig_arrow_show(0,trig_ch1_sta);
-	osc_ui_trig_arrow_show(1,trig_ch2_sta);
+	/* set trig arrow data */
+	osc_ui_trig_arrow_show(0,!osc_run_msg.trig_source);
+	osc_ui_trig_arrow_show(1,osc_run_msg.trig_source);
 	/* end of */	
 }
 /* key callback */
@@ -379,9 +377,6 @@ static void key_menu_callback(void)
 	/* show or hide */
 	if( menu_sta )
 	{
-		/* get trig arrow sta */
-		trig_ch1_sta = osc_ui_trig_arrow_sta(0);
-		trig_ch2_sta = osc_ui_trig_arrow_sta(1);
 		/* set osc menu group */
 		menu_update();
 		/* show window */

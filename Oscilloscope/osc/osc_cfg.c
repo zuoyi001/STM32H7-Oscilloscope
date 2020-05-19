@@ -492,6 +492,15 @@ void osc_trig_scale_thread(unsigned char chn)
 		osc_ui_move_trig_arrow(chn,new_pos );
 		/* show lines */
 		osc_ui_trig_lines_show(chn,1);
+		/* show hide */
+		if( chn == 0 )
+		{
+		  osc_ui_trig_lines_show(1,0);
+		}
+		else
+		{
+			osc_ui_trig_lines_show(0,0);
+		}
 		/* set lines hold time */
 		trig_lines_hold_time_s = 3;
 		/* mode trig lines */
