@@ -961,6 +961,7 @@ static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigne
 	/* chn */
 	unsigned short color = ( chn == 1 ) ? COLOR_CH1 : COLOR_CH2;
 	const unsigned char * chnn = ( chn == 1 ) ? chn1_tab : chn2_tab;
+	unsigned short color_num = ( chn == 1 ) ? COLOR_TEXT_ARROW_CH1 : COLOR_TEXT_ARROW_CH2;
 	/* set check */
 	for( int i = 0 ; i < 12 ; i ++ )
 	{
@@ -976,12 +977,18 @@ static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigne
 					/* arrow table */
 					if( (arrow_table[i] << (j-12)) & 0x80 )
 					{
-						dev->set_noload_point(pos_x + j , pos_y + i , color);
+						if( dev->read_point(pos_x + j , pos_y + i) == backcolor )
+						{
+							dev->set_noload_point(pos_x + j , pos_y + i , color);
+						}
 					}
 				}
 				else
 				{
-					dev->set_noload_point(pos_x + j , pos_y + i , color);
+					if( dev->read_point(pos_x + j , pos_y + i) == backcolor )
+					{
+						dev->set_noload_point(pos_x + j , pos_y + i , color);
+					}
 				}
 				/* chnn */
 				if( i >= 1 && i < 11 )
@@ -992,14 +999,25 @@ static void osc_draw_arrow_noload(gui_dev_def * dev,unsigned short pos_x,unsigne
 						/* set color */
 						if( (chnn[i-1] << (j-5)) & 0x80 )
 						{
-							dev->set_noload_point(pos_x + j , pos_y + i , COLOR_GRID_AREA_BG);
+							if( dev->read_point(pos_x + j , pos_y + i) == backcolor || dev->read_point(pos_x + j , pos_y + i) == color )
+							{
+								dev->set_noload_point(pos_x + j , pos_y + i , color_num);
+							}
 						}						
 					}
 				}
 			}
 			else
 			{
-				dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
+				/* chn */
+				if( dev->read_point(pos_x + j , pos_y + i) == color )
+				{
+					dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
+				}
+				else if( dev->read_point(pos_x + j , pos_y + i) == color_num )
+				{
+					dev->set_noload_point(pos_x + j , pos_y + i , backcolor);
+				}					
 			}
 #else
 				unsigned short tm = color[i*20+j];

@@ -96,6 +96,9 @@
 #define COLOR_CH1_BG_TRIG      (40)//(RGB(7,227,231))
 #define COLOR_CH2_GR_TRIG      (41)//(RGB(255,255,7))
 #define COLOR_CH2_BG_TRIG      (42)//(RGB(255,255,7))
+/* diff pridata color */
+#define COLOR_TEXT_ARROW_CH1   (43)//(RGB(7, 3, 7))
+#define COLOR_TEXT_ARROW_CH2   (44)//(RGB(7, 3, 7))
 /* typdef chn line manage */
 typedef struct
 {
@@ -152,6 +155,8 @@ RGTB(255,255,0),       /* 39 */\
 RGTB(255,255,0),       /* 40 */\
 RGTB(3,227,231),       /* 41 */\
 RGTB(3,227,231),       /* 42 */\
+RGTB(7, 3, 7),         /* 43 */\
+RGTB(7, 3, 7),         /* 44 */\
 }
 #else
 /* THREE color */
