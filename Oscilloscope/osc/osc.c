@@ -1232,7 +1232,7 @@ void osc_calculate_trig_arrow(window_def * pwin,widget_def *wd,int chn)
 	}
 	/* set ch1 */
 	wd->msg.x = pwin->msg.x + hori_pixel + LEFT_REMAIN_PIXEL + 3;
-	wd->msg.y = vertical_pixel_total / 2 + TOP_REMAIN_PIXEL - 6  + 2 + (chn - 1) * 100 + 50; /* 20 * 12 */
+	wd->msg.y = vertical_pixel_total / 2 + TOP_REMAIN_PIXEL - 6 + 1; /* 20 * 12 */
 	/* not supply size now */
 #if 0
 	wd->msg.x_size = 0;
