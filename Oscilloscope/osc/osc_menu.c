@@ -24,6 +24,7 @@
 #include "string.h"
 #include "hal_exit.h"
 #include "osc_cfg.h"
+#include "hal_usart.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,10);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
@@ -263,10 +264,71 @@ static void key_auto_callback(void)
 		/* auto mode */
 	}	
 }
+/* delay for test */
+static void delay_for_usart(unsigned int t)
+{
+	while(t--);
+}
 /* runstop */
 static void key_measure_callback(void)
 {
 	int menu_sta = osc_ui_menu_sta();
+	/* screen test */
+	if( osc_run_msg.run_mode == RUN_STOP_MODE )
+	{
+		/* send sceen data */
+		extern unsigned char gram[800*600];
+		unsigned short ucnt = 0;
+		unsigned char last_pixel = gram[0];
+		volatile unsigned int total_pixel = 0;
+		volatile unsigned int total_line = 0;
+		/* send gram */
+		for( int i = 0 ; i < 800 * 480 + 1; i ++ )
+		{
+			/* check last */
+			if( last_pixel == gram[i] )
+			{
+				ucnt++;
+			}
+			else
+			{
+				/*-----------------*/
+				total_pixel += ucnt;
+				/* send this data */
+				hal_usart_send_one(0xFD);
+				delay_for_usart(100002);
+				hal_usart_send_one(0xFC);
+				delay_for_usart(100002);				
+				hal_usart_send_one(last_pixel);
+				delay_for_usart(100002);
+				hal_usart_send_one( ucnt & 0xff );
+				delay_for_usart(100002);
+				hal_usart_send_one( ucnt >> 8 );
+				delay_for_usart(100002);				
+				hal_usart_send_one(0xFB);
+				delay_for_usart(100002);
+				/* next */
+				last_pixel = gram[i];
+				/* set cnt */
+				ucnt = 1;
+				/* line add */
+				total_line ++;
+			}
+		}
+		/* send tail */
+		hal_usart_send_one(total_line>>24);
+		delay_for_usart(100002);
+		hal_usart_send_one(total_line>>16);
+		delay_for_usart(100002);
+		hal_usart_send_one(total_line>>8);
+		delay_for_usart(100002);
+		hal_usart_send_one(total_line>>0);
+		delay_for_usart(100002);		
+		/* send tail */
+    hal_usart_send("abcd",4);
+		/* reutrn */
+		return;
+	}
 	/* show or hide */
 	if( !menu_sta )
 	{
