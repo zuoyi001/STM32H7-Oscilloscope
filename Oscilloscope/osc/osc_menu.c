@@ -69,6 +69,8 @@ static int osc_menu_heep(void)
 /* config */
 static int osc_menu_init(void)
 {
+	/* power on */
+	osc_power_en(1);
 	/* set fast tips ch1 */
 	osc_ui_set_chn_text(0,osc_run_msg.coupling_type[0] ? fast_tips_ch1[1] : fast_tips_ch1[0]);
 	/* ch2 */
