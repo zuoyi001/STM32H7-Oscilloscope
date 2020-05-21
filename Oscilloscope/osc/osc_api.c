@@ -220,7 +220,7 @@ int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,in
 	/* get trig source */
 	trig_source_p = ( trig_source == TRIG_SOURCE_CH1 ) ? cache_fifo[2] : cache_fifo[3];
 	/* search data */
-	for( int i = area->total_pixel_h / 2 ; i < FIFO_DEEP * 2 - area->total_pixel_h / 2 ; i ++  )
+	for( int i = area->total_pixel_h / 2 + 125 ; i < FIFO_DEEP * 2 - area->total_pixel_h / 2 - 125 ; i ++  )
 	{
 		/* search */
 		if( trig_source_p[i] == t0 && trig_source_p[i+1] == t1 )
@@ -233,7 +233,14 @@ int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,in
 					trig_source_p[i+3] == t1 )
 				{
 					/* ok we find the pos*/
-					trig_pos = i - area->total_pixel_h / 2 + 5;
+					if( ins != 0x30 )
+					{
+						trig_pos = i - area->total_pixel_h / 2 + 5;
+					}
+					else
+					{
+						trig_pos = i - area->total_pixel_h / 2 + 5 - 125;
+					}
 					/* set ok */
 					ret = FS_OK;
 					/* break ,and copy data */
@@ -261,24 +268,20 @@ static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsig
 		/* cnt */
 		unsigned short cnt_ch1 = 0,cnt_ch2 = 0;
 		/* create ins data */
-		for( int i = 0 ; i < area->total_pixel_h ; i += 3 )
+		for( int i = 0 ; i < area->total_pixel_h + 250; i += 4 )
 		{
 			/* set to tmp buffer ch2 */
 			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i];
 			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i + 1];
 			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i + 2];
-			/* insert one data */
-			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i + 2];
 			/* set to tmp buffer ch2 */
 			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i];
 			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 1];
-			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 2];
-			/* insert one data */
-			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 2];			
+			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 2];		
 		}
 		/* set chn point */
-		ch1_pos = &tmp_buffer_ch1[125];
-		ch2_pos = &tmp_buffer_ch2[125];
+		ch1_pos = &tmp_buffer_ch1[0];
+		ch2_pos = &tmp_buffer_ch2[0];
 	}
 	else
 	{
