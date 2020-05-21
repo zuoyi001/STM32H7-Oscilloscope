@@ -30,6 +30,9 @@ static unsigned char cache_fifo[4][ FIFO_DEEP * 2 ]  __attribute__((at(0x3000000
 /* dac */
 static signed short osc_dac_buffer[4];
 static signed short osc_chn_offset[2];
+/* temp data */
+static signed char tmp_buffer_ch1[1000];
+static signed char tmp_buffer_ch2[1000];
 /* Private includes ----------------------------------------------------------*/
 void osc_stop_adc_clock(void)
 {
@@ -188,7 +191,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 	}
 }
 /* wave data select */
-int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag)
+int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag,unsigned int ins)
 { 
 	/* ret tes */
 	int ret = FS_ERR;
@@ -240,22 +243,55 @@ int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,in
 		}
 	}
 	/* copy data */
-	osc_create_analog_data((signed char *)&cache_fifo[0][trig_pos],(signed char *)&cache_fifo[1][trig_pos],ch1_m,ch2_m);
+	osc_create_analog_data((signed char *)&cache_fifo[0][trig_pos],(signed char *)&cache_fifo[1][trig_pos],ch1_m,ch2_m,ins);
 	/* end */
 	return ret;
 }
 /* create analog data to display dev */
-static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m )
+static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m ,unsigned int ins)
 {
 	/* get draw area */
 	draw_area_def * area = get_draw_area_msg();
+	/* pos */
+	signed char * ch1_pos;
+	signed char * ch2_pos;
+	/* check ins */
+	if( ins == 0x30 )
+	{
+		/* cnt */
+		unsigned short cnt_ch1 = 0,cnt_ch2 = 0;
+		/* create ins data */
+		for( int i = 0 ; i < area->total_pixel_h ; i += 3 )
+		{
+			/* set to tmp buffer ch2 */
+			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i];
+			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i + 1];
+			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i + 2];
+			/* insert one data */
+			tmp_buffer_ch1[cnt_ch1++] = ch1_o[i + 2];
+			/* set to tmp buffer ch2 */
+			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i];
+			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 1];
+			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 2];
+			/* insert one data */
+			tmp_buffer_ch2[cnt_ch2++] = ch2_o[i + 2];			
+		}
+		/* set chn point */
+		ch1_pos = &tmp_buffer_ch1[125];
+		ch2_pos = &tmp_buffer_ch2[125];
+	}
+	else
+	{
+		ch1_pos = ch1_o;
+		ch2_pos = ch2_o;
+	}
 	/* create the data */
   for( int i = 0 ; i < area->total_pixel_h ; i ++ )
 	{
 		/* create the ddtd */
-		ch1_m[i] = area->total_pixel_v - (float)(ch1_o[i] + 128) / 255.0f * area->total_pixel_v;
-		ch2_m[i] = area->total_pixel_v - (float)(ch2_o[i] + 128) / 255.0f * area->total_pixel_v;
-	}	
+		ch1_m[i] = area->total_pixel_v - (float)(ch1_pos[i] + 128) / 255.0f * area->total_pixel_v;
+		ch2_m[i] = area->total_pixel_v - (float)(ch2_pos[i] + 128) / 255.0f * area->total_pixel_v;
+	}
 }
 /* osc output dac */
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d)

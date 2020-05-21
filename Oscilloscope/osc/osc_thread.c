@@ -47,6 +47,8 @@ static unsigned short line_buffer_ch1[2][800];
 static unsigned short line_buffer_ch2[2][800];
 /* zoom */
 unsigned short line_zoom[2];
+/* ins */
+unsigned int osc_inter_s = 0;
 /* time sw */
 const osc_time_def * osc_time_sw;
 /* run msg */
@@ -143,7 +145,7 @@ static void osc_thread(void)
 	/* read data from fifo */
 	osc_read_fifo_data(clock_sta);
 	/* transfor data */
-	int ret = osc_trig_read(line_buffer_ch1[cnt_p%2],line_buffer_ch2[cnt_p%2],runmsg->trig_type,runmsg->trig_source,clock_sta);
+	int ret = osc_trig_read(line_buffer_ch1[cnt_p%2],line_buffer_ch2[cnt_p%2],runmsg->trig_type,runmsg->trig_source,clock_sta,osc_inter_s);
 	/* single mode */
 	if( (runmsg->trig_mode == RUN_TRIG_SINGLE && ret == FS_OK) || 
 		   runmsg->trig_mode == RUN_TRIG_AUTO || 
@@ -223,6 +225,8 @@ static void osc_thread(void)
 		/* incremer */
 		cnt_p++;
   }
+	/* read ins */
+	osc_inter_s = osc_time_sw->osc_ins;
 	/* read next seq */
 	clock_sta = hal_read_gpio(DIO_CLOCK_STA) ? 1 : 0;
 	/* enable tr */

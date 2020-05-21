@@ -225,6 +225,10 @@ void osc_create_lines(gui_dev_def * dev,unsigned short * line_d,unsigned char mo
 	{
 		it = 350;
 	}
+	else if(  zm == 2 )
+	{
+		it = 187;
+	}
 	/* draws */
 	for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
 	{

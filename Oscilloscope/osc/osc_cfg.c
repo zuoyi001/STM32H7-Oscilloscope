@@ -58,11 +58,27 @@ const osc_time_def osc_tim[] =
 		.osc_zoom_factor = 3,
 	},
 	{
+		.str = "500ns",
+		.osc_time = 500 , /*  base on 750ns */
+		.osc_clock_ex = 1,
+		.osc_unit = OSC_UINT_NS,
+		.osc_zoom_factor = 2,
+		.osc_ins = 0x30, /* transfer to 500ns for 1us */
+	},	
+	{
 		.str = "750ns",
 		.osc_time = 750 , /* 750 ns */
 		.osc_clock_ex = 1,
 		.osc_unit = OSC_UINT_NS,
 		.osc_zoom_factor = 1,
+	},
+	{
+		.str = "1.0us",
+		.osc_time = 1000 , /*  base on 750ns */
+		.osc_clock_ex = 1,
+		.osc_unit = OSC_UINT_NS,
+		.osc_zoom_factor = 1,
+		.osc_ins = 0x30, /* transfer to 1us for 750ns */
 	},
 	{
 		.str = "2.5us",

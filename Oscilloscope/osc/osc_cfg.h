@@ -47,6 +47,8 @@ typedef struct{
 	unsigned int osc_clock_ex;
 	/* Zoom Factor */
 	unsigned int osc_zoom_factor;
+	/* ins */
+	unsigned int osc_ins;
 	/* end if */
 }osc_time_def;
 /* voltage scale */

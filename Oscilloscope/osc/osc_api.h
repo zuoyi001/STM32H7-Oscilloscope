@@ -28,8 +28,8 @@
 void osc_stop_adc_clock(void);
 void osc_start_adc_clock(unsigned char internal);
 void osc_read_fifo_data(unsigned char clock_sta);
-int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag);
-static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m );
+int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag,unsigned int);
+static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m ,unsigned int);
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d);
 void osc_fifo_clock(unsigned short sta);
 unsigned short osc_read_key_menu(void);
