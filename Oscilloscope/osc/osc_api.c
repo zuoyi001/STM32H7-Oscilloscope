@@ -430,8 +430,30 @@ void osc_coupling_setting(unsigned char chn,unsigned char dcac)
 		hal_write_gpio(DIO_CH2_DCAC,dcac);
 	}
 }
-
-
+/* pwr */
+void osc_power_en(unsigned char mode)
+{
+	if( mode == 0 )
+	{
+		hal_write_gpio(DIO_PWR_CTRL,0); // pwr off
+	}
+	else
+	{
+		hal_write_gpio(DIO_PWR_CTRL,1); // pwr on
+	}
+}
+/* pwr */
+void osc_beep_en(unsigned char mode)
+{
+	if( mode == 0 )
+	{
+		hal_write_gpio(DIO_BEEP_ENABLE,0); // pwr off
+	}
+	else
+	{
+		hal_write_gpio(DIO_BEEP_ENABLE,1); // pwr on
+	}
+}
 
 
 

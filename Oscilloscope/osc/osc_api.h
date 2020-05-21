@@ -40,6 +40,8 @@ void osc_dac_offset(unsigned char chn,signed short offset_mv);
 void osc_set_key_addr(unsigned char addr_cnt);
 int osc_read_com2(void);
 void osc_coupling_setting(unsigned char chn,unsigned char dcac);
+void osc_power_en(unsigned char mode);
+void osc_beep_en(unsigned char mode);
 
 #endif
 

@@ -57,6 +57,10 @@
 #define DIO_CD4051_ADDR_C   (5)
 /* COM data 2 */
 #define DIO_CD4051_COM2     (7)
+/* pwr ctrl pin */
+#define DIO_PWR_CTRL        (30)
+/* beep */
+#define DIO_BEEP_ENABLE     (29)
 /* */
 /* typedef gpio config table */
 

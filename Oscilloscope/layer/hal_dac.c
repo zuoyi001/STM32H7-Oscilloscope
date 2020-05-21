@@ -30,7 +30,15 @@ DAC_HandleTypeDef DAC1_Handler;
 static int hal_dac_init(void)
 {
 	/* enable clock */
+	GPIO_InitTypeDef GPIO_Initure;
+
 	__HAL_RCC_DAC12_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+
+	GPIO_Initure.Pin=GPIO_PIN_5;
+	GPIO_Initure.Mode=GPIO_MODE_ANALOG; 
+	GPIO_Initure.Pull=GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOA,&GPIO_Initure);
 	/* init dac */
 	DAC_ChannelConfTypeDef DACCH1_Config;
 	/* struct */

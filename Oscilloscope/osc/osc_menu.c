@@ -477,6 +477,12 @@ static void key_menu_Longfress_callback(void)
 			/* end of */
 		}		
   }
+	else
+	{
+		/* power off*/
+		osc_power_en(0);
+		/* end */
+	}
 }
 /* menu_update */
 static void menu_update(void)

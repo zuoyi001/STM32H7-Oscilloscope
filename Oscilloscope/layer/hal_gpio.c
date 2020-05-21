@@ -288,6 +288,24 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},
+	/* 29 */
+	{
+		.capital = "PC2 BEEP",
+		.GPIO_GROUP = GPIOC,
+		.GPIO_PIN = GPIO_PIN_2,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
+	/* 30 */
+	{
+		.capital = "P15 PWR EN",
+		.GPIO_GROUP = GPIOA,
+		.GPIO_PIN = GPIO_PIN_15,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},
 };
 
 /* v */
