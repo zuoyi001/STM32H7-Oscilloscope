@@ -25,11 +25,8 @@
 #include "math.h"
 #include "osc_measure.h"
 #include "stdio.h"
-/* function */
-static void osc_measure_thread(void);
-static int freq_measure_ch(unsigned char chn , char * buf);
-static int osc_measure_init(void);
-static int osc_heep(void);
+#include "osc_api.h"
+#include "osc_cfg.h"
 /* measure item enable */
 static unsigned char measure_enable_ch[2][3];
 /* Private includes ----------------------------------------------------------*/
@@ -56,7 +53,7 @@ const osc_measure_def osc_measure_ch[] =
 	/* 3 */
 	{
 		.capital = "·å·åÖµ",
-		.method = 0,
+		.method = peek_measure_ch,
 	},
 	/* 4 */
 	{
@@ -95,10 +92,10 @@ static int osc_heep(void)
 	/* set default settings */
 	measure_enable_ch[0][0] = 1;
 	measure_enable_ch[0][1] = 3;
-	measure_enable_ch[0][2] = 6;
+	measure_enable_ch[0][2] = 7;
 	/* ch2 */
 	measure_enable_ch[1][0] = 1;
-	measure_enable_ch[1][1] = 2;
+	measure_enable_ch[1][1] = 3;
 	measure_enable_ch[1][2] = 7;	
 	/*----------------------*/
 	return FS_OK;
@@ -217,13 +214,60 @@ static int freq_measure_ch(unsigned char chn , char * buf)
 			sprintf(buf,"%3.1fHz ",freq );
 		}			
 	}
+	/* get len */
+	osc_set_str(buf,8);	
 	/* return OK */
 	return FS_OK;
 }
+/* p-p measure */
+static int peek_measure_ch(unsigned char chn , char * buf)
+{
+	/* osc vol scale */
+	const osc_vol_scale_def * ovs;
+	/* get peek value */
+	signed char max,min;
+	/* get */
+	int ret = osc_api_peek(chn,&max,&min);
+	/* check */
+	if( ret == FS_OK )
+	{
+		/* get vol scale */
+		ovs = osc_get_vol_scale(chn);
+		/* calbrate ppk */
+		float peek_mv = ((float)max * 4.0f - (float)min* 4.0f) / 128.0f * ovs->mv_int;
+		/* show */
+		if( peek_mv >= 1000 )
+		{
+			/* change */
+			sprintf(buf,"%2.2fV", peek_mv / 1000.0f);				
+		}
+		else
+		{
+			sprintf(buf,"%3.1fmV", peek_mv );
+		}
+		/* get len */
+		osc_set_str(buf,7);
+		/* return OK */
+		return FS_OK;
+	}
+	/* bad data */
+	return FS_ERR;
+}
+/* check and set str len */
+static void osc_set_str(char * bdf,unsigned int limit)
+{
+	/* get len */
+	int len = strlen(bdf);
+	/* check */
+	if( len < limit )
+	{
+		memset( bdf + len , ' ' , limit - len );
+	}
+	/* set tail */
+	bdf[limit] = 0;	
+	/* end of func */
+}
 /* measure thread */
-
-static unsigned char itee_last = 0,nw = 0;
-
 static void osc_measure_thread(void)
 {
 	/* static buffer for measure */
@@ -256,14 +300,6 @@ static void osc_measure_thread(void)
 			/*------------*/
 		}
 	}
-	
-	if( itee_last != nw )
-	{
-		osc_measure_item_update(0,0,nw,1);
-		osc_measure_item_update(1,1,nw,1);
-	}
-	
-	 itee_last = nw;
 }
 
 

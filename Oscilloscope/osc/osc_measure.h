@@ -21,7 +21,15 @@
 #ifndef __OSC_MEASURE_H__
 #define __OSC_MEASURE_H__
 /* Includes ------------------------------------------------------------------*/
+/* function */
+static void osc_measure_thread(void);
+static int freq_measure_ch(unsigned char chn , char * buf);
+static int osc_measure_init(void);
+static int osc_heep(void);
+static int peek_measure_ch(unsigned char chn , char * buf);
+static void osc_set_str(char * bdf,unsigned int limit);
 
+/* deinen */
 typedef struct
 {
 	const char * capital;

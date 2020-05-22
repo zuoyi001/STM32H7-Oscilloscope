@@ -805,7 +805,7 @@ void osc_calculate_measure_ch(window_def * pwin,widget_def *wd,int num,char ** i
 		/* set ch1 */
 		if( i % 2 )
 		{
-			wd[i].msg.x = eh * (i/2) + 32 + 16 * strl / 2 + 16;
+			wd[i].msg.x = eh * (i/2) + 32 + 16 * strl / 2 + 8;
 		}
 		else
 		{

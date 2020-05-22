@@ -42,6 +42,7 @@ int osc_read_com2(void);
 void osc_coupling_setting(unsigned char chn,unsigned char dcac);
 void osc_power_en(unsigned char mode);
 void osc_beep_en(unsigned char mode);
+int osc_api_peek(unsigned char chn , signed char * max,signed char * min);
 
 #endif
 

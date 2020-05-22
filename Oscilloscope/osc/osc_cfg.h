@@ -73,6 +73,7 @@ void osc_trig_scale_thread(unsigned char chn);
 const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn);
 static void osc_cfg_task(void);
 static void osc_vertical_offset_tips(unsigned char chn,signed short mv);
+const osc_vol_scale_def * osc_get_vol_scale(unsigned char chn);
 
 #endif
 

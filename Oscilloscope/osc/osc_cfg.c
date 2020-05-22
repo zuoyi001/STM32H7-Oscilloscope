@@ -27,6 +27,7 @@
 #include "osc_api.h"
 #include "hal_dac.h"
 #include "stdio.h"
+#include "osc_menu.h"
 /* out dac part */
 static signed short trig_dac_part_offset = 0;
 static signed short trig_dac_part_rot = 0;
@@ -381,6 +382,16 @@ static int osc_time_scan_leng(void)
 static int osc_vol_scale_leng(void)
 {
 	return sizeof(osc_vol_offset_scale_ch1) / sizeof(osc_vol_offset_scale_ch1[0]);
+}
+/* get */
+const osc_vol_scale_def * osc_get_vol_scale(unsigned char chn)
+{
+	/* get run msg for osc */
+	osc_run_msg_def * runmsg = get_run_msg();
+	/* index */
+	unsigned char index = runmsg->vol_scale_ch[chn];
+	/* return OK */
+	return &osc_vol_offset_scale_ch1[index];
 }
 /* osc_cfg_thread */
 const osc_time_def * osc_scan_thread(void)

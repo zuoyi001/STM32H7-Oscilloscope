@@ -33,6 +33,9 @@ static signed short osc_chn_offset[2];
 /* temp data */
 static signed char tmp_buffer_ch1[1000];
 static signed char tmp_buffer_ch2[1000];
+/* max and min */
+static signed char max_ch[2],min_ch[2];
+static unsigned char peek_flag_up[2];
 /* Private includes ----------------------------------------------------------*/
 void osc_stop_adc_clock(void)
 {
@@ -288,13 +291,62 @@ static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsig
 		ch1_pos = ch1_o;
 		ch2_pos = ch2_o;
 	}
+	/* clear the flags and init data */
+	max_ch[0] = -126;
+	min_ch[0] =  126;
+	max_ch[1] = -126;
+	min_ch[1] =  126;
 	/* create the data */
   for( int i = 0 ; i < area->total_pixel_h ; i ++ )
 	{
 		/* create the ddtd */
 		ch1_m[i] = area->total_pixel_v - (float)(ch1_pos[i] + 128) / 255.0f * area->total_pixel_v;
 		ch2_m[i] = area->total_pixel_v - (float)(ch2_pos[i] + 128) / 255.0f * area->total_pixel_v;
+		/* check ch1 max */
+		if( ch1_pos[i] > max_ch[0] )
+		{
+			max_ch[0] = ch1_pos[i];
+		}
+		/* check ch1 min */
+		if( ch1_pos[i] < min_ch[0] )
+		{
+			min_ch[0] = ch1_pos[i];
+		}
+		/* check ch2 max */
+		if( ch2_pos[i] > max_ch[1] )
+		{
+			max_ch[1] = ch2_pos[i];
+		}
+		/* check ch1 min */
+		if( ch2_pos[i] < min_ch[1] )
+		{
+			min_ch[1] = ch2_pos[i];
+		}		
+		/* flags */
+		peek_flag_up[0] = 1;	
+    peek_flag_up[1] = 1;			
 	}
+}
+/* osc api get max and min */
+int osc_api_peek(unsigned char chn , signed char * max,signed char * min)
+{
+	if( chn >= 2 )
+	{
+		return FS_ERR;
+	}
+	/* flags */
+	if( peek_flag_up[chn] == 1 )
+	{
+		/* set data */
+		*max = max_ch[chn];
+		*min = min_ch[chn];
+		/* clear */
+		peek_flag_up[chn] = 0;
+		/* return OK */
+		return FS_OK;
+	}
+	/* return ERROR */
+	return FS_ERR;
 }
 /* osc output dac */
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d)
