@@ -56,6 +56,8 @@ typedef struct
 {
 	/* show * str */
 	char * str;
+	/* mv */
+	unsigned short mv_int;
 	/* gain dac */
 	unsigned short gain_dac;
 	/* gain_offset ch1*/

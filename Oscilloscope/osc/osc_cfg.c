@@ -206,6 +206,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 0 */
 	{
 		.str = "5mV  ",
+		.mv_int = 5,
 		.gain_dac = 500,
 		.gain_offset_ch[0] = -150,
 		.gain_offset_ch[1] = -150,
@@ -214,6 +215,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 1 */
 	{
 		.str = "10mV ",
+		.mv_int = 10,
 		.gain_dac = 920,
 		.gain_offset_ch[0] = -72,
 		.gain_offset_ch[1] = -77,
@@ -222,6 +224,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 2 */
 	{
 		.str = "20mV ",
+		.mv_int = 20,
 		.gain_dac = 1300,
 		.gain_offset_ch[0] = -30,
 		.gain_offset_ch[1] = -40,
@@ -230,6 +233,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 3 */
 	{
 		.str = "50mV ",
+		.mv_int = 50,
 		.gain_dac = 1850,
 		.gain_offset_ch[0] = -10,
 		.gain_offset_ch[1] = -20,
@@ -238,6 +242,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 4 */
 	{
 		.str = "100mV",
+		.mv_int = 100,
 		.gain_dac = 2270,
 		.gain_offset_ch[0] = 0,
 		.gain_offset_ch[1] = -13,
@@ -246,6 +251,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 5 */
 	{
 		.str = "200mV",
+		.mv_int = 200,
 		.gain_dac = 2720,
 		.gain_offset_ch[0] = 8,
 		.gain_offset_ch[1] = -5,
@@ -254,6 +260,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 6 */
 	{
 		.str = "500mV",
+		.mv_int = 500,
 		.gain_dac = 1460,
 		.gain_offset_ch[0] = -28,
 		.gain_offset_ch[1] = -38,
@@ -262,6 +269,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 7 */
 	{
 		.str = "1V   ",
+		.mv_int = 1000,
 		.gain_dac = 1860,
 		.gain_offset_ch[0] = -10,
 		.gain_offset_ch[1] = -22,
@@ -270,6 +278,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 8 */
 	{
 		.str = "2V   ",
+		.mv_int = 2000,
 		.gain_dac = 2300,
 		.gain_offset_ch[0] = 0,
 		.gain_offset_ch[1] = -12,
@@ -278,6 +287,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 9 */
 	{
 		.str = "5V   ",
+		.mv_int = 5000,
 		.gain_dac = 2850,
 		.gain_offset_ch[0] = 5,
 		.gain_offset_ch[1] = -10,
@@ -286,6 +296,7 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	/* 10 */
 	{
 		.str = "10V  ",
+		.mv_int = 10000,
 		.gain_dac = 4095,
 		.gain_offset_ch[0] = 5,
 		.gain_offset_ch[1] = -10,
