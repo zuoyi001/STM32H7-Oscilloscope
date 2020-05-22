@@ -72,6 +72,8 @@ void osc_offset_scale_thread(unsigned char chn);
 void osc_trig_scale_thread(unsigned char chn);
 const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn);
 static void osc_cfg_task(void);
+static void osc_vertical_offset_tips(unsigned char chn,signed short mv);
+
 #endif
 
 

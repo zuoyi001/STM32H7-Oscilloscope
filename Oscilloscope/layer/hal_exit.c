@@ -69,7 +69,7 @@ static void osc_rot_isr(unsigned char index,unsigned char up_dm)
 		/* set flag */
 		rot_flag[index] = 1;
 		/* time ctrl */
-		if( index == 2 )
+		if( index == 2 || index == 3 )
 		{
 			/* get timestmp */
 			unsigned int now = hal_sys_time_us();
@@ -79,10 +79,10 @@ static void osc_rot_isr(unsigned char index,unsigned char up_dm)
 			if( diff > 5 )
 			{
 				/* cal */
-				if( diff < 300 )
+				if( diff < 100 )
 				{
 					/* set zm */
-					signed short zm = 21 - (2.0f)*(float)diff / 30.0f;  
+					signed short zm = 11 - (float)diff / 10.0f;  
 					/* com */
 					rot_updm[index] += up_dm ? (-zm) : zm;
 				}

@@ -26,6 +26,7 @@
 #include "osc_ui.h"
 #include "osc_api.h"
 #include "hal_dac.h"
+#include "stdio.h"
 /* out dac part */
 static signed short trig_dac_part_offset = 0;
 static signed short trig_dac_part_rot = 0;
@@ -474,10 +475,35 @@ void osc_offset_scale_thread(unsigned char chn)
 		osc_dac_offset(chn,out_dac_mv);
 		/* update dac trig */
 		osc_set_dac(trig_dac_part_offset + trig_dac_part_rot);
+		/* show */
+    osc_vertical_offset_tips(chn,out_dac_mv);
 	}
 	/* ipdate */
 	lsat_vol = vol_offset_scale;
 	last_chn = chn;
+}
+/* show vertical vol */
+static void osc_vertical_offset_tips(unsigned char chn,signed short mv)
+{
+	/* test */
+	static char buf[32];
+	/* get rotation data */
+	signed short osc_vs = osc_rot_sta(OSC_VOL_SCALE);
+	/* transfer to vol */
+	float fmv = (float)mv / (-128.0f) * (float)osc_vol_offset_scale_ch1[osc_vs].mv_int;
+	/* change unit */
+	if( fmv >= 1000 || fmv <= -1000 )
+	{
+		/* create data */
+		sprintf(buf,"通道%d 垂直位置 % 4.2f%s",chn+1,fmv / 1000,"V     ");
+	}
+	else
+	{
+		/* create data */
+		sprintf(buf,"通道%d 垂直位置 % 4.2f%s",chn+1,fmv,"mV    ");
+	}
+	/* show data */
+	osc_ui_tips_str(buf);	
 }
 /* voltage thread */
 void osc_trig_scale_thread(unsigned char chn)

@@ -29,6 +29,6 @@ tex4 = GBK2312_ASSETS_HZ16("自动");
 tex4 = GBK2312_ASSETS_HZ16("正常");
 tex4 = GBK2312_ASSETS_HZ16("单次");
 tex4 = GBK2312_ASSETS_HZ16("智能源");
-tex4 = GBK2312_ASSETS_HZ16("边沿上升下降");
+tex4 = GBK2312_ASSETS_HZ16("边沿上升下降水平垂直位置格");
 
 
