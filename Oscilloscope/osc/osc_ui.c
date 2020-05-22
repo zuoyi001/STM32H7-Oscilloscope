@@ -81,7 +81,7 @@ int osc_create_ui(void)
 	/* menu */
 	osc_calculate_menu(&win_menu,menu_text,6,menu_table);
 	/* tips */
-	osc_calculate_tips(&win_group[2],&tips_text,TIPS_NORMAL,"扫描时间已到达最大值");
+	osc_calculate_tips(&win_group[2],&tips_text,TIPS_NORMAL,"  ");
 	/* arrow */
 	osc_calculate_base_arrow(&win_main,&base_vol_arrow[0],1);
 	osc_calculate_base_arrow(&win_main,&base_vol_arrow[1],2);
@@ -101,10 +101,43 @@ void osc_ui_time_str(char * str)
 {
 	gui_set_wid_text(&time_ch[1],str);
 }
+/* void osc ui tips show hide */
+void osc_ui_tips_show(unsigned char mode)
+{
+	/* show or hide */
+	if( mode )
+	{
+		gui_show_widget(&tips_text);
+	}
+	else
+	{
+		gui_hide_widget(&tips_text);
+	}
+}
 /* set time text */
 void osc_ui_tips_str(char * str)
 {
-	gui_set_wid_text(&tips_text,str);
+	/* check hide */
+	if( CHECK_HIDE(tips_text.msg.wflags))
+	{
+		/* show */
+		gui_show_widget(&tips_text);
+		/* set text */
+		gui_set_wid_text(&tips_text,str);		
+	}
+}
+/* set tip text dir*/
+void osc_ui_tips_str_dir(char * str)
+{
+	/* show */
+	gui_show_widget(&tips_text);
+	/* set text */
+	gui_set_wid_text(&tips_text,str);		
+}
+/* get tips sta */
+int osc_ui_tips_sta(void)
+{
+	return CHECK_HIDE(tips_text.msg.wflags) ? 1 : 0;
 }
 /* move arrow */
 void osc_ui_move_offset_arrow(unsigned char chn,unsigned short pos)

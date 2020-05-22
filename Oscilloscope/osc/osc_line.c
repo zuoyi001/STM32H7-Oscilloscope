@@ -230,7 +230,7 @@ void osc_create_lines(gui_dev_def * dev,unsigned short * line_d,unsigned char mo
 		it = 187;
 	}
 	/* draws */
-	for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - zm ; i += zm )
+	for( int i = 0 ; i < msg_area->pixel_horizontal * msg_area->num_horizontal - 1 ; i += zm )
 	{
 	/* create lines */
 		osc_draw_lines(dev,msg_area->start_pos_x + i,msg_area->start_pos_y + line_d[it] , msg_area->start_pos_x + i + zm ,msg_area->start_pos_y + line_d[it+1],mode,chn,index);

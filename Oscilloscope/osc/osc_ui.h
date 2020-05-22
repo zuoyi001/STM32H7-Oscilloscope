@@ -53,6 +53,9 @@ void osc_ui_set_csh_show(unsigned char chn,unsigned char mode);
 void osc_ui_set_trig_text(const char * text);
 void osc_ui_set_trig_src(const char * text);
 void osc_ui_show_offset_arrow(unsigned char chn , unsigned char mode);
+void osc_ui_tips_show(unsigned char mode);
+void osc_ui_tips_str_dir(char * str);
+int osc_ui_tips_sta(void);
 /* Private includes ----------------------------------------------------------*/
 
 #endif
