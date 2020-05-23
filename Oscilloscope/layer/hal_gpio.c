@@ -102,7 +102,7 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 	/* 8 */
 	{
 		.capital = "CLOCK STA",/* match old bottom board */
-		.GPIO_GROUP = GPIOD,
+		.GPIO_GROUP = GPIOC,
 		.GPIO_PIN = GPIO_PIN_2,
 		.GPIO_MODE = GPIO_MODE_INPUT,
 		.GPIO_PULL = GPIO_PULLUP,
@@ -290,8 +290,8 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 	},
 	/* 29 */
 	{
-		.capital = "PC2 BEEP",
-		.GPIO_GROUP = GPIOC,
+		.capital = "PB2 USB-S",
+		.GPIO_GROUP = GPIOB,
 		.GPIO_PIN = GPIO_PIN_2,
 		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
 		.GPIO_PULL = GPIO_PULLDOWN,

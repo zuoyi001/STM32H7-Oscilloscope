@@ -495,15 +495,15 @@ void osc_power_en(unsigned char mode)
 	}
 }
 /* pwr */
-void osc_beep_en(unsigned char mode)
+void osc_usbs_en(unsigned char mode)
 {
 	if( mode == 0 )
 	{
-		hal_write_gpio(DIO_BEEP_ENABLE,0); // pwr off
+		hal_write_gpio(DIO_USB_S_ENABLE,0); // pwr off
 	}
 	else
 	{
-		hal_write_gpio(DIO_BEEP_ENABLE,1); // pwr on
+		hal_write_gpio(DIO_USB_S_ENABLE,1); // pwr on
 	}
 }
 

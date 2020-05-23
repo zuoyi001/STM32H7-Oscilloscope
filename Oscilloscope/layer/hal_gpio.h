@@ -27,7 +27,7 @@
 /* hal afio map */
 #define FIFO_DATA           (0)
 #define DIO_CLOCK_SEL       (15)
-#define DIO_CLOCK_STA       (6)
+#define DIO_CLOCK_STA       (8)
 #define DIO_R0              (11)
 #define DIO_R1              (12)
 #define DIO_R2              (13)
@@ -60,7 +60,7 @@
 /* pwr ctrl pin */
 #define DIO_PWR_CTRL        (30)
 /* beep */
-#define DIO_BEEP_ENABLE     (29)
+#define DIO_USB_S_ENABLE     (29)
 /* */
 /* typedef gpio config table */
 
