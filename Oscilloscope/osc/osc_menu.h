@@ -79,7 +79,12 @@ void osc_clear_all_lines(void);
 static void osc_signle_mode(void);
 void osc_single_thread(void);
 static void key_menu_Longfress_callback(void);
-
+static void key_trig_short_click(void);
+static void key_chnn_short_click(void);
+static void key_swi_short_click(void);
+static void key_math_short_click(void);
+static void key_onoff_short_click(void);
+static void key_onoff_long_click(void);
 #endif
 
 

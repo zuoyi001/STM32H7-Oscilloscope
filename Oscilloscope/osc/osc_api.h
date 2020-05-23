@@ -43,6 +43,8 @@ void osc_coupling_setting(unsigned char chn,unsigned char dcac);
 void osc_power_en(unsigned char mode);
 void osc_beep_en(unsigned char mode);
 int osc_api_peek(unsigned char chn , signed char * max,signed char * min);
+int osc_read_com1(void);
+void osc_backlight_en(unsigned short mode);
 
 #endif
 

@@ -87,8 +87,8 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOC,
 		.GPIO_PIN = GPIO_PIN_1,
 		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_PULLUP,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},		
 	/* 7 */
 	{
@@ -96,8 +96,8 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_GROUP = GPIOD,
 		.GPIO_PIN = GPIO_PIN_6,
 		.GPIO_MODE = GPIO_MODE_INPUT,
-		.GPIO_PULL = GPIO_NOPULL,
-		.GPIO_DEFAULT = GPIO_PIN_SET,
+		.GPIO_PULL = GPIO_PULLDOWN,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},
 	/* 8 */
 	{
@@ -306,6 +306,15 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_PULL = GPIO_PULLDOWN,
 		.GPIO_DEFAULT = GPIO_PIN_RESET,
 	},
+	/* 31 */
+	{
+		.capital = "LCD BACK light",
+		.GPIO_GROUP = GPIOB,
+		.GPIO_PIN = GPIO_PIN_6,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_SET,
+	},	
 };
 
 /* v */

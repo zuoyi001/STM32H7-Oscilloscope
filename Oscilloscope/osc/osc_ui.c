@@ -26,6 +26,8 @@
 #include "display_dev.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_INODE_REGISTER("osc_ui",osc_create_ui,0,0,1);
+/* create cfg task gui detecter task run as 100 ms */
+FOS_TSK_REGISTER(osc_ui_task,PRIORITY_4,1000);
 /* define win */
 window_def win_main;
 window_def win_group[4];
@@ -58,6 +60,8 @@ char * menu_table[6] = {"系统菜单","通道选择\n CH1","耦合方式\n DC","触发方式\n 
 char * mert43[5] = {"CH1:DC","CH2:AC","Auto","TRIG:CH1","TIME:0s"};
 /* gui dev */
 static gui_dev_def * dev;
+/* hold times */
+static unsigned short tips_hold_time_s = 0;
 /* osc create ui */
 int osc_create_ui(void)
 {
@@ -96,6 +100,23 @@ int osc_create_ui(void)
 	/* return */
 	return FS_OK;
 }
+/* osc ui task */
+static void osc_ui_task(void)
+{
+	/* tips */
+	if( osc_ui_tips_sta() == 0 )
+	{
+		/* shown */
+		if( tips_hold_time_s == 0 )
+		{
+			osc_ui_tips_show(0);//HIDE THE tips
+		}
+		else
+		{
+			tips_hold_time_s --;
+		}
+	}	
+}
 /* set time text */
 void osc_ui_time_str(char * str)
 {
@@ -108,6 +129,8 @@ void osc_ui_tips_show(unsigned char mode)
 	if( mode )
 	{
 		gui_show_widget(&tips_text);
+		/* set hold time */		
+		tips_hold_time_s = 5; // 5s			
 	}
 	else
 	{
@@ -123,7 +146,9 @@ void osc_ui_tips_str(char * str)
 		/* show */
 		gui_show_widget(&tips_text);
 		/* set text */
-		gui_set_wid_text(&tips_text,str);		
+		gui_set_wid_text(&tips_text,str);
+    /* set hold time */		
+		tips_hold_time_s = 5; // 5s
 	}
 }
 /* set tip text dir*/
@@ -133,6 +158,8 @@ void osc_ui_tips_str_dir(char * str)
 	gui_show_widget(&tips_text);
 	/* set text */
 	gui_set_wid_text(&tips_text,str);		
+	/* set hold time */		
+	tips_hold_time_s = 5; // 5s	
 }
 /* get tips sta */
 int osc_ui_tips_sta(void)

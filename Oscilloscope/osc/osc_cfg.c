@@ -33,7 +33,6 @@ static signed short trig_dac_part_offset = 0;
 static signed short trig_dac_part_rot = 0;
 /* hold time */
 static unsigned short trig_lines_hold_time_s = 0;
-static unsigned short tips_hold_time_s = 0;
 /* create cfg task gui detecter task run as 100 ms */
 FOS_TSK_REGISTER(osc_cfg_task,PRIORITY_4,1000);
 /* Private includes ----------------------------------------------------------*/
@@ -321,19 +320,6 @@ static void osc_cfg_task(void)
 	{
 		trig_lines_hold_time_s --;
 	}
-	/* tips */
-	if( osc_ui_tips_sta() == 0 )
-	{
-		/* shown */
-		if( tips_hold_time_s == 0 )
-		{
-			osc_ui_tips_show(0);//HIDE THE tips
-		}
-		else
-		{
-			tips_hold_time_s --;
-		}
-	}
 }
 /* set scan clock */
 const osc_time_def * osc_scan_time(unsigned int index)
@@ -415,7 +401,6 @@ const osc_time_def * osc_scan_thread(void)
 		{
 			ste = 0;
 			osc_ui_tips_str("扫描时间已经到达最大值");
-			tips_hold_time_s = 5;
 		}
 	}
 	else if( osc_rot < 0 )
@@ -429,7 +414,6 @@ const osc_time_def * osc_scan_thread(void)
 		{
 			ste = 0;
 			osc_ui_tips_str("扫描时间已经到达最小值");
-			tips_hold_time_s = 5;
 		}
 	}
 	else
@@ -529,8 +513,6 @@ static void osc_vertical_offset_tips(unsigned char chn,signed short mv)
 		/* create data */
 		sprintf(buf,"通道%d 垂直位置 % 4.2f%s",chn+1,fmv,"mV    ");
 	}
-	/* set hold time */
-	tips_hold_time_s = 5;
 	/* show */
 	osc_ui_tips_str_dir(buf);	
 }
@@ -622,7 +604,6 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 		{
 			ste = 0;
 			osc_ui_tips_str("垂直电压已到达最大值");
-			tips_hold_time_s = 5;
 		}
 	}
 	else if( osc_vs_t < 0 )
@@ -636,7 +617,6 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 		{
 			ste = 0;
 			osc_ui_tips_str("垂直电压已到达最小值");
-			tips_hold_time_s = 5;
 		}
 	}
 	else

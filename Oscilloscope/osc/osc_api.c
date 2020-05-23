@@ -409,11 +409,6 @@ void osc_fifo_clock(unsigned short sta)
 {
 	hal_write_gpio(FIFO_DIO_TR,sta);
 }
-/* unsigned read key menu */
-unsigned short osc_read_key_menu(void)
-{
-	return hal_read_gpio(KEY_MENU);
-}
 /* coune */
 int osc_read_rot_idle(unsigned index)
 {
@@ -469,6 +464,11 @@ int osc_read_com2(void)
 {
 	return hal_read_gpio(DIO_CD4051_COM2) ? 1 : 0;
 }
+/* osc read com1 sta */
+int osc_read_com1(void)
+{
+	return hal_read_gpio(DIO_CD4051_COM1) ? 1 : 0;
+}
 /* void dcac coupling */
 void osc_coupling_setting(unsigned char chn,unsigned char dcac)
 {
@@ -506,8 +506,18 @@ void osc_usbs_en(unsigned char mode)
 		hal_write_gpio(DIO_USB_S_ENABLE,1); // pwr on
 	}
 }
-
-
+/* pwr */
+void osc_backlight_en(unsigned short mode)
+{
+	if( mode == 0 )
+	{
+		hal_write_gpio(DIO_BACK_LIGHT_EN,0); // light off
+	}
+	else
+	{
+		hal_write_gpio(DIO_BACK_LIGHT_EN,1); // light on
+	}
+}
 
 
 

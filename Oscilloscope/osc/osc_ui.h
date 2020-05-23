@@ -56,6 +56,8 @@ void osc_ui_show_offset_arrow(unsigned char chn , unsigned char mode);
 void osc_ui_tips_show(unsigned char mode);
 void osc_ui_tips_str_dir(char * str);
 int osc_ui_tips_sta(void);
+static void osc_ui_task(void);
+
 /* Private includes ----------------------------------------------------------*/
 
 #endif

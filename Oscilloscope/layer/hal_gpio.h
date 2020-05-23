@@ -35,7 +35,6 @@
 #define FIFO_DATA_D8        (20)
 #define FIFO_FULL0          (1)
 #define FIFO_DIO_TR         (10)
-#define KEY_MENU            (6)
 /* ROT 7 ~ 0 */
 #define DIO_ROT_TIME_UP     (21)
 #define DIO_ROT_TIME_DM     (22)
@@ -55,12 +54,15 @@
 #define DIO_CD4051_ADDR_A   (3)
 #define DIO_CD4051_ADDR_B   (4)
 #define DIO_CD4051_ADDR_C   (5)
-/* COM data 2 */
+/* COM data 1 2 */
+#define DIO_CD4051_COM1     (6)
 #define DIO_CD4051_COM2     (7)
 /* pwr ctrl pin */
 #define DIO_PWR_CTRL        (30)
 /* beep */
-#define DIO_USB_S_ENABLE     (29)
+#define DIO_USB_S_ENABLE    (29)
+/* lcd back light */
+#define DIO_BACK_LIGHT_EN   (31)
 /* */
 /* typedef gpio config table */
 

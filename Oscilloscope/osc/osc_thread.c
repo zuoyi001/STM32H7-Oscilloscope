@@ -233,15 +233,22 @@ static void osc_thread(void)
 	osc_fifo_clock(1);
 	/* restart pwm */
 	osc_start_adc_clock(osc_time_sw->osc_clock_ex);//for test select the inter clock
-	
 }
 /* void line clear */
 void osc_clear_all_lines(void)
 {
-	osc_create_lines(dev,line_buffer_ch1[0],1,0,0,line_zoom[0]);
-	osc_create_lines(dev,line_buffer_ch2[0],1,0,1,line_zoom[0]);	
-	osc_create_lines(dev,line_buffer_ch1[1],1,1,0,line_zoom[1]);
-	osc_create_lines(dev,line_buffer_ch2[1],1,1,1,line_zoom[1]);
+	/* check zero */
+	if( line_zoom[0] != 0 )
+	{
+		osc_create_lines(dev,line_buffer_ch1[0],1,0,0,line_zoom[0]);
+		osc_create_lines(dev,line_buffer_ch2[0],1,0,1,line_zoom[0]);	
+	}
+	/* check aefo*/
+	if( line_zoom[1] != 0 )
+	{
+		osc_create_lines(dev,line_buffer_ch1[1],1,1,0,line_zoom[1]);
+		osc_create_lines(dev,line_buffer_ch2[1],1,1,1,line_zoom[1]);
+	}
 }
 
 

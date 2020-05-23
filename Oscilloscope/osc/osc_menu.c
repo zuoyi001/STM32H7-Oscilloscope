@@ -26,7 +26,7 @@
 #include "osc_cfg.h"
 #include "hal_usart.h"
 /* Private includes ----------------------------------------------------------*/
-FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,10);/* run as 10ms */
+FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,5);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
 /* create cfg task gui detecter task run as 100 ms */
 FOS_TSK_REGISTER(osc_menu_hide_thread,PRIORITY_4,1000);
@@ -45,14 +45,15 @@ const char * trig_source[2] = {"TRIG:CH1","TRIG:CH2"};
 /* static link */
 static osc_run_msg_def osc_run_msg __attribute__((at(0x24000000 + 800 * 600 + 64)));;
 /* static key sta */
-static unsigned char com2_sta[8];
+static unsigned char com2_sta[16];
 static unsigned int cd_cnt = 0;
 /* menu show or hide */
 static unsigned char menu_hold_time_s = 0;
 /* LONG press cnt */
 #define LONG_PRESS_LIMIT (12)
 /* function */
-static void (*com_callbacks[9])(void);
+static void (*com_callbacks[32])(void);
+static unsigned char key_default_sta[16];
 /* heap init */
 static int osc_menu_heep(void)
 {
@@ -62,7 +63,19 @@ static int osc_menu_heep(void)
 	com_callbacks[5] = key_single_callback;
 	com_callbacks[6] = key_measure_callback;
 	com_callbacks[7] = key_runstop_callback;
-	com_callbacks[8] = key_menu_Longfress_callback;
+	/* set callbacks */
+	com_callbacks[12] = key_trig_short_click;
+	com_callbacks[10] = key_chnn_short_click;
+	com_callbacks[15] = key_swi_short_click;
+	com_callbacks[14] = key_math_short_click;
+	com_callbacks[13] = key_onoff_short_click;
+	/* long press */
+	com_callbacks[29] = key_onoff_long_click; // 13 + 16
+	com_callbacks[18] = key_menu_Longfress_callback; // 2 + 16 
+	/* set default sta */
+	memset(key_default_sta,1,sizeof(key_default_sta));
+	/* set power key */
+	key_default_sta[13] = 0;
 	/* return */
 	return FS_OK;
 }
@@ -88,20 +101,34 @@ static int osc_menu_init(void)
 /* thread */
 static void osc_menu_thread(void)
 {
+	/* logic */
+	static unsigned char logic_cd = 0;
 	/* set addr */
-	osc_set_key_addr(cd_cnt);
-	/* read data */
-	com2_sta[cd_cnt] = osc_read_com2();
-	/* next and limit */
-	cd_cnt ++ ;
-	/* set limit */
-	if( cd_cnt >= 8 )
+	if( logic_cd == 0 )
 	{
-		/* check event */
-		check_COM2_event(com2_sta,8);
-		/* clear */
-		cd_cnt = 0;
+		osc_set_key_addr(cd_cnt);
 	}
+	else
+	{
+		/* read key */
+		com2_sta[cd_cnt + 8] = osc_read_com1();	
+		/* read com2 */
+		com2_sta[cd_cnt] = osc_read_com2();
+		/* NEXT ADDR */
+		cd_cnt ++ ;
+		/* set limit */
+		if( cd_cnt >= 8 )
+		{
+			/* check event */
+			check_COM2_event(com2_sta,16);
+			/* clear */
+			cd_cnt = 0;
+		}
+    /* CLEAR LOGIC */		
+	}
+	/* set logic */
+	logic_cd ^= 1;
+	/* end of */
 }
 /* menu show */
 static void osc_menu_hide_thread(void)
@@ -124,14 +151,14 @@ static void osc_menu_hide_thread(void)
 static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 {
 	/* key flags */
-	static unsigned char key_flags[8];
-	static unsigned int longfress_cnt = 0;
-	static unsigned char once_time = 0;
+	static unsigned char key_flags[16];
+	static unsigned int longfress_cnt[16];
+	static unsigned char once_time[16];
 	/* flags */
 	for( int i = 0 ; i < len ; i ++ )
 	{
 		/* key check */
-		if( sta_buf[i] == 1 )
+		if( sta_buf[i] == key_default_sta[i] )
 		{
 			/* check cde */
 			if( key_flags[i] == 1 )
@@ -139,7 +166,7 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 				/* clear */
 				key_flags[i] = 0;
 				/* long fress */
-				if( i != 2 || longfress_cnt < LONG_PRESS_LIMIT )
+				if( once_time[i] == 0 )
 				{
 					/* send key event */
 					if( com_callbacks[i] != 0 )
@@ -147,13 +174,16 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 						/* run callback functions */
 						com_callbacks[i]();
 						/* set hold time */
-						menu_hold_time_s = 50;
+						if( i < 8 )
+						{
+							menu_hold_time_s = 50;
+						}
 						/* -------------- */
 					}
 			  }
 				/* clear */
-				longfress_cnt = 0;
-				once_time = 0;
+				longfress_cnt[i] = 0;
+				once_time[i] = 0;
 				/* -------------- */
 			}
 		}
@@ -161,23 +191,19 @@ static void check_COM2_event(unsigned char * sta_buf,unsigned int len)
 		{
 			/* match low level */
 			key_flags[i] = 1;
-			/* match low level */
-			if( i == 2 )
+			/* get time */
+			longfress_cnt[i] ++;
+			/* 1S */
+			if( longfress_cnt[i] >= LONG_PRESS_LIMIT && once_time[i] == 0)
 			{
-				/* get time */
-				longfress_cnt ++;
-				/* 1S */
-				if( longfress_cnt >= LONG_PRESS_LIMIT && once_time == 0)
+				/* clear */
+				once_time[i] = 1;
+				/* do the callback  */
+				if( com_callbacks[i + 16] )
 				{
-					/* clear */
-					once_time = 1;
-					/* do the callback  */
-					if( com_callbacks[8] )
-					{
-						com_callbacks[8]();
-					}
-					/* ---------------- */
+					com_callbacks[i + 16]();
 				}
+				/* ---------------- */
 			}
 		}
   }
@@ -479,12 +505,49 @@ static void key_menu_Longfress_callback(void)
 			/* end of */
 		}		
   }
+}
+/* key off and on short click */
+static void key_trig_short_click(void)
+{
+	
+}
+/* key off and on short click */
+static void key_chnn_short_click(void)
+{
+	
+}
+/* key off and on short click */
+static void key_swi_short_click(void)
+{
+	
+}
+/* key off and on short click */
+static void key_math_short_click(void)
+{
+	
+}
+/* key off and on short click */
+static void key_onoff_short_click(void)
+{
+	static unsigned char first_time = 0;
+	/* check */
+	if( first_time != 0 )
+	{
+	  osc_ui_tips_str("长按关机");
+	}
 	else
 	{
-		/* power off*/
-		osc_power_en(0);
-		/* end */
+		first_time = 1;
 	}
+}
+/* key off and on short click */
+static void key_onoff_long_click(void)
+{
+	/* close back light */
+	osc_backlight_en(0);
+	/* power off*/
+	osc_power_en(0);
+	/* end */
 }
 /* menu_update */
 static void menu_update(void)
