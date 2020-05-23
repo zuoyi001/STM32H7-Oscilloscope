@@ -23,7 +23,7 @@
 #include "fos.h"
 #include "hal_dac.h"
 /* register a init inode */
-FOS_INODE_REGISTER("hal_dac",hal_dac_init,0,0,14);
+FOS_INODE_REGISTER("hal_dac",hal_dac_init,0,0,9);
 /* Handle */
 DAC_HandleTypeDef DAC1_Handler;
 /* hal init */

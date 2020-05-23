@@ -227,10 +227,6 @@ static void key_runstop_callback(void)
 			/* set */
 			osc_ui_set_one_menu_text(2,(osc_run_msg.coupling_type[foc]) ? menu_coupling[1] : menu_coupling[0]);
 			osc_ui_set_one_menu_text(5,(osc_run_msg.chn_enable[foc]) ? menu_open_chn[1] : menu_open_chn[0]);
-			/* set trig source */
-			osc_ui_set_trig_src(trig_source[foc]);
-			/* set trig source */
-			osc_run_msg.trig_source = foc;
 			/* update the pridata */
 			osc_rot_set(OSC_VOL_OFFSET_SCALE,osc_run_msg.vol_offset_scale[foc]);
 			osc_rot_set(OSC_VOL_SCALE,osc_run_msg.vol_scale_ch[foc]);
@@ -509,7 +505,12 @@ static void key_menu_Longfress_callback(void)
 /* key off and on short click */
 static void key_trig_short_click(void)
 {
-	
+	/* set trig source */
+	unsigned char foc = osc_run_msg.trig_source ^ 1;
+	/* set trig source */
+	osc_ui_set_trig_src(trig_source[foc]);
+	/* set trig source */
+	osc_run_msg.trig_source = foc;	
 }
 /* key off and on short click */
 static void key_chnn_short_click(void)

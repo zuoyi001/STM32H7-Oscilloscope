@@ -330,10 +330,6 @@ static int hal_gpio_init(void)
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOE_CLK_ENABLE();
-	__HAL_RCC_GPIOF_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
-	__HAL_RCC_GPIOH_CLK_ENABLE();
-	__HAL_RCC_GPIOI_CLK_ENABLE();
 	/* init gpio one by one */
 	for( int i = 0 ; i < sizeof(gpio_config_table) / sizeof(gpio_config_table[0]) ; i ++ )
 	{
