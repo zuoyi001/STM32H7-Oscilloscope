@@ -32,6 +32,7 @@ static int k24c02_heap_init(void)
 /* config */
 static int k24c02_config_init(void)
 {
+#if 0
 	/* write read test */
 	unsigned char te[5] = {1,2,3,4,5};
 	osc_k24c02_write(0,te,5);
@@ -39,14 +40,14 @@ static int k24c02_config_init(void)
 	unsigned char rd[5];
 	
 	osc_k24C02_read(0,rd,5);
-	
+#endif	
 	return FS_OK;
 }
 /* write delay */
 static void osc_k24c02_delay(unsigned int t)
 {
 	/* am */
-	t *= 2000;
+	t *= 200000;
 	/* wait */
 	while(t--);
 }
@@ -93,8 +94,11 @@ static void AT24CXX_WriteOneByte(unsigned short WriteAddr,unsigned char DataToWr
 	osc_k24c02_delay(10);	 
 }
 /* read many bytes */
-void osc_k24C02_read(unsigned short ReadAddr,unsigned char *pBuffer,unsigned short NumToRead)
+void osc_k24C02_read(unsigned short ReadAddr,void * pBuffer_v,unsigned short NumToRead)
 {
+	/* change */
+	unsigned char * pBuffer = pBuffer_v;
+	/*--------*/
 	while(NumToRead)
 	{
 		*pBuffer++=AT24CXX_ReadOneByte(ReadAddr++);	
@@ -102,8 +106,11 @@ void osc_k24C02_read(unsigned short ReadAddr,unsigned char *pBuffer,unsigned sho
 	}
 }  
 /* write many datas */
-void osc_k24c02_write(unsigned short WriteAddr,unsigned char *pBuffer,unsigned short NumToWrite)
+void osc_k24c02_write(unsigned short WriteAddr,void *pBuffer_v,unsigned short NumToWrite)
 {
+	/* change */
+	unsigned char * pBuffer = pBuffer_v;
+	/*--------*/	
 	while(NumToWrite--)
 	{
 		AT24CXX_WriteOneByte(WriteAddr,*pBuffer);

@@ -74,6 +74,7 @@ static int osc_menu_heep(void)
 	com_callbacks[29] = key_onoff_long_click; // 13 + 16
 	com_callbacks[18] = key_menu_Longfress_callback; // 2 + 16 
 	com_callbacks[31] = key_swi_long_click; // 15 + 16
+	com_callbacks[30] = key_math_long_click; //14 + 16
 	/* set default sta */
 	memset(key_default_sta,1,sizeof(key_default_sta));
 	/* set power key */
@@ -546,10 +547,10 @@ static void key_onoff_short_click(void)
 /* key off and on short click */
 static void key_onoff_long_click(void)
 {
-	/* close back light */
-	osc_backlight_en(0);
-	/* power off*/
-	osc_power_en(0);
+//	/* close back light */
+//	osc_backlight_en(0);
+//	/* power off*/
+//	osc_power_en(0);
 	/* end */
 }
 /* menu_update */

@@ -26,8 +26,8 @@
 
 static int k24c02_heap_init(void); 
 static int k24c02_config_init(void);
-void osc_k24C02_read(unsigned short ,unsigned char *,unsigned short);
-void osc_k24c02_write(unsigned short ,unsigned char *,unsigned short);
+void osc_k24C02_read(unsigned short ,void *,unsigned short);
+void osc_k24c02_write(unsigned short ,void *,unsigned short);
 #endif
 
 

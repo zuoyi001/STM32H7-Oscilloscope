@@ -203,7 +203,7 @@ const osc_time_def osc_tim[] =
 	},
 };
 /* voltage gain */
-const osc_vol_scale_def osc_vol_offset_scale_ch1[] = 
+osc_vol_scale_def osc_vol_offset_scale_ch1[] = 
 {
 	/* 0 */
 	{
@@ -289,9 +289,9 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "2V   ",
 		.mv_int = 2000,
-		.gain_dac[0] = 2229,
+		.gain_dac[0] = 2300,
 		.gain_dac[1] = 2300,
-		.gain_offset_ch[0] = 5,
+		.gain_offset_ch[0] = 0,
 		.gain_offset_ch[1] = -12,
 		.gain_sel = 0,
 	},
@@ -379,7 +379,7 @@ static int osc_time_scan_leng(void)
 static int osc_vol_scale_leng(void)
 {
 	return sizeof(osc_vol_offset_scale_ch1) / sizeof(osc_vol_offset_scale_ch1[0]);
-}
+} 
 /* get */
 const osc_vol_scale_def * osc_get_vol_scale(unsigned char chn)
 {
@@ -388,6 +388,11 @@ const osc_vol_scale_def * osc_get_vol_scale(unsigned char chn)
 	/* index */
 	unsigned char index = runmsg->vol_scale_ch[chn];
 	/* return OK */
+	return &osc_vol_offset_scale_ch1[index];
+}
+/* get osc vol scale */
+osc_vol_scale_def * osc_vol_scale_s(unsigned char index)
+{
 	return &osc_vol_offset_scale_ch1[index];
 }
 /* osc_cfg_thread */

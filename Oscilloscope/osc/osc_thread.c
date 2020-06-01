@@ -35,7 +35,7 @@ static void osc_thread(void);
 static int osc_thead_init(void);
 /* Includes ------------------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_thread,PRIORITY_IDLE,100); /* gui detecter task run as idle */
-FOS_INODE_REGISTER("osc_thread",0,osc_thead_init,0,1);
+FOS_INODE_REGISTER("osc_thread",0,osc_thead_init,0,9);
 /* buffer */
 static unsigned char clock_sta = 0;
 /* gui dev */

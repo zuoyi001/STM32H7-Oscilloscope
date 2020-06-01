@@ -30,6 +30,6 @@ tex4 = GBK2312_ASSETS_HZ16("正常");
 tex4 = GBK2312_ASSETS_HZ16("单次");
 tex4 = GBK2312_ASSETS_HZ16("智能源");
 tex4 = GBK2312_ASSETS_HZ16("边沿上升下降水平垂直位置格电压长按关机倒记时");
-tex4 = GBK2312_ASSETS_HZ16("进入退出校准模式");
+tex4 = GBK2312_ASSETS_HZ16("进入退出校准模式保存成功失败");
 
 

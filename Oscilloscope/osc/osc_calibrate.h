@@ -21,11 +21,31 @@
 #ifndef __OSC_CALIBRATE_H__
 #define __OSC_CALIBRATE_H__
 /* defines */
-
+typedef struct
+{
+	/* gain dac */
+	unsigned short gain_dac_e[2];
+	/* gain_offset ch1*/
+	signed short gain_offset_ch_e[2];	
+}ep_struct_def;
+/* saving data */
+typedef struct
+{
+	/* save data */
+	ep_struct_def ep_s[11];//define at osc_cfg
+	/* check */
+	unsigned short check_xor;
+	/*-------*/
+}eeprom_calibrate_def;
 /* Includes ------------------------------------------------------------------*/
 void key_swi_long_click(void);
 unsigned char osc_get_calibrate_sta(void);
 void osc_calibrate_api(unsigned char inx,signed short zm);
+static int osc_calibrate_init(void);
+static int calibrete_heap_init(void);
+static int calibrate_config_init(void);
+static int osc_save_cal_param(unsigned int index,unsigned char chn,unsigned short gain_dac,signed short offset_dac);
+void key_math_long_click(void);
 
 #endif
 
