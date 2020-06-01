@@ -56,14 +56,15 @@ typedef struct
 {
 	/* show * str */
 	char * str;
-	/* mv */
-	unsigned short mv_int;
 	/* gain dac */
-	unsigned short gain_dac;
+	unsigned short gain_dac[2];
 	/* gain_offset ch1*/
 	signed short gain_offset_ch[2];
 	/* gain_sel */
 	unsigned short gain_sel;
+	/* mv */
+	unsigned short mv_int;
+  /* end of */	
 }osc_vol_scale_def;
 
 /* set scan time */

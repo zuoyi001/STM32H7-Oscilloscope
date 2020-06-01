@@ -25,6 +25,7 @@
 #include "hal_exit.h"
 #include "osc_cfg.h"
 #include "hal_usart.h"
+#include "osc_calibrate.h"
 /* Private includes ----------------------------------------------------------*/
 FOS_TSK_REGISTER(osc_menu_thread,PRIORITY_2,5);/* run as 10ms */
 FOS_INODE_REGISTER("osc_menu",osc_menu_heep,osc_menu_init,0,15);
@@ -72,6 +73,7 @@ static int osc_menu_heep(void)
 	/* long press */
 	com_callbacks[29] = key_onoff_long_click; // 13 + 16
 	com_callbacks[18] = key_menu_Longfress_callback; // 2 + 16 
+	com_callbacks[31] = key_swi_long_click; // 15 + 16
 	/* set default sta */
 	memset(key_default_sta,1,sizeof(key_default_sta));
 	/* set power key */

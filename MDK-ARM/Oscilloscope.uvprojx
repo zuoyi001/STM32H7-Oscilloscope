@@ -617,6 +617,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\dev\led.c</FilePath>
             </File>
+            <File>
+              <FileName>k24c02.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\k24c02.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -661,6 +666,11 @@
               <FileName>osc_menu.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\osc\osc_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>osc_calibrate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\osc\osc_calibrate.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -209,7 +209,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "5mV  ",
 		.mv_int = 5,
-		.gain_dac = 500,
+		.gain_dac[0] = 500,
+		.gain_dac[1] = 500,
 		.gain_offset_ch[0] = -150,
 		.gain_offset_ch[1] = -150,
 		.gain_sel = 1,
@@ -218,7 +219,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "10mV ",
 		.mv_int = 10,
-		.gain_dac = 920,
+		.gain_dac[0] = 920,
+		.gain_dac[1] = 920,
 		.gain_offset_ch[0] = -72,
 		.gain_offset_ch[1] = -77,
 		.gain_sel = 1,
@@ -227,7 +229,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "20mV ",
 		.mv_int = 20,
-		.gain_dac = 1300,
+		.gain_dac[0] = 1300,
+		.gain_dac[1] = 1300,
 		.gain_offset_ch[0] = -30,
 		.gain_offset_ch[1] = -40,
 		.gain_sel = 1,
@@ -236,7 +239,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "50mV ",
 		.mv_int = 50,
-		.gain_dac = 1850,
+		.gain_dac[0] = 1850,
+		.gain_dac[1] = 1850,
 		.gain_offset_ch[0] = -10,
 		.gain_offset_ch[1] = -20,
 		.gain_sel = 1,
@@ -245,7 +249,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "100mV",
 		.mv_int = 100,
-		.gain_dac = 2270,
+		.gain_dac[0] = 2270,
+		.gain_dac[1] = 2270,
 		.gain_offset_ch[0] = 0,
 		.gain_offset_ch[1] = -13,
 		.gain_sel = 1,
@@ -254,7 +259,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "200mV",
 		.mv_int = 200,
-		.gain_dac = 2720,
+		.gain_dac[0] = 2720,
+		.gain_dac[1] = 2720,
 		.gain_offset_ch[0] = 8,
 		.gain_offset_ch[1] = -5,
 		.gain_sel = 1,
@@ -263,7 +269,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "500mV",
 		.mv_int = 500,
-		.gain_dac = 1460,
+		.gain_dac[0] = 1460,
+		.gain_dac[1] = 1460,
 		.gain_offset_ch[0] = -28,
 		.gain_offset_ch[1] = -38,
 		.gain_sel = 0,
@@ -272,7 +279,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "1V   ",
 		.mv_int = 1000,
-		.gain_dac = 1860,
+		.gain_dac[0] = 1860,
+		.gain_dac[1] = 1860,
 		.gain_offset_ch[0] = -10,
 		.gain_offset_ch[1] = -22,
 		.gain_sel = 0,
@@ -281,8 +289,9 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "2V   ",
 		.mv_int = 2000,
-		.gain_dac = 2300,
-		.gain_offset_ch[0] = 0,
+		.gain_dac[0] = 2229,
+		.gain_dac[1] = 2300,
+		.gain_offset_ch[0] = 5,
 		.gain_offset_ch[1] = -12,
 		.gain_sel = 0,
 	},
@@ -290,7 +299,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "5V   ",
 		.mv_int = 5000,
-		.gain_dac = 2850,
+		.gain_dac[0] = 2850,
+		.gain_dac[1] = 2300,
 		.gain_offset_ch[0] = 5,
 		.gain_offset_ch[1] = -10,
 		.gain_sel = 0,
@@ -299,7 +309,8 @@ const osc_vol_scale_def osc_vol_offset_scale_ch1[] =
 	{
 		.str = "10V  ",
 		.mv_int = 10000,
-		.gain_dac = 4095,
+		.gain_dac[0] = 4095,
+		.gain_dac[1] = 4095,
 		.gain_offset_ch[0] = 5,
 		.gain_offset_ch[1] = -10,
 		.gain_sel = 0,
@@ -639,7 +650,7 @@ const osc_vol_scale_def * osc_vol_scale_thread(unsigned char chn)
 		/* set gain ctrl */
 		osc_gain_ctrl(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_sel);
 		/* set dac */
-		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac,osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[chn]);
+		osc_vol_dac(chn,osc_vol_offset_scale_ch1[osc_vs_t].gain_dac[chn],osc_vol_offset_scale_ch1[osc_vs_t].gain_offset_ch[chn]);
 		/* end */
 	}
   /* clear flags */

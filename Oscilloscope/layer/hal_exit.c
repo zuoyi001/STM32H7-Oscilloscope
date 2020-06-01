@@ -23,6 +23,8 @@
 #include "osc_api.h"
 #include "fos.h"
 #include "hal_tim.h"
+#include "osc_calibrate.h"
+#include "osc_cfg.h"
 /* exit init */
 static int osc_exit_rot_init(void);
 static void exit_thread(void);
@@ -69,7 +71,7 @@ static void osc_rot_isr(unsigned char index,unsigned char up_dm)
 		/* set flag */
 		rot_flag[index] = 1;
 		/* time ctrl */
-		if( index == 2 || index == 3 )
+		if( index == OSC_VOL_OFFSET_SCALE || index == OSC_TRIG_SCALE )
 		{
 			/* get timestmp */
 			unsigned int now = hal_sys_time_us();
@@ -78,17 +80,25 @@ static void osc_rot_isr(unsigned char index,unsigned char up_dm)
 			/* deg */
 			if( diff > 5 )
 			{
+				signed short zm;
 				/* cal */
 				if( diff < 100 )
 				{
-					/* set zm */
-					signed short zm = 11 - (float)diff / 10.0f;  
-					/* com */
+					zm = 11 - (float)diff / 10.0f;  			
+				}
+				else
+				{
+					zm = 1;
+				}
+				/* set zm */
+				if( osc_get_calibrate_sta() == 0 )
+				{
 					rot_updm[index] += up_dm ? (-zm) : zm;
 				}
 				else
 				{
-					rot_updm[index] += up_dm ? (-1) : 1;
+					/* calbrate app */
+					osc_calibrate_api(index,up_dm ? (-zm) : zm);
 				}
 				/* upd */
 				last_td = now;
