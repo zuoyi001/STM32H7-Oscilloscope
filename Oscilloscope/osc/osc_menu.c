@@ -547,10 +547,19 @@ static void key_onoff_short_click(void)
 /* key off and on short click */
 static void key_onoff_long_click(void)
 {
-//	/* close back light */
-//	osc_backlight_en(0);
-//	/* power off*/
-//	osc_power_en(0);
+	static unsigned char first_time = 0;
+	/* check */
+	if( first_time != 0 )
+	{
+		/* close back light */
+		osc_backlight_en(0);
+		/* power off*/
+		osc_power_en(0);
+	}
+	else
+	{
+		first_time = 1;
+	}	
 	/* end */
 }
 /* menu_update */

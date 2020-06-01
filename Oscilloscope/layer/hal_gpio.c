@@ -315,6 +315,15 @@ const GPIO_CONFIG_DEF gpio_config_table[] =
 		.GPIO_PULL = GPIO_PULLUP,
 		.GPIO_DEFAULT = GPIO_PIN_SET,
 	},	
+	/* 32 */
+	{
+		.capital = "HUSB_EN",
+		.GPIO_GROUP = GPIOD,
+		.GPIO_PIN = GPIO_PIN_7,
+		.GPIO_MODE = GPIO_MODE_OUTPUT_PP,
+		.GPIO_PULL = GPIO_PULLUP,
+		.GPIO_DEFAULT = GPIO_PIN_RESET,
+	},	
 };
 
 /* v */
