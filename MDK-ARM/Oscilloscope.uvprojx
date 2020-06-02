@@ -622,6 +622,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscilloscope\dev\k24c02.c</FilePath>
             </File>
+            <File>
+              <FileName>touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscilloscope\dev\touch.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
