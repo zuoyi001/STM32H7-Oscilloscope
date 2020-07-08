@@ -34,6 +34,7 @@ unsigned int hal_tim2_cnt(void);
 unsigned int hal_tim3_cnt(void);
 static void hal_tim3_cap_init(void);
 static void hal_tim2_cap_init(void);
+static void mx_tim4_init(unsigned short psc,unsigned short arr);
 
 #endif
 

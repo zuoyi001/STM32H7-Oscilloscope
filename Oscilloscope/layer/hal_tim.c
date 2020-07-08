@@ -23,15 +23,24 @@
 #include "hal_tim.h"
 #include "fos.h"
 #include "string.h"
+
+#include "gui.h"
+
+/* gui dev */
+static gui_dev_def * dev;
+
+static int tim_config(void);
+	
 /* enable or disable the test pwm */
 #define DEBUG_PWM   (0)
 /* register a init inode */
-FOS_INODE_REGISTER("hal_gpio",hal_tim_init,0,0,14);
+FOS_INODE_REGISTER("hal_gpio",hal_tim_init,tim_config,0,14);
 /* static tim handle */
 static TIM_HandleTypeDef TIM_Handle; 
 static TIM_HandleTypeDef htim5;
 static TIM_HandleTypeDef htim2;
 static TIM_HandleTypeDef htim3;
+static TIM_HandleTypeDef htim4;
 static void mx_time5_init(void);
 /* static void get tim3 cnt */
 static unsigned int tim3_cnt_gt = 0;
@@ -75,11 +84,53 @@ static int hal_tim_init(void)
 	hal_tim2_cap_init();
 	hal_tim3_cap_init();
 	/*----------------*/
+	mx_tim4_init(100,100);
+	/*----------------*/
 #if DEBUG_PWM
   hal_test_init();
 #endif
 	/* return */
   return FS_OK;
+}
+
+static int tim_config(void)
+{
+		/* gui dev get */
+  dev = get_gui_dev();
+	
+	return 0;
+}
+
+/* task task */
+static void mx_tim4_init(unsigned short psc,unsigned short arr)
+{
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = psc - 1 ;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = arr - 1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+  HAL_TIM_Base_Start_IT(&htim4);
+  /* USER CODE END TIM7_Init 2 */
 }
 /* set PWM io to IO mode */
 static void hal_io_clock(unsigned char mode)
@@ -340,7 +391,9 @@ void hal_tim_psc(unsigned int psc)
 		if( last_psc != psc )
 		{
 			/* set psc */
-			//mx_time17_init(10000, psc / 10000); 
+			mx_tim4_init(20000, psc / 10000);
+			/* enable the IRQ */
+      HAL_NVIC_EnableIRQ(TIM4_IRQn);			
 		}
 		/* clear */
 		last_psc = psc;
@@ -356,7 +409,10 @@ void hal_tim_psc(unsigned int psc)
 			tioflag = 1;
 			/* set io to PWM */
 			hal_io_clock(0);
+			/* enable the IRQ */
+      HAL_NVIC_DisableIRQ(TIM4_IRQn);				
 		}
+		/* set psc */
 		TIM1->PSC = psc - 1;
 	}
 }
@@ -376,7 +432,32 @@ unsigned int hal_tim3_cnt(void)
 	return (tim3_cnt_gt << 16) + TIM3->CNT;
 }
 
+#define LED_RED_GPIO GPIOC
+#define LED_RED_GPIO_PIN GPIO_PIN_4
 
+unsigned int diff = 0;
+
+void TIM4_IRQHandler(void)
+{
+	diff = hal_sys_time_us();
+  /* USER CODE BEGIN TIM7_IRQn 0 */
+  static unsigned short cnt = 20,cnt_y = 100;
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim4);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
+	dev->set_noload_point(cnt,cnt_y,4);
+  /* USER CODE END TIM7_IRQn 1 */	
+	
+	cnt ++ ;
+	
+	if( cnt >= 750 + 20 )
+	{
+		cnt = 20;
+		cnt_y ++;
+	}
+	
+	diff = hal_sys_time_us() - diff;
+}
 
 
 
