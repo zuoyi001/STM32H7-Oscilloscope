@@ -27,9 +27,9 @@
 #define LED_RED_GPIO_PIN GPIO_PIN_4
 /* register node */
 FOS_INODE_REGISTER("led",led_hardware_init,0,0,10);
-/* define task run as 500ms */
-FOS_TSK_REGISTER(led_thread_500ms,PRIORITY_4,500);
-FOS_TSK_REGISTER(led_thread_300ms,PRIORITY_4,100);
+///* define task run as 500ms */
+//FOS_TSK_REGISTER(led_thread_500ms,PRIORITY_4,500);
+//FOS_TSK_REGISTER(led_thread_300ms,PRIORITY_4,100);
 /* ------------------------ */
 int led_hardware_init(void)
 {
@@ -49,46 +49,46 @@ int led_hardware_init(void)
 	/* return */
 	return FS_OK;
 }
-/* led thread run as 500ms */
-static void led_thread_500ms(void)
-{
-	HAL_GPIO_TogglePin(LED_RED_GPIO,LED_RED_GPIO_PIN);
-}
-/* led thread run as 300ms */
-static void led_thread_300ms(void)
-{
-	/* freq ctrl */
-	static unsigned int led_freq_ctrl = 0;
-	static unsigned char flag_led = 0;
-	/* freq ctrl */
-	if( led_freq_ctrl > 48 )
-	{
-		/* test */
-		if( flag_led == 1 )
-		{
-			/* set flags */
-			flag_led = 0;
-			/* on the led */			
-			HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_RESET);
-		}
-	}
-	else
-	{
-		/* test */
-		if( flag_led == 0 )
-		{
-			/* set flags */
-			flag_led = 1;
-			/* off the led */
-			HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_SET);
-		}
-	}
-	/* clear */
-	if( led_freq_ctrl++ >= 50 )
-	{
-		led_freq_ctrl = 0;
-	}
-}
+///* led thread run as 500ms */
+//static void led_thread_500ms(void)
+//{
+//	HAL_GPIO_TogglePin(LED_RED_GPIO,LED_RED_GPIO_PIN);
+//}
+///* led thread run as 300ms */
+//static void led_thread_300ms(void)
+//{
+//	/* freq ctrl */
+//	static unsigned int led_freq_ctrl = 0;
+//	static unsigned char flag_led = 0;
+//	/* freq ctrl */
+//	if( led_freq_ctrl > 48 )
+//	{
+//		/* test */
+//		if( flag_led == 1 )
+//		{
+//			/* set flags */
+//			flag_led = 0;
+//			/* on the led */			
+//			HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_RESET);
+//		}
+//	}
+//	else
+//	{
+//		/* test */
+//		if( flag_led == 0 )
+//		{
+//			/* set flags */
+//			flag_led = 1;
+//			/* off the led */
+//			HAL_GPIO_WritePin(LED_RED_GPIO,LED_RED_GPIO_PIN,GPIO_PIN_SET);
+//		}
+//	}
+//	/* clear */
+//	if( led_freq_ctrl++ >= 50 )
+//	{
+//		led_freq_ctrl = 0;
+//	}
+//}
 
 
 

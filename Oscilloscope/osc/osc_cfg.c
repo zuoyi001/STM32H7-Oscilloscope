@@ -188,7 +188,7 @@ const osc_time_def osc_tim[] =
 		.osc_zoom_factor = 1,
 		.osc_ins = 2, /* 1000ms */
 	},	
-	#if 0
+	#if 1
 	{
 		.str = "100ms",
 		.osc_time = 100 , /* 100ms */
@@ -210,6 +210,48 @@ const osc_time_def osc_tim[] =
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
 	},
+  {
+		.str = "1.0s  ",
+		.osc_time = 1 , /* 1ms */
+		.osc_clock_ex = 0,
+		.osc_unit = OSC_UNIT_S,
+		.osc_zoom_factor = 1,
+	},
+	{
+		.str = "2.5s  ",
+		.osc_time = 2.5 , /* 2.5ms */
+		.osc_clock_ex = 0,
+		.osc_unit = OSC_UNIT_S,
+		.osc_zoom_factor = 1,
+	},	
+	{
+		.str = "5s   ",
+		.osc_time = 5 , /* 5ms */
+		.osc_clock_ex = 0,
+		.osc_unit = OSC_UNIT_S,
+		.osc_zoom_factor = 1,
+	},	
+	{
+		.str = "10s  ",
+		.osc_time = 10 , /* 10ms */
+		.osc_clock_ex = 0,
+		.osc_unit = OSC_UNIT_S,
+		.osc_zoom_factor = 1,
+	},	
+	{
+		.str = "25s ",
+		.osc_time = 25 , /* 25ms */
+		.osc_clock_ex = 0,
+		.osc_unit = OSC_UNIT_S,
+		.osc_zoom_factor = 1,
+	},	
+	{
+		.str = "50s  ",
+		.osc_time = 50 , /* 50ms */
+		.osc_clock_ex = 0,
+		.osc_unit = OSC_UNIT_S,
+		.osc_zoom_factor = 1,
+	},		
 	#endif
 };
 /* voltage gain */
@@ -369,6 +411,10 @@ const osc_time_def * osc_scan_time(unsigned int index)
 	{
 		/* return */
     return &osc_tim[index];		
+	}
+	else if( osc_tim[index].osc_unit == OSC_UNIT_S )
+	{
+		psc = (unsigned int)((float)OSC_BASE_CLOCK * 1000000 * osc_tim[index].osc_time / (float)area->pixel_horizontal) / 2;
 	}
 	else
 	{

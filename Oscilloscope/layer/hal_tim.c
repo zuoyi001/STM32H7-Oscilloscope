@@ -81,6 +81,30 @@ static int hal_tim_init(void)
 	/* return */
   return FS_OK;
 }
+/* set PWM io to IO mode */
+static void hal_io_clock(unsigned char mode)
+{
+	/* enable the clk */
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	/* define a struction */
+	GPIO_InitTypeDef GPIO_Handle;
+	/* define a struction */
+	GPIO_Handle.Pin = GPIO_PIN_9;
+	GPIO_Handle.Pull = GPIO_PULLUP;
+	GPIO_Handle.Speed = GPIO_SPEED_HIGH;	
+	/* mode */
+	if( mode == 0 )
+	{
+		GPIO_Handle.Mode = GPIO_MODE_AF_PP;
+		GPIO_Handle.Alternate = GPIO_AF1_TIM1;
+	}
+	else
+	{
+		GPIO_Handle.Mode = GPIO_MODE_OUTPUT_PP;
+	}
+	/* GPIOE */
+	HAL_GPIO_Init(GPIOE, &GPIO_Handle);
+}
 #if DEBUG_PWM
 /* test pwm */
 static void hal_test_init(void)
@@ -299,16 +323,40 @@ void hal_pwm_start(void)
 /* void set pwm freq */
 void hal_tim_psc(unsigned int psc)
 {
-	if( psc >= 65000 )
+	/* flag */
+	static unsigned char tpflag = 0,tioflag = 0;
+	static unsigned int last_psc = 0;
+	/* --- */
+	if( psc > 60000 )
 	{
-		TIM1->ARR = 3;
-		TIM1->CCR1 = 2;
-		TIM1->PSC = psc / 4 - 1;		
+		/* IO mode */
+		if( tpflag == 0 )
+		{
+			tpflag = 1;
+			/* reset PWM set PWM io to IO mode */
+			hal_io_clock(1);
+		}
+		/* diff */
+		if( last_psc != psc )
+		{
+			/* set psc */
+			//mx_time17_init(10000, psc / 10000); 
+		}
+		/* clear */
+		last_psc = psc;
+		tioflag = 0;
 	}
 	else
 	{
-		TIM1->ARR = 1;
-		TIM1->CCR1 = 1;
+		/* set value */
+		tpflag = 0;
+		/* set */
+		if( tioflag == 0 )
+		{
+			tioflag = 1;
+			/* set io to PWM */
+			hal_io_clock(0);
+		}
 		TIM1->PSC = psc - 1;
 	}
 }
