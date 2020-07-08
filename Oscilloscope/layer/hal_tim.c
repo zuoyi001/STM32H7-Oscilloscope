@@ -297,9 +297,20 @@ void hal_pwm_start(void)
 	HAL_TIM_PWM_Start(&TIM_Handle, TIM_CHANNEL_1);
 }
 /* void set pwm freq */
-void hal_tim_psc(unsigned short psc)
+void hal_tim_psc(unsigned int psc)
 {
-	TIM1->PSC = psc - 1;
+	if( psc >= 65000 )
+	{
+		TIM1->ARR = 3;
+		TIM1->CCR1 = 2;
+		TIM1->PSC = psc / 4 - 1;		
+	}
+	else
+	{
+		TIM1->ARR = 1;
+		TIM1->CCR1 = 1;
+		TIM1->PSC = psc - 1;
+	}
 }
 /* get sys time */
 unsigned int hal_sys_time_us(void)

@@ -66,7 +66,8 @@ const osc_time_def osc_tim[] =
 		.osc_unit = OSC_UINT_NS,
 		.osc_zoom_factor = 2,
 		.osc_ins = 0x30, /* transfer to 500ns for 1us */
-	},	
+	},
+#if 1	
 	{
 		.str = "750ns",
 		.osc_time = 750 , /* 750 ns */
@@ -74,6 +75,7 @@ const osc_time_def osc_tim[] =
 		.osc_unit = OSC_UINT_NS,
 		.osc_zoom_factor = 1,
 	},
+#endif
 	{
 		.str = "1.0us",
 		.osc_time = 1000 , /*  base on 750ns */
@@ -144,6 +146,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
+		.osc_ins = 5, /* 50ms */
 	},
 	{
 		.str = "2.5ms",
@@ -151,6 +154,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
+		.osc_ins = 5, /* 125ms */
 	},	
 	{
 		.str = "5ms  ",
@@ -158,6 +162,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
+		.osc_ins = 5, /* 250ms */
 	},	
 	{
 		.str = "10ms ",
@@ -165,6 +170,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
+		.osc_ins = 3, /* 300ms */
 	},	
 	{
 		.str = "25ms ",
@@ -172,6 +178,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
+		.osc_ins = 2, /* 500ms */
 	},	
 	{
 		.str = "50ms ",
@@ -179,6 +186,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
+		.osc_ins = 2, /* 1000ms */
 	},	
 	{
 		.str = "100ms",
@@ -344,16 +352,16 @@ const osc_time_def * osc_scan_time(unsigned int index)
 	/* get draw area */
 	draw_area_def * area = get_draw_area_msg();
 	/* psc */
-	unsigned short psc = 0;
+	unsigned int psc = 0;
 	/* get the */
 	if( osc_tim[index].osc_unit == OSC_UNIT_US )
 	{
 		/* calbrate the psc num */
-		psc = (unsigned short)((float)OSC_BASE_CLOCK * osc_tim[index].osc_time / (float)area->pixel_horizontal) / 2;
+		psc = (unsigned int)((float)OSC_BASE_CLOCK * osc_tim[index].osc_time / (float)area->pixel_horizontal) / 2;
 	}
 	else if( osc_tim[index].osc_unit == OSC_UNIT_MS )
 	{
-		psc = (unsigned short)((float)OSC_BASE_CLOCK * 1000 * osc_tim[index].osc_time / (float)area->pixel_horizontal) / 2;
+		psc = (unsigned int)((float)OSC_BASE_CLOCK * 1000 * osc_tim[index].osc_time / (float)area->pixel_horizontal) / 2;
 	}
 	else if( osc_tim[index].osc_unit == OSC_UINT_NS )
 	{
