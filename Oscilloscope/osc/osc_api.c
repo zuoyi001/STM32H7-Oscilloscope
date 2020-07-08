@@ -194,7 +194,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 	}
 }
 /* wave data select */
-int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag,unsigned int ins)
+int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag,unsigned int ins,unsigned int deep)
 { 
 	/* ret tes */
 	int ret = FS_ERR;
@@ -222,8 +222,10 @@ int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,in
 	}
 	/* get trig source */
 	trig_source_p = ( trig_source == TRIG_SOURCE_CH1 ) ? cache_fifo[2] : cache_fifo[3];
+	/* deep */
+	unsigned int deep_use =  ( deep == 0 ) ? ( FIFO_DEEP * 2 ) : deep;
 	/* search data */
-	for( int i = area->total_pixel_h / 2 + 125 ; i < FIFO_DEEP * 2 - area->total_pixel_h / 2 - 125 ; i ++  )
+	for( int i = area->total_pixel_h / 2 + 125 ; i < deep_use - area->total_pixel_h / 2 - 125 ; i ++  )
 	{
 		/* search */
 		if( trig_source_p[i] == t0 && trig_source_p[i+1] == t1 )

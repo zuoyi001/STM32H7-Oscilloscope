@@ -51,8 +51,15 @@ unsigned short line_zoom[2];
 unsigned int osc_inter_s = 0;
 /* time sw */
 const osc_time_def * osc_time_sw;
+/* area */
+const draw_area_def * area;
 /* run msg */
 osc_run_msg_def * runmsg;
+/* last run time */
+static float osc_time_last = 0;
+static unsigned int osc_half_tus = 0;
+static unsigned int osc_tflag = 0;
+static unsigned int deep_u = 0;
 /* upload default setting */
 static int osc_thead_init(void)
 {
@@ -61,7 +68,7 @@ static int osc_thead_init(void)
 	/* get run msg for osc */
 	runmsg = get_run_msg();
 	/* get draw area */
-	draw_area_def * area = get_draw_area_msg();	
+	area = get_draw_area_msg();	
   /* read from eeprom or clean */
   if( 0 )
 	{
@@ -131,10 +138,35 @@ static void osc_thread(void)
 	runmsg->trig_vol_level_ch[foc] = osc_rot_sta(OSC_TRIG_SCALE);
 	/* get scan time */
 	osc_time_sw = osc_scan_thread();
+	/* update the runtime */
+	if( osc_time_sw->osc_ins >= 2 && osc_time_sw->osc_ins <= 10 )
+	{
+		if( osc_time_last != osc_time_sw->osc_time )
+		{
+			/* update */
+			osc_time_last = osc_time_sw->osc_time;
+			/* update the run time */
+			osc_half_tus = hal_sys_time_us();
+		}
+		/* diff time */
+		unsigned int diff = hal_sys_time_us() - osc_half_tus;
+		/* check */
+	  if( diff >= osc_time_sw->osc_time * 10 * osc_time_sw->osc_ins * 1000 )
+		{
+			/* set flag */
+			osc_tflag = 1;
+		}
+		/* set deep */
+		deep_u = osc_time_sw->osc_ins * area->total_pixel_h;
+	}
+	else
+	{
+		deep_u = 0;
+	}
 	/* single thread */
 	osc_single_thread();
 	/* nothing to do */
-	if( hal_read_gpio(FIFO_FULL0) != 0 )
+	if( !(hal_read_gpio(FIFO_FULL0) == 0 || osc_tflag == 1) )
 	{
 		return; // not use to deal
 	}
@@ -145,7 +177,7 @@ static void osc_thread(void)
 	/* read data from fifo */
 	osc_read_fifo_data(clock_sta);
 	/* transfor data */
-	int ret = osc_trig_read(line_buffer_ch1[cnt_p%2],line_buffer_ch2[cnt_p%2],runmsg->trig_type,runmsg->trig_source,clock_sta,osc_inter_s);
+	int ret = osc_trig_read(line_buffer_ch1[cnt_p%2],line_buffer_ch2[cnt_p%2],runmsg->trig_type,runmsg->trig_source,clock_sta,osc_inter_s,deep_u);
 	/* single mode */
 	if( (runmsg->trig_mode == RUN_TRIG_SINGLE && ret == FS_OK) || 
 		   runmsg->trig_mode == RUN_TRIG_AUTO || 
@@ -233,6 +265,10 @@ static void osc_thread(void)
 	osc_fifo_clock(1);
 	/* restart pwm */
 	osc_start_adc_clock(osc_time_sw->osc_clock_ex);//for test select the inter clock
+	/* get run time */
+	osc_tflag = 0;
+	/* reset time */
+	osc_half_tus = hal_sys_time_us();	
 }
 /* void line clear */
 void osc_clear_all_lines(void)

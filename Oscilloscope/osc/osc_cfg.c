@@ -146,7 +146,7 @@ const osc_time_def osc_tim[] =
 		.osc_clock_ex = 0,
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
-		.osc_ins = 5, /* 50ms */
+		.osc_ins = 10, /* 100ms */
 	},
 	{
 		.str = "2.5ms",
@@ -188,6 +188,7 @@ const osc_time_def osc_tim[] =
 		.osc_zoom_factor = 1,
 		.osc_ins = 2, /* 1000ms */
 	},	
+	#if 0
 	{
 		.str = "100ms",
 		.osc_time = 100 , /* 100ms */
@@ -209,6 +210,7 @@ const osc_time_def osc_tim[] =
 		.osc_unit = OSC_UNIT_MS,
 		.osc_zoom_factor = 1,
 	},
+	#endif
 };
 /* voltage gain */
 osc_vol_scale_def osc_vol_offset_scale_ch1[] = 
