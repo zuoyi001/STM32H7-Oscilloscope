@@ -18,26 +18,23 @@
   */
 /* USER CODE END Header */
 
-#ifndef __HAL_TIM_H__
-#define __HAL_TIM_H__
+#ifndef __OSC_LOWS_H__
+#define __OSC_LOWS_H__
 /* Includes ------------------------------------------------------------------*/
 
-/* Private includes ----------------------------------------------------------*/
-
-static int hal_tim_init(void);
-static void hal_test_init(void);
-void hal_pwm_stop(void);
-void hal_pwm_start(void);
-void hal_tim_psc(unsigned int psc);
-unsigned int hal_sys_time_us(void);
-unsigned int hal_tim2_cnt(void);
-unsigned int hal_tim3_cnt(void);
-static void hal_tim3_cap_init(void);
-static void hal_tim2_cap_init(void);
-static void mx_tim4_init(unsigned short psc,unsigned short arr);
-int hal_lows_flag(void);
-void osc_clear_all_lines(void);
+void osc_low_speed_thread(void);
+	
 
 #endif
+
+
+
+
+
+
+
+
+
+
 
 

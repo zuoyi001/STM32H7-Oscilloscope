@@ -35,6 +35,7 @@
 #define FIFO_DATA_D8        (20)
 #define FIFO_FULL0          (1)
 #define FIFO_DIO_TR         (10)
+#define FIFO_DIO_RST        (9)
 /* ROT 7 ~ 0 */
 #define DIO_ROT_TIME_UP     (21)
 #define DIO_ROT_TIME_DM     (22)

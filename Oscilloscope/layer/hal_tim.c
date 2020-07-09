@@ -23,18 +23,14 @@
 #include "hal_tim.h"
 #include "fos.h"
 #include "string.h"
-
+#include "osc_lows.h"
 #include "gui.h"
-
-/* gui dev */
-static gui_dev_def * dev;
-
-static int tim_config(void);
-	
+#include "osc_api.h"
+#include "hal_gpio.h"
 /* enable or disable the test pwm */
 #define DEBUG_PWM   (0)
 /* register a init inode */
-FOS_INODE_REGISTER("hal_gpio",hal_tim_init,tim_config,0,14);
+FOS_INODE_REGISTER("hal_gpio",hal_tim_init,0,0,14);
 /* static tim handle */
 static TIM_HandleTypeDef TIM_Handle; 
 static TIM_HandleTypeDef htim5;
@@ -44,6 +40,8 @@ static TIM_HandleTypeDef htim4;
 static void mx_time5_init(void);
 /* static void get tim3 cnt */
 static unsigned int tim3_cnt_gt = 0;
+/* lows_flags */
+static int lows_flags = FS_ERR;
 /* init base and open as default */
 static int hal_tim_init(void)
 {
@@ -92,15 +90,6 @@ static int hal_tim_init(void)
 	/* return */
   return FS_OK;
 }
-
-static int tim_config(void)
-{
-		/* gui dev get */
-  dev = get_gui_dev();
-	
-	return 0;
-}
-
 /* task task */
 static void mx_tim4_init(unsigned short psc,unsigned short arr)
 {
@@ -371,12 +360,19 @@ void hal_pwm_start(void)
 {
 	HAL_TIM_PWM_Start(&TIM_Handle, TIM_CHANNEL_1);
 }
+/* get lows flags */
+int hal_lows_flag(void)
+{
+	return lows_flags;
+}
 /* void set pwm freq */
 void hal_tim_psc(unsigned int psc)
 {
 	/* flag */
 	static unsigned char tpflag = 0,tioflag = 0;
 	static unsigned int last_psc = 0;
+	/* tmp test */
+	extern unsigned char clock_sta_2;
 	/* --- */
 	if( psc > 60000 )
 	{
@@ -391,13 +387,21 @@ void hal_tim_psc(unsigned int psc)
 		if( last_psc != psc )
 		{
 			/* set psc */
-			mx_tim4_init(20000, psc / 10000);
+			mx_tim4_init(10000, psc / 10000);
+			/* clear all lines */
+			osc_clear_all_lines();
+			/* set the fifo */
+			osc_fifo_reset();
+			/* read io */
+			clock_sta_2 = hal_read_gpio(DIO_CLOCK_STA) ? 1 : 0;
 			/* enable the IRQ */
       HAL_NVIC_EnableIRQ(TIM4_IRQn);			
 		}
 		/* clear */
 		last_psc = psc;
 		tioflag = 0;
+		/* set flags */
+		lows_flags = FS_OK;
 	}
 	else
 	{
@@ -414,6 +418,8 @@ void hal_tim_psc(unsigned int psc)
 		}
 		/* set psc */
 		TIM1->PSC = psc - 1;
+		/* set flags */
+		lows_flags = FS_ERR;		
 	}
 }
 /* get sys time */
@@ -431,32 +437,14 @@ unsigned int hal_tim3_cnt(void)
 {
 	return (tim3_cnt_gt << 16) + TIM3->CNT;
 }
-
-#define LED_RED_GPIO GPIOC
-#define LED_RED_GPIO_PIN GPIO_PIN_4
-
-unsigned int diff = 0;
-
+/* init */
 void TIM4_IRQHandler(void)
 {
-	diff = hal_sys_time_us();
-  /* USER CODE BEGIN TIM7_IRQn 0 */
-  static unsigned short cnt = 20,cnt_y = 100;
   /* USER CODE END TIM7_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM7_IRQn 1 */
-	dev->set_noload_point(cnt,cnt_y,4);
+	osc_low_speed_thread();
   /* USER CODE END TIM7_IRQn 1 */	
-	
-	cnt ++ ;
-	
-	if( cnt >= 750 + 20 )
-	{
-		cnt = 20;
-		cnt_y ++;
-	}
-	
-	diff = hal_sys_time_us() - diff;
 }
 
 

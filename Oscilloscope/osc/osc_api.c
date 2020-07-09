@@ -71,8 +71,25 @@ static void delay_us_fifo(unsigned int t)
 //	/* waitting */
 //	while(t--);
 }
+/* fifo reset */
+void osc_fifo_reset(void)
+{
+	/* set w to high */
+	osc_fifo_clock(0);
+	/* rs to low */
+	hal_write_gpio(FIFO_DIO_RST,0);
+	hal_write_gpio(FIFO_DIO_RST,1);
+	/* set w to low */
+	osc_fifo_clock(1);	
+}
+/* void read fifo_noload */
+void osc_read_fifo_noload(unsigned char * ch1_noload,unsigned char * ch2_noload,unsigned int len)
+{
+	memcpy(ch1_noload,cache_fifo[0],len);
+	memcpy(ch2_noload,cache_fifo[1],len);
+}
 /* read data from fifo */
-void osc_read_fifo_data(unsigned char clock_sta)
+void osc_read_fifo_data(unsigned char clock_sta,unsigned int deep)
 {
 	/* temp data */
 	unsigned char bit_q[8];
@@ -82,7 +99,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 	/* start read r0*/
 	hal_write_gpio(DIO_R0,1);
 	/* start read r0 */
-	for( int i = 0 ; i < FIFO_DEEP ; i ++ )
+	for( int i = 0 ; i < deep ; i ++ )
 	{
 		/* create a falling edge */
 		hal_write_gpio(DIO_R0,0);
@@ -119,7 +136,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
 	/* start read r1 -----------------------------------------------------------------*/
 	hal_write_gpio(DIO_R1,1);
 	/* start read r1 */
-	for( int i = 0 ; i < FIFO_DEEP ; i ++ )
+	for( int i = 0 ; i < deep ; i ++ )
 	{
 		/* create a falling edge */
 		hal_write_gpio(DIO_R1,0);
@@ -138,7 +155,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
   /* start read r2 -----------------------------------------------------------------*/
 	hal_write_gpio(DIO_R2,1);
 	/* start read r2 */
-	for( int i = 0 ; i < FIFO_DEEP ; i ++ )
+	for( int i = 0 ; i < deep ; i ++ )
 	{
 		/* create a falling edge */
 		hal_write_gpio(DIO_R2,0);
@@ -159,7 +176,7 @@ void osc_read_fifo_data(unsigned char clock_sta)
   /* start read r3 -----------------------------------------------------------------*/
 	hal_write_gpio(DIO_R3,1);
 	/* start read r2 */
-	for( int i = 0 ; i < FIFO_DEEP ; i ++ )
+	for( int i = 0 ; i < deep ; i ++ )
 	{
 		/* create a falling edge */
 		hal_write_gpio(DIO_R3,0);

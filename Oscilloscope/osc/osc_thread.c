@@ -165,6 +165,11 @@ static void osc_thread(void)
 	}
 	/* single thread */
 	osc_single_thread();
+	/* check lows */
+	if( hal_lows_flag() == FS_OK )
+  {
+		return;
+	}
 	/* nothing to do */
 	if( !(hal_read_gpio(FIFO_FULL0) == 0 || osc_tflag == 1) )
 	{
@@ -175,7 +180,7 @@ static void osc_thread(void)
 	/* disable the tr */
 	osc_fifo_clock(0);
 	/* read data from fifo */
-	osc_read_fifo_data(clock_sta);
+	osc_read_fifo_data(clock_sta,FIFO_DEEP);
 	/* transfor data */
 	int ret = osc_trig_read(line_buffer_ch1[cnt_p%2],line_buffer_ch2[cnt_p%2],runmsg->trig_type,runmsg->trig_source,clock_sta,osc_inter_s,deep_u);
 	/* single mode */

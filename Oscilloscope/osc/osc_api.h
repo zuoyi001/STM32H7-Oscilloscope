@@ -27,7 +27,7 @@
 
 void osc_stop_adc_clock(void);
 void osc_start_adc_clock(unsigned char internal);
-void osc_read_fifo_data(unsigned char clock_sta);
+void osc_read_fifo_data(unsigned char clock_sta,unsigned int deep);
 int osc_trig_read(unsigned short * ch1_m,unsigned short * ch2_m,int trig_type,int trig_source,int tflag,unsigned int ins,unsigned int deep);
 static void osc_create_analog_data(signed char * ch1_o,signed char * ch2_o,unsigned short * ch1_m,unsigned short * ch2_m ,unsigned int);
 void osc_voltage_output(unsigned short a,unsigned short b,unsigned short c,unsigned short d);
@@ -45,6 +45,8 @@ void osc_beep_en(unsigned char mode);
 int osc_api_peek(unsigned char chn , signed char * max,signed char * min);
 int osc_read_com1(void);
 void osc_backlight_en(unsigned short mode);
+void osc_fifo_reset(void);
+void osc_read_fifo_noload(unsigned char * ch1_noload,unsigned char * ch2_noload,unsigned int len);
 
 #endif
 
