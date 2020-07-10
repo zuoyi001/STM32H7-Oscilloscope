@@ -238,8 +238,65 @@ void osc_create_lines(gui_dev_def * dev,unsigned short * line_d,unsigned char mo
 		it ++;
 	}
 }
-
-
+/* void clear area */
+void osc_clear_area(gui_dev_def * dev,unsigned short start_x,unsigned short start_y)
+{
+	/* get msg area */
+	draw_area_def *  msg_area = get_draw_area_msg();
+	
+	/* area */
+	for( int j = msg_area->start_pos_y ; j < msg_area->stop_pos_y ; j ++ )
+	{
+		/* read */
+		unsigned char piox = dev->read_point(start_x,j);
+		/* for */
+		for( int i = 0 ; i < 2 ; i ++ )
+		{
+			/* get chn */
+			const chn_manage_def * chn_d = &chn_m[i];
+			/* chn */
+			if( piox == chn_d->BG_0 )
+			{	
+				dev->set_noload_point(start_x,j,COLOR_GRID_AREA_BG);
+			} 
+			else if( piox == chn_d->BG_1 )
+			{	
+				dev->set_noload_point(start_x,j,COLOR_GRID_AREA_BG);
+			} 		
+			else if( piox == chn_d->BG_F )
+			{	
+				dev->set_noload_point(start_x,j,COLOR_GRID_AREA_BG);
+			}			
+			else if( piox == chn_d->GR_0 )			 
+			{
+				dev->set_noload_point(start_x,j,COLOR_GRID_POINT);
+			}
+			else if( piox == chn_d->GR_1 )			 
+			{
+				dev->set_noload_point(start_x,j,COLOR_GRID_POINT);
+			}
+			else if( piox == chn_d->GR_F )			 
+			{
+				dev->set_noload_point(start_x,j,COLOR_GRID_POINT);
+			}			
+			else
+			{
+				
+			}
+		}
+  }
+}
+/* void */
+void osc_clear_screen(gui_dev_def * dev)
+{
+		/* get msg area */
+	draw_area_def *  msg_area = get_draw_area_msg();
+	/* for */
+	for( int i = msg_area->start_pos_x ; i < msg_area->stop_pos_x ; i ++ )
+	{
+		osc_clear_area(dev,i,0);
+	}
+}
 
 
 

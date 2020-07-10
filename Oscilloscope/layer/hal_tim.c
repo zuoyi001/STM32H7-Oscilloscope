@@ -371,8 +371,6 @@ void hal_tim_psc(unsigned int psc)
 	/* flag */
 	static unsigned char tpflag = 0,tioflag = 0;
 	static unsigned int last_psc = 0;
-	/* tmp test */
-	extern unsigned char clock_sta_2;
 	/* --- */
 	if( psc > 60000 )
 	{
@@ -389,11 +387,9 @@ void hal_tim_psc(unsigned int psc)
 			/* set psc */
 			mx_tim4_init(10000, psc / 10000);
 			/* clear all lines */
-			osc_clear_all_lines();
+			osc_lows_clear();
 			/* set the fifo */
 			osc_fifo_reset();
-			/* read io */
-			clock_sta_2 = hal_read_gpio(DIO_CLOCK_STA) ? 1 : 0;
 			/* enable the IRQ */
       HAL_NVIC_EnableIRQ(TIM4_IRQn);			
 		}
@@ -414,7 +410,11 @@ void hal_tim_psc(unsigned int psc)
 			/* set io to PWM */
 			hal_io_clock(0);
 			/* enable the IRQ */
-      HAL_NVIC_DisableIRQ(TIM4_IRQn);				
+      HAL_NVIC_DisableIRQ(TIM4_IRQn);	
+      /* clear */
+      last_psc = 0;	
+			/* clear all lines */
+			osc_lows_clear();			
 		}
 		/* set psc */
 		TIM1->PSC = psc - 1;

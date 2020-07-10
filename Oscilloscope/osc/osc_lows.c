@@ -37,21 +37,18 @@ static int osc_lows_config(void);
 /* thread */
 FOS_INODE_REGISTER("osc_lows",osc_lows_init,osc_lows_config,0,9);
 /* buffer */
-unsigned char clock_sta_2 = 0;
 static unsigned char ch1_no[2],ch2_no[2];
 /* set */
 static gui_dev_def * dev;
 /* area */
 const draw_area_def * area_lows;
 /* run msg */
-static osc_run_msg_def * runmsg;
+//static osc_run_msg_def * runmsg;
 /* static switch case data */
 static unsigned char step = 1;
 static unsigned short last_ch[2] = {0xffff,0xffff};
 static unsigned short pixel_pos = 0;
 static unsigned char win_clear_flag = 0;
-/* line buffer */
-static unsigned short line_buffer_ch[2][800];
 /* osc set low */
 static int osc_lows_init(void)
 {
@@ -63,28 +60,31 @@ static int osc_lows_config(void)
 	/* gui dev get */
 	dev = get_gui_dev();
 	/* get run msg for osc */
-	runmsg = get_run_msg();
+//	runmsg = get_run_msg();
 	/* get draw area */
 	area_lows = get_draw_area_msg();		
 	/* return OK */
 	return FS_OK;	
 }
+/* clear all flags */
+void osc_lows_clear(void)
+{
+	step = 1;
+	last_ch[0] = 0xffff;
+	last_ch[1] = 0xffff;
+	pixel_pos = 0;
+	win_clear_flag = 0;
+	/* clear */
+	osc_clear_screen(dev);
+}
 /* thread */
 void osc_low_speed_thread(void)
 {
-	static unsigned int ddfsc_half_tus,diffus,cnt = 0;
-	
-	ddfsc_half_tus = hal_sys_time_us();
-	#if 1
-	
-	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_4,GPIO_PIN_SET);
-	
 	/* check */
 	if( step == 0 )
 	{
 		/* read data from fifo */
-	  /* read data from fifo */
-		osc_read_fifo_data(clock_sta_2,1);
+		osc_read_fifo_data(0,1);
 		/* transfor data */
 		osc_read_fifo_noload(ch1_no,ch2_no,2);
 		/* get io sta */
@@ -93,8 +93,67 @@ void osc_low_speed_thread(void)
 		/* set lines */
 		signed char use_ch[2];
 		unsigned short ch_m[2];
+		/* index */
+		unsigned char index = 0;
+		/* get */
+#if 1		
 		/* set index */
-		unsigned char index = /*(clock_sta_2 == 1) ? ( pixel_pos % 2 ) :*/ ( ( pixel_pos + 1 ) % 2 );
+		if( 1 )//clock_sta_2 == 0 )
+		{
+			if( ch1_no[0] == 0xff && ch2_no[0] == 0xff )
+			{
+				/* get */
+				if( ch1_no[1] != 0xff || ch2_no[1] != 0xff )
+				{
+					 /* index = 1 */
+					index = 1;
+				}
+			}
+			/* get index 2*/
+			if( ch1_no[1] == 0xff && ch2_no[1] == 0xff )
+			{
+				/* get */
+				if( ch1_no[0] != 0xff || ch2_no[0] != 0xff )
+				{
+					/* index = 0 */
+					index = 0;
+				}
+			}		
+	  }
+#if 0		
+    /* set index */
+		if( pixel_pos % 2 )
+		{
+			if( clock_sta_2 == 1 )
+			{
+				index = 1;
+			}
+			else if( clock_sta_2 == 3 )
+			{
+				index = 0;
+			}
+			else
+			{
+				index = 0;
+			}
+		}
+		else
+		{
+			if( clock_sta_2 == 2 )
+			{
+				index = 1;
+			}
+			else if( clock_sta_2 == 4 )
+			{
+				index = 0;
+			}
+			else
+			{
+				index = 0;
+			}
+		}
+#endif		
+#endif		
 		/* get data */
 		use_ch[0] = (signed char)ch1_no[index];
 		use_ch[1] = (signed char)ch2_no[index];
@@ -104,21 +163,15 @@ void osc_low_speed_thread(void)
 		/* set lines */
 		if( last_ch[0] != 0xffff && last_ch[1] != 0xffff )
 		{
-//			/* check clear */
-//			if( win_clear_flag == 1 )
-//			{
-//				for( int i = 0 ; i < 75 ; i ++ )
-//				{
-//					osc_draw_lines(dev,area_lows->start_pos_x + pixel_pos,area_lows->start_pos_y + line_buffer_ch[0][pixel_pos],area_lows->start_pos_x + pixel_pos + 1,area_lows->start_pos_y + line_buffer_ch[0][pixel_pos+1] , 1 , 0 , 0 ); 
-//					osc_draw_lines(dev,area_lows->start_pos_x + pixel_pos,area_lows->start_pos_y + line_buffer_ch[1][pixel_pos],area_lows->start_pos_x + pixel_pos + 1,area_lows->start_pos_y + line_buffer_ch[1][pixel_pos+1] , 1 , 1 , 0 ); 
-//				}
-//			}
+			/* check clear */
+			if( win_clear_flag == 1 )
+			{
+				osc_clear_area(dev,area_lows->start_pos_x + pixel_pos + 75,0);
+				osc_clear_area(dev,area_lows->start_pos_x + pixel_pos + 75 + 1,0);
+			}
 			/* show lines */
 			osc_draw_lines(dev,area_lows->start_pos_x + pixel_pos,area_lows->start_pos_y + last_ch[0],area_lows->start_pos_x + pixel_pos + 1,area_lows->start_pos_y + ch_m[0] , 0 , 0 , 0 ); 
 			osc_draw_lines(dev,area_lows->start_pos_x + pixel_pos,area_lows->start_pos_y + last_ch[1],area_lows->start_pos_x + pixel_pos + 1,area_lows->start_pos_y + ch_m[1] , 0 , 1 , 0 ); 
-			/* save data */
-			line_buffer_ch[0][pixel_pos] = last_ch[0];
-			line_buffer_ch[1][pixel_pos] = last_ch[1];
 		}
 		/* increame */
 		pixel_pos ++ ;
@@ -127,8 +180,11 @@ void osc_low_speed_thread(void)
 		{
 			pixel_pos = 0;
 			win_clear_flag = 1;
-			
-			cnt++;
+			/* clear */
+			for( int i = 0 ; i < 75 ; i ++ )
+			{
+			  osc_clear_area(dev,area_lows->start_pos_x + pixel_pos + i,0);
+			}
 		}
 		/* reset */
 		last_ch[0] = ch_m[0];
@@ -144,14 +200,6 @@ void osc_low_speed_thread(void)
 	step ++ ;
 	/* */
 	step %= 2;
-	#endif
-	//HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_4);
-	
-	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_4,GPIO_PIN_RESET);
-	
-	diffus = hal_sys_time_us() - ddfsc_half_tus;
-	
-
 }
 
 

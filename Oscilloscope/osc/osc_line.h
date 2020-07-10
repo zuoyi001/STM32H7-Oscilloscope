@@ -25,6 +25,8 @@
 /* function declare */
 void osc_create_lines(gui_dev_def * dev,unsigned short * line_d,unsigned char mode,unsigned short index,unsigned char chn ,unsigned short zm);
 void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index);
+void osc_clear_area(gui_dev_def * dev,unsigned short start_x,unsigned short start_y);
+void osc_clear_screen(gui_dev_def * dev);
 #endif
 
 

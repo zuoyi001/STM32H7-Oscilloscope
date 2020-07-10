@@ -23,7 +23,7 @@
 /* Includes ------------------------------------------------------------------*/
 
 void osc_low_speed_thread(void);
-	
+void osc_lows_clear(void);	
 
 #endif
 
