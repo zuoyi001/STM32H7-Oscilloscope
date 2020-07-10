@@ -65,7 +65,7 @@ const chn_manage_def chn_m[] =
 	},	
 };
 /* osc draw lines */
-static void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index)
+void osc_draw_lines(gui_dev_def * dev,unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2,unsigned short mode,unsigned short chn,unsigned short index)
 {
 	/* defines */
 	int xerr = 0 , yerr = 0 , delta_x , delta_y , distance; 
